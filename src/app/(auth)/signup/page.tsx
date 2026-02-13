@@ -35,14 +35,12 @@ export default function SignUpPage() {
       return;
     }
 
-    // If session exists, email confirmation is disabled — go straight to dashboard
+    // Sign out immediately so user must confirm email before accessing dashboard
     if (data.session) {
-      router.push("/dashboard");
-      router.refresh();
-      return;
+      await supabase.auth.signOut();
     }
 
-    // No session means email confirmation is required
+    // Always show confirmation screen — user must verify email first
     setConfirmEmail(true);
     setLoading(false);
   }

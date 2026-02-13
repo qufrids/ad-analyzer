@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
   const [fullName, setFullName] = useState("");
@@ -12,7 +11,6 @@ export default function SignUpPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [confirmEmail, setConfirmEmail] = useState(false);
-  const router = useRouter();
   const supabase = createClient();
 
   async function handleSubmit(e: React.FormEvent) {

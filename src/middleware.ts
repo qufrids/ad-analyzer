@@ -31,14 +31,19 @@ export async function middleware(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
 
-  // Redirect unauthenticated users away from dashboard
-  if (!user && path.startsWith("/dashboard")) {
+  // Protected routes — require authentication
+  const protectedPaths = ["/dashboard", "/analyze", "/history", "/settings", "/analysis"];
+  const isProtected = protectedPaths.some(
+    (p) => path === p || path.startsWith(p + "/")
+  );
+
+  if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  // Redirect authenticated users away from auth pages
+  // Redirect authenticated users away from auth pages (but NOT reset-password)
   if (user && (path === "/login" || path === "/signup")) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
@@ -49,5 +54,14 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/signup"],
+  matcher: [
+    "/dashboard/:path*",
+    "/analyze/:path*",
+    "/history/:path*",
+    "/settings/:path*",
+    "/analysis/:path*",
+    "/login",
+    "/signup",
+    "/reset-password",
+  ],
 };

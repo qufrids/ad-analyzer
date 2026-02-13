@@ -110,25 +110,39 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Download image and convert to base64
-    const imageResponse = await fetch(imageUrl);
-    if (!imageResponse.ok) {
+    // 3. Download image from storage using Supabase (handles private buckets)
+    // Extract the file path from the full storage URL
+    const storagePath = imageUrl.split("/ad-images/").pop();
+    if (!storagePath) {
+      return NextResponse.json(
+        { error: "Invalid image URL" },
+        { status: 400 }
+      );
+    }
+
+    const { data: imageData, error: downloadErr } = await supabase.storage
+      .from("ad-images")
+      .download(decodeURIComponent(storagePath));
+
+    if (downloadErr || !imageData) {
+      console.error("Storage download error:", downloadErr);
       return NextResponse.json(
         { error: "Failed to fetch image from storage" },
         { status: 400 }
       );
     }
 
-    const contentType = imageResponse.headers.get("content-type") || "image/jpeg";
-    const mediaType = (
-      contentType.includes("png")
+    // Detect media type from file extension or blob type
+    const blobType = imageData.type;
+    const fileExt = storagePath.split(".").pop()?.toLowerCase();
+    const mediaType: "image/jpeg" | "image/png" | "image/webp" =
+      blobType.includes("png") || fileExt === "png"
         ? "image/png"
-        : contentType.includes("webp")
+        : blobType.includes("webp") || fileExt === "webp"
         ? "image/webp"
-        : "image/jpeg"
-    ) as "image/jpeg" | "image/png" | "image/webp";
+        : "image/jpeg";
 
-    const imageBuffer = await imageResponse.arrayBuffer();
+    const imageBuffer = await imageData.arrayBuffer();
     const imageBase64 = Buffer.from(imageBuffer).toString("base64");
 
     // 4. Build prompt

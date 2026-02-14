@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import ScoreRing from "./ScoreRing";
 import ScoreBar from "./ScoreBar";
+import DownloadPDF from "./DownloadPDF";
 
 const SCORE_LABELS: Record<string, string> = {
   visual_impact: "Visual Impact",
@@ -48,6 +49,18 @@ export default async function AnalysisDetailPage({
 
   if (!analysis) notFound();
 
+  // Generate signed URL for the image (bucket is private)
+  let imageUrl = "";
+  if (analysis.image_url) {
+    const path = analysis.image_url.split("/ad-images/").pop();
+    if (path) {
+      const { data: signedData } = await supabase.storage
+        .from("ad-images")
+        .createSignedUrl(decodeURIComponent(path), 3600);
+      if (signedData?.signedUrl) imageUrl = signedData.signedUrl;
+    }
+  }
+
   const result = analysis.analysis_result as {
     overall_score: number;
     summary: string;
@@ -79,9 +92,9 @@ export default async function AnalysisDetailPage({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
           {/* Image */}
           <div className="bg-gray-800 flex items-center justify-center p-4 sm:p-6 min-h-[200px] sm:min-h-[300px]">
-            {analysis.image_url ? (
+            {imageUrl ? (
               <img
-                src={analysis.image_url}
+                src={imageUrl}
                 alt="Ad creative"
                 className="max-h-[280px] sm:max-h-[400px] w-auto rounded-lg object-contain"
               />
@@ -248,16 +261,15 @@ export default async function AnalysisDetailPage({
           </svg>
           Analyze Another
         </Link>
-        <button
-          disabled
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gray-800 border border-gray-700 text-gray-500 font-medium rounded-lg cursor-not-allowed text-sm"
-          title="Coming soon"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          Download PDF
-        </button>
+        <DownloadPDF
+          data={{
+            platform: analysis.platform,
+            niche: analysis.niche,
+            overall_score: analysis.overall_score,
+            created_at: analysis.created_at,
+            result,
+          }}
+        />
         <button
           disabled
           className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gray-800 border border-gray-700 text-gray-500 font-medium rounded-lg cursor-not-allowed text-sm"

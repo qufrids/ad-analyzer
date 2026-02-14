@@ -39,6 +39,25 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(3);
 
+  // Generate signed URLs for images (bucket is private)
+  const signedUrls: Record<string, string> = {};
+  if (analyses && analyses.length > 0) {
+    const paths = analyses
+      .filter((a) => a.image_url)
+      .map((a) => {
+        const path = a.image_url.split("/ad-images/").pop();
+        return path ? { id: a.id, path: decodeURIComponent(path) } : null;
+      })
+      .filter(Boolean) as { id: string; path: string }[];
+
+    for (const { id, path } of paths) {
+      const { data } = await supabase.storage
+        .from("ad-images")
+        .createSignedUrl(path, 3600);
+      if (data?.signedUrl) signedUrls[id] = data.signedUrl;
+    }
+  }
+
   const totalAnalyses = totalCount ?? 0;
   const avgScore =
     analyses && analyses.length > 0
@@ -134,9 +153,9 @@ export default async function DashboardPage() {
                 className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-700 transition group"
               >
                 <div className="aspect-video bg-gray-800 relative">
-                  {analysis.image_url ? (
+                  {signedUrls[analysis.id] ? (
                     <img
-                      src={analysis.image_url}
+                      src={signedUrls[analysis.id]}
                       alt="Ad creative"
                       className="w-full h-full object-cover"
                     />

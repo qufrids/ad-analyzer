@@ -181,11 +181,12 @@ export async function POST(request: Request) {
     );
 
     // 7. Map values to match DB constraints
+    const allowedNiches = ["fashion", "beauty", "tech", "fitness", "food", "home", "other"];
     const nicheMap: Record<string, string> = {
       tech_gadgets: "tech",
       home_garden: "home",
     };
-    const dbNiche = nicheMap[niche] || niche;
+    const dbNiche = nicheMap[niche] || (allowedNiches.includes(niche) ? niche : "other");
 
     const platformMap: Record<string, string> = {
       google_ads: "google",

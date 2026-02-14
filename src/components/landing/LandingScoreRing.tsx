@@ -1,7 +1,7 @@
 function scoreColor(score: number) {
-  if (score > 70) return { ring: "stroke-green-400", text: "text-green-400" };
-  if (score >= 40) return { ring: "stroke-orange-400", text: "text-orange-400" };
-  return { ring: "stroke-red-400", text: "text-red-400" };
+  if (score >= 70) return { stroke: "#22c55e", text: "text-green-400" };
+  if (score >= 40) return { stroke: "#f97316", text: "text-orange-400" };
+  return { stroke: "#ef4444", text: "text-red-400" };
 }
 
 export default function LandingScoreRing({
@@ -12,11 +12,11 @@ export default function LandingScoreRing({
   size?: number;
 }) {
   const center = size / 2;
-  const radius = size * 0.41;
+  const radius = size * 0.4;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
   const colors = scoreColor(score);
-  const strokeWidth = size * 0.06;
+  const strokeWidth = size * 0.07;
 
   return (
     <div className="relative inline-flex items-center justify-center">
@@ -26,9 +26,8 @@ export default function LandingScoreRing({
           cy={center}
           r={radius}
           fill="none"
-          stroke="currentColor"
           strokeWidth={strokeWidth}
-          className="text-gray-800"
+          className="stroke-white/[0.06]"
         />
         <circle
           cx={center}
@@ -37,18 +36,15 @@ export default function LandingScoreRing({
           fill="none"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
-          className={colors.ring}
+          stroke={colors.stroke}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
+          style={{ filter: `drop-shadow(0 0 6px ${colors.stroke}40)` }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className={`text-lg font-bold ${colors.text}`}>
-          {score}
-        </span>
-        <span className="text-[9px] text-gray-500 uppercase tracking-wider">
-          / 100
-        </span>
+        <span className={`text-xl font-bold ${colors.text}`}>{score}</span>
+        <span className="text-[8px] text-gray-500 uppercase tracking-wider">/100</span>
       </div>
     </div>
   );

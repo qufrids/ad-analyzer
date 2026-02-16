@@ -40,6 +40,7 @@ export default function AnalyzePage() {
 
   // Step 3: Analyze
   const [analyzing, setAnalyzing] = useState(false);
+  const [progressMsg, setProgressMsg] = useState("");
   const [error, setError] = useState("");
   const [noCredits, setNoCredits] = useState(false);
 
@@ -94,6 +95,24 @@ export default function AnalyzePage() {
     setError("");
     setNoCredits(false);
     setAnalyzing(true);
+
+    // Cycle through progress messages
+    const progressMessages = [
+      "Uploading creative...",
+      "Analyzing hook strength...",
+      "Evaluating copy clarity...",
+      "Predicting engagement potential...",
+      "Assessing CTA effectiveness...",
+      "Checking platform fit...",
+      "Generating performance score...",
+      "Building recommendations...",
+    ];
+    let msgIndex = 0;
+    setProgressMsg(progressMessages[0]);
+    const progressTimer = setInterval(() => {
+      msgIndex = Math.min(msgIndex + 1, progressMessages.length - 1);
+      setProgressMsg(progressMessages[msgIndex]);
+    }, 3500);
 
     try {
       // Check credits
@@ -196,6 +215,9 @@ export default function AnalyzePage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setAnalyzing(false);
+    } finally {
+      clearInterval(progressTimer);
+      setProgressMsg("");
     }
   }
 
@@ -450,7 +472,7 @@ export default function AnalyzePage() {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                 />
               </svg>
-              Analyzing your ad...
+              {progressMsg || "Analyzing your ad..."}
             </>
           ) : (
             <>
@@ -461,6 +483,12 @@ export default function AnalyzePage() {
             </>
           )}
         </button>
+
+        {analyzing && progressMsg && (
+          <p className="text-sm text-gray-400 text-center animate-pulse-subtle">
+            {progressMsg}
+          </p>
+        )}
 
         {!canAnalyze && !analyzing && (
           <p className="text-xs text-gray-600 text-center mt-2">

@@ -235,12 +235,13 @@ function Overline({ children }: { children: React.ReactNode }) {
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-[1.08]">
+    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-gray-900 dark:text-white leading-[1.08]">
       {children}
     </h2>
   );
 }
 
+/* MetricBar lives inside the dark product mock card — keep dark-only styles */
 function MetricBar({ label, score, hi }: { label: string; score: number; hi: boolean }) {
   return (
     <div>
@@ -274,7 +275,7 @@ const capColor: Record<string, string> = {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#09090B] text-white overflow-x-hidden">
+    <div className="min-h-screen bg-white dark:bg-[#09090B] text-gray-900 dark:text-white overflow-x-hidden">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -286,7 +287,7 @@ export default function LandingPage() {
           § 1  HERO
       ══════════════════════════════════════ */}
       <section className="relative pt-16 overflow-hidden">
-        {/* Radial ambient — very subtle */}
+        {/* Radial ambient */}
         <div
           aria-hidden
           className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] opacity-[0.04]"
@@ -302,16 +303,16 @@ export default function LandingPage() {
             {/* ── LEFT: Copy ── */}
             <div>
               <ScrollReveal>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-8 rounded-full border border-white/[0.08] bg-white/[0.03]">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-8 rounded-full border border-gray-200 dark:border-white/[0.08] bg-gray-100 dark:bg-white/[0.03]">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse-dot" />
-                  <span className="text-[12px] text-zinc-400">
+                  <span className="text-[12px] text-gray-500 dark:text-zinc-400">
                     Ad Performance Intelligence Platform
                   </span>
                 </div>
               </ScrollReveal>
 
               <ScrollReveal delay={0.08}>
-                <h1 className="text-5xl sm:text-6xl lg:text-[68px] font-black tracking-tight leading-[1.04] text-white">
+                <h1 className="text-5xl sm:text-6xl lg:text-[68px] font-black tracking-tight leading-[1.04] text-gray-900 dark:text-white">
                   Know Which Ads
                   <br />
                   Will Win —{" "}
@@ -322,7 +323,7 @@ export default function LandingPage() {
               </ScrollReveal>
 
               <ScrollReveal delay={0.15}>
-                <p className="mt-7 text-[17px] text-zinc-400 leading-relaxed max-w-lg">
+                <p className="mt-7 text-[17px] text-gray-600 dark:text-zinc-400 leading-relaxed max-w-lg">
                   Upload your creative. Our AI predicts performance, surfaces weak
                   spots, and tells you exactly what to improve — in under 30
                   seconds.
@@ -333,7 +334,7 @@ export default function LandingPage() {
                 <div className="mt-8 flex flex-col sm:flex-row gap-3">
                   <Link
                     href="/signup"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-zinc-900 font-semibold text-[15px] rounded-lg hover:bg-zinc-100 transition-colors shadow-lg shadow-black/30"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-zinc-900 font-semibold text-[15px] rounded-lg hover:bg-gray-800 dark:hover:bg-zinc-100 transition-colors shadow-lg shadow-black/20"
                   >
                     Analyze My Ad
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -342,7 +343,7 @@ export default function LandingPage() {
                   </Link>
                   <Link
                     href="#features"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-white/[0.1] text-zinc-300 hover:text-white hover:border-white/[0.2] font-medium text-[15px] rounded-lg transition-colors"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-gray-300 dark:border-white/[0.1] text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white hover:border-gray-400 dark:hover:border-white/[0.2] font-medium text-[15px] rounded-lg transition-colors"
                   >
                     See Example Analysis
                   </Link>
@@ -352,7 +353,7 @@ export default function LandingPage() {
               <ScrollReveal delay={0.28}>
                 <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
                   {["No credit card required", "3 free analyses", "Results in 30 seconds"].map((t) => (
-                    <span key={t} className="flex items-center gap-1.5 text-[12px] text-zinc-500">
+                    <span key={t} className="flex items-center gap-1.5 text-[12px] text-gray-500 dark:text-zinc-500">
                       <svg className="w-3.5 h-3.5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
@@ -363,7 +364,7 @@ export default function LandingPage() {
               </ScrollReveal>
             </div>
 
-            {/* ── RIGHT: Premium Product Mock ── */}
+            {/* ── RIGHT: Premium Product Mock (intentionally always dark) ── */}
             <ScrollReveal delay={0.18} className="w-full">
               <div className="relative">
                 {/* Glow behind card */}
@@ -466,12 +467,12 @@ export default function LandingPage() {
       {/* ══════════════════════════════════════
           § 2  TRUST BAR
       ══════════════════════════════════════ */}
-      <div className="border-y border-white/[0.05] bg-zinc-950/50">
+      <div className="border-y border-gray-200 dark:border-white/[0.05] bg-gray-50 dark:bg-zinc-950/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
             {TRUST_ITEMS.map((t) => (
-              <span key={t} className="flex items-center gap-2 text-[12px] text-zinc-500">
-                <svg className="w-3.5 h-3.5 text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <span key={t} className="flex items-center gap-2 text-[12px] text-gray-500 dark:text-zinc-500">
+                <svg className="w-3.5 h-3.5 text-gray-400 dark:text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 {t}
@@ -498,7 +499,7 @@ export default function LandingPage() {
                 <br />
                 Even Launch.
               </SectionHeading>
-              <p className="mt-6 text-zinc-400 text-[17px] leading-relaxed max-w-md">
+              <p className="mt-6 text-gray-600 dark:text-zinc-400 text-[17px] leading-relaxed max-w-md">
                 The creative testing cycle is broken. Teams spend money to find out
                 what doesn&rsquo;t work. By then, budget is gone and confidence is low.
               </p>
@@ -509,7 +510,7 @@ export default function LandingPage() {
                   { stat: "3.2×", label: "Higher ROAS with pre-launch validation" },
                 ].map((s) => (
                   <div key={s.stat}>
-                    <p className="text-3xl font-black text-white mb-1">{s.stat}</p>
+                    <p className="text-3xl font-black text-gray-900 dark:text-white mb-1">{s.stat}</p>
                     <p className="text-[11px] text-zinc-500 leading-tight">{s.label}</p>
                   </div>
                 ))}
@@ -545,12 +546,12 @@ export default function LandingPage() {
                 },
               ].map((p, i) => (
                 <ScrollReveal key={p.num} delay={i * 0.07}>
-                  <div className="flex gap-5 py-6 border-b border-white/[0.05] group">
+                  <div className="flex gap-5 py-6 border-b border-gray-200 dark:border-white/[0.05] group">
                     <span className="text-[11px] font-mono text-zinc-600 pt-0.5 shrink-0 w-6">
                       {p.num}
                     </span>
                     <div>
-                      <p className="text-[15px] font-semibold text-white mb-1.5 group-hover:text-green-400 transition-colors">
+                      <p className="text-[15px] font-semibold text-gray-900 dark:text-white mb-1.5 group-hover:text-green-400 transition-colors">
                         {p.title}
                       </p>
                       <p className="text-[13px] text-zinc-500 leading-relaxed">{p.body}</p>
@@ -567,7 +568,7 @@ export default function LandingPage() {
       {/* ══════════════════════════════════════
           § 4  PRODUCT INTELLIGENCE
       ══════════════════════════════════════ */}
-      <section id="features" className="py-24 sm:py-36 border-t border-white/[0.05]">
+      <section id="features" className="py-24 sm:py-36 border-t border-gray-200 dark:border-white/[0.05]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <div className="max-w-2xl mb-16 sm:mb-20">
@@ -577,7 +578,7 @@ export default function LandingPage() {
                 <br />
                 Every Analysis
               </SectionHeading>
-              <p className="mt-5 text-zinc-400 text-[17px] leading-relaxed">
+              <p className="mt-5 text-gray-600 dark:text-zinc-400 text-[17px] leading-relaxed">
                 Not vague AI feedback. Structured, prioritized intelligence built
                 around what actually drives ad performance.
               </p>
@@ -587,7 +588,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {CAPABILITIES.map((c, i) => (
               <ScrollReveal key={c.label} delay={i * 0.07}>
-                <div className="bg-zinc-900 border border-white/[0.07] rounded-xl p-6 h-full hover:border-white/[0.13] transition-colors group">
+                <div className="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-white/[0.07] rounded-xl p-6 h-full hover:border-gray-400 dark:hover:border-white/[0.13] transition-colors group">
                   <div className="flex items-center justify-between mb-5">
                     <span className="text-[11px] font-mono text-zinc-600">{c.label}</span>
                     <span
@@ -600,11 +601,11 @@ export default function LandingPage() {
                        c.color === "orange" ? "Detection"  : "Confidence"}
                     </span>
                   </div>
-                  <h3 className="text-[15px] font-bold text-white mb-3 leading-snug group-hover:text-green-400 transition-colors">
+                  <h3 className="text-[15px] font-bold text-gray-900 dark:text-white mb-3 leading-snug group-hover:text-green-400 transition-colors">
                     {c.title}
                   </h3>
-                  <p className="text-[13px] text-zinc-500 leading-relaxed mb-5">{c.body}</p>
-                  <p className="text-[10px] font-semibold tracking-widest uppercase text-zinc-600">
+                  <p className="text-[13px] text-gray-500 dark:text-zinc-500 leading-relaxed mb-5">{c.body}</p>
+                  <p className="text-[10px] font-semibold tracking-widest uppercase text-gray-400 dark:text-zinc-600">
                     {c.detail}
                   </p>
                 </div>
@@ -617,7 +618,7 @@ export default function LandingPage() {
       {/* ══════════════════════════════════════
           § 5  AD COMPARISON
       ══════════════════════════════════════ */}
-      <section className="py-24 sm:py-36 border-t border-white/[0.05]">
+      <section className="py-24 sm:py-36 border-t border-gray-200 dark:border-white/[0.05]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-16">
@@ -630,7 +631,7 @@ export default function LandingPage() {
                 </SectionHeading>
               </div>
               <div className="shrink-0">
-                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] text-[11px] text-zinc-500">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 dark:border-white/[0.08] bg-gray-50 dark:bg-white/[0.03] text-[11px] text-gray-500 dark:text-zinc-500">
                   <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
                   Coming to Pro
                 </span>
@@ -640,7 +641,7 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_64px_1fr] gap-4 items-stretch">
 
-            {/* Ad A — LOSER */}
+            {/* Ad A — LOSER (intentionally dark product card) */}
             <ScrollReveal delay={0.05}>
               <div className="bg-zinc-900 border border-white/[0.07] rounded-xl overflow-hidden h-full">
                 <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center justify-between">
@@ -711,15 +712,15 @@ export default function LandingPage() {
 
             {/* VS divider */}
             <div className="hidden lg:flex flex-col items-center justify-center gap-3 py-8">
-              <div className="flex-1 w-px bg-white/[0.05]" />
-              <span className="text-[11px] font-black text-zinc-600 tracking-widest">VS</span>
-              <div className="flex-1 w-px bg-white/[0.05]" />
+              <div className="flex-1 w-px bg-gray-300 dark:bg-white/[0.05]" />
+              <span className="text-[11px] font-black text-gray-400 dark:text-zinc-600 tracking-widest">VS</span>
+              <div className="flex-1 w-px bg-gray-300 dark:bg-white/[0.05]" />
             </div>
             <div className="lg:hidden flex items-center justify-center py-2">
-              <span className="text-[11px] font-black text-zinc-600 tracking-widest px-4">VS</span>
+              <span className="text-[11px] font-black text-gray-400 dark:text-zinc-600 tracking-widest px-4">VS</span>
             </div>
 
-            {/* Ad B — WINNER */}
+            {/* Ad B — WINNER (intentionally dark product card) */}
             <ScrollReveal delay={0.12}>
               <div className="bg-zinc-900 border border-green-500/[0.18] rounded-xl overflow-hidden h-full relative">
                 <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-green-500/40 via-green-400/60 to-green-500/40" />
@@ -795,21 +796,21 @@ export default function LandingPage() {
 
           {/* Insight strip */}
           <ScrollReveal delay={0.15}>
-            <div className="mt-5 p-5 bg-zinc-900 border border-white/[0.07] rounded-xl flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="mt-5 p-5 bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-white/[0.07] rounded-xl flex flex-col sm:flex-row sm:items-center gap-4">
               <div className="shrink-0">
                 <p className="text-[9px] font-semibold tracking-[0.15em] uppercase text-zinc-500 mb-1">
                   Why Creative B Wins
                 </p>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl font-black text-white">+53</span>
+                  <span className="text-2xl font-black text-gray-900 dark:text-white">+53</span>
                   <span className="text-xs text-zinc-500">points on Hook Strength</span>
-                  <span className="text-zinc-700 mx-1">·</span>
-                  <span className="text-2xl font-black text-white">+47</span>
+                  <span className="text-gray-300 dark:text-zinc-700 mx-1">·</span>
+                  <span className="text-2xl font-black text-gray-900 dark:text-white">+47</span>
                   <span className="text-xs text-zinc-500">points on CTA Clarity</span>
                 </div>
               </div>
-              <div className="hidden sm:block h-10 w-px bg-white/[0.06]" />
-              <p className="text-[13px] text-zinc-400 leading-relaxed">
+              <div className="hidden sm:block h-10 w-px bg-gray-300 dark:bg-white/[0.06]" />
+              <p className="text-[13px] text-gray-600 dark:text-zinc-400 leading-relaxed">
                 Creative B leads with a specific, outcome-driven hook and substantive social proof.
                 These two factors account for the majority of the 53-point gap in performance prediction.
               </p>
@@ -821,7 +822,7 @@ export default function LandingPage() {
       {/* ══════════════════════════════════════
           § 6  WORKFLOW
       ══════════════════════════════════════ */}
-      <section id="workflow" className="py-24 sm:py-36 border-t border-white/[0.05]">
+      <section id="workflow" className="py-24 sm:py-36 border-t border-gray-200 dark:border-white/[0.05]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <div className="max-w-xl mb-16">
@@ -838,19 +839,19 @@ export default function LandingPage() {
             {/* Connector line — desktop */}
             <div
               aria-hidden
-              className="hidden lg:block absolute top-9 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent"
+              className="hidden lg:block absolute top-9 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-white/[0.08] to-transparent"
             />
 
             {WORKFLOW.map((w, i) => (
               <ScrollReveal key={w.step} delay={i * 0.08}>
                 <div className="relative p-6 lg:p-8 group">
                   {/* Step number */}
-                  <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-white/[0.08] flex items-center justify-center mb-5 relative z-10 group-hover:border-green-500/30 group-hover:bg-green-500/[0.06] transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-zinc-900 border border-gray-200 dark:border-white/[0.08] flex items-center justify-center mb-5 relative z-10 group-hover:border-green-500/30 group-hover:bg-green-500/[0.06] transition-colors">
                     <span className="text-[11px] font-black text-zinc-500 font-mono group-hover:text-green-400 transition-colors">
                       {w.step}
                     </span>
                   </div>
-                  <h3 className="text-[15px] font-bold text-white mb-2.5 leading-snug">
+                  <h3 className="text-[15px] font-bold text-gray-900 dark:text-white mb-2.5 leading-snug">
                     {w.title}
                   </h3>
                   <p className="text-[13px] text-zinc-500 leading-relaxed">{w.body}</p>
@@ -864,7 +865,7 @@ export default function LandingPage() {
       {/* ══════════════════════════════════════
           § 7  SOCIAL PROOF / TESTIMONIALS
       ══════════════════════════════════════ */}
-      <section className="py-24 sm:py-36 border-t border-white/[0.05]">
+      <section className="py-24 sm:py-36 border-t border-gray-200 dark:border-white/[0.05]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <div className="text-center mb-16">
@@ -878,7 +879,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {TESTIMONIALS.map((t, i) => (
               <ScrollReveal key={t.name} delay={i * 0.08}>
-                <div className="bg-zinc-900 border border-white/[0.07] rounded-xl p-7 h-full hover:border-white/[0.12] transition-colors flex flex-col">
+                <div className="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-white/[0.07] rounded-xl p-7 h-full hover:border-gray-400 dark:hover:border-white/[0.12] transition-colors flex flex-col">
                   {/* Stars */}
                   <div className="flex gap-1 mb-5">
                     {Array.from({ length: 5 }).map((_, s) => (
@@ -887,17 +888,17 @@ export default function LandingPage() {
                       </svg>
                     ))}
                   </div>
-                  <blockquote className="text-[14px] text-zinc-300 leading-relaxed flex-1 mb-6">
+                  <blockquote className="text-[14px] text-gray-700 dark:text-zinc-300 leading-relaxed flex-1 mb-6">
                     &ldquo;{t.quote}&rdquo;
                   </blockquote>
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-zinc-800 border border-white/[0.08] flex items-center justify-center shrink-0">
-                      <span className="text-[11px] font-bold text-zinc-400">
+                    <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-zinc-800 border border-gray-300 dark:border-white/[0.08] flex items-center justify-center shrink-0">
+                      <span className="text-[11px] font-bold text-gray-600 dark:text-zinc-400">
                         {t.name[0]}
                       </span>
                     </div>
                     <div>
-                      <p className="text-[13px] font-semibold text-white">{t.name}</p>
+                      <p className="text-[13px] font-semibold text-gray-900 dark:text-white">{t.name}</p>
                       <p className="text-[11px] text-zinc-500">{t.role}</p>
                     </div>
                   </div>
@@ -911,13 +912,13 @@ export default function LandingPage() {
       {/* ══════════════════════════════════════
           § 8  PRICING
       ══════════════════════════════════════ */}
-      <section id="pricing" className="py-24 sm:py-36 border-t border-white/[0.05]">
+      <section id="pricing" className="py-24 sm:py-36 border-t border-gray-200 dark:border-white/[0.05]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <div className="text-center mb-16">
               <Overline>Pricing</Overline>
               <SectionHeading>Start Free. Scale When Ready.</SectionHeading>
-              <p className="mt-5 text-zinc-400 text-[16px] max-w-md mx-auto">
+              <p className="mt-5 text-gray-600 dark:text-zinc-400 text-[16px] max-w-md mx-auto">
                 No contracts. No hidden fees. Cancel anytime.
               </p>
             </div>
@@ -931,8 +932,8 @@ export default function LandingPage() {
                     p.highlight
                       ? "bg-white text-zinc-900"
                       : p.soon
-                      ? "bg-zinc-900/50 border border-white/[0.05]"
-                      : "bg-zinc-900 border border-white/[0.07]"
+                      ? "bg-gray-50/50 dark:bg-zinc-900/50 border border-gray-200 dark:border-white/[0.05]"
+                      : "bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-white/[0.07]"
                   }`}
                 >
                   {p.highlight && (
@@ -940,7 +941,7 @@ export default function LandingPage() {
                   )}
                   {p.soon && (
                     <div className="absolute top-4 right-4">
-                      <span className="text-[9px] font-semibold text-zinc-600 uppercase tracking-wider px-2 py-0.5 border border-white/[0.06] rounded">
+                      <span className="text-[9px] font-semibold text-gray-400 dark:text-zinc-600 uppercase tracking-wider px-2 py-0.5 border border-gray-200 dark:border-white/[0.06] rounded">
                         Soon
                       </span>
                     </div>
@@ -949,7 +950,7 @@ export default function LandingPage() {
                   <div className="p-7 flex-1 flex flex-col">
                     <h3
                       className={`text-[13px] font-semibold mb-4 ${
-                        p.highlight ? "text-zinc-600" : "text-zinc-400"
+                        p.highlight ? "text-zinc-600" : "text-gray-500 dark:text-zinc-400"
                       }`}
                     >
                       {p.name}
@@ -958,7 +959,7 @@ export default function LandingPage() {
                     <div className="flex items-baseline gap-1 mb-2">
                       <span
                         className={`text-4xl font-black tracking-tight ${
-                          p.highlight ? "text-zinc-900" : p.soon ? "text-zinc-600" : "text-white"
+                          p.highlight ? "text-zinc-900" : p.soon ? "text-zinc-600" : "text-gray-900 dark:text-white"
                         }`}
                       >
                         {p.price}
@@ -988,7 +989,7 @@ export default function LandingPage() {
                               p.highlight
                                 ? "text-green-500"
                                 : p.soon
-                                ? "text-zinc-700"
+                                ? "text-gray-300 dark:text-zinc-700"
                                 : "text-green-400"
                             }`}
                             fill="none"
@@ -1003,7 +1004,7 @@ export default function LandingPage() {
                                 ? "text-zinc-700"
                                 : p.soon
                                 ? "text-zinc-600"
-                                : "text-zinc-300"
+                                : "text-gray-700 dark:text-zinc-300"
                             }`}
                           >
                             {f}
@@ -1015,7 +1016,7 @@ export default function LandingPage() {
                     {p.soon ? (
                       <button
                         disabled
-                        className="w-full py-2.5 border border-white/[0.06] rounded-lg text-zinc-600 text-[13px] font-semibold cursor-not-allowed"
+                        className="w-full py-2.5 border border-gray-200 dark:border-white/[0.06] rounded-lg text-gray-400 dark:text-zinc-600 text-[13px] font-semibold cursor-not-allowed"
                       >
                         {p.cta}
                       </button>
@@ -1025,7 +1026,7 @@ export default function LandingPage() {
                         className={`block w-full text-center py-2.5 rounded-lg text-[13px] font-semibold transition-colors ${
                           p.highlight
                             ? "bg-zinc-900 text-white hover:bg-zinc-800"
-                            : "bg-white/[0.06] text-white hover:bg-white/[0.10] border border-white/[0.08]"
+                            : "bg-gray-900 dark:bg-white/[0.06] text-white hover:bg-gray-800 dark:hover:bg-white/[0.10] border border-gray-700 dark:border-white/[0.08]"
                         }`}
                       >
                         {p.cta}
@@ -1042,7 +1043,7 @@ export default function LandingPage() {
       {/* ══════════════════════════════════════
           § 9  FAQ
       ══════════════════════════════════════ */}
-      <section className="py-24 sm:py-36 border-t border-white/[0.05]">
+      <section className="py-24 sm:py-36 border-t border-gray-200 dark:border-white/[0.05]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <div className="text-center mb-16">
@@ -1051,12 +1052,12 @@ export default function LandingPage() {
             </div>
           </ScrollReveal>
 
-          <div className="divide-y divide-white/[0.05]">
+          <div className="divide-y divide-gray-200 dark:divide-white/[0.05]">
             {FAQS.map((faq, i) => (
               <ScrollReveal key={faq.q} delay={i * 0.04}>
                 <details className="group py-5">
                   <summary className="flex items-center justify-between gap-4 cursor-pointer list-none">
-                    <span className="text-[15px] font-semibold text-white group-open:text-green-400 transition-colors">
+                    <span className="text-[15px] font-semibold text-gray-900 dark:text-white group-open:text-green-400 transition-colors">
                       {faq.q}
                     </span>
                     <svg
@@ -1068,7 +1069,7 @@ export default function LandingPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </summary>
-                  <p className="mt-3 text-[14px] text-zinc-400 leading-relaxed pr-8">
+                  <p className="mt-3 text-[14px] text-gray-600 dark:text-zinc-400 leading-relaxed pr-8">
                     {faq.a}
                   </p>
                 </details>
@@ -1081,7 +1082,7 @@ export default function LandingPage() {
       {/* ══════════════════════════════════════
           § 10  FINAL CTA
       ══════════════════════════════════════ */}
-      <section className="py-24 sm:py-36 border-t border-white/[0.05]">
+      <section className="py-24 sm:py-36 border-t border-gray-200 dark:border-white/[0.05]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <div
             aria-hidden
@@ -1089,19 +1090,19 @@ export default function LandingPage() {
             style={{ background: "radial-gradient(ellipse at 50% 50%, #22C55E, transparent 70%)" }}
           />
           <ScrollReveal>
-            <h2 className="text-4xl sm:text-5xl lg:text-[60px] font-black tracking-tight leading-[1.06] text-white relative">
+            <h2 className="text-4xl sm:text-5xl lg:text-[60px] font-black tracking-tight leading-[1.06] text-gray-900 dark:text-white relative">
               Stop Guessing.
               <br />
               Start Launching Winners.
             </h2>
-            <p className="mt-6 text-zinc-400 text-[17px] max-w-lg mx-auto leading-relaxed">
+            <p className="mt-6 text-gray-600 dark:text-zinc-400 text-[17px] max-w-lg mx-auto leading-relaxed">
               Join performance marketers who validate creatives before spending budget.
               Your first 3 analyses are completely free.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/signup"
-                className="inline-flex items-center gap-2 px-7 py-4 bg-white text-zinc-900 font-bold text-[15px] rounded-lg hover:bg-zinc-100 transition-colors shadow-xl shadow-black/40"
+                className="inline-flex items-center gap-2 px-7 py-4 bg-gray-900 dark:bg-white text-white dark:text-zinc-900 font-bold text-[15px] rounded-lg hover:bg-gray-800 dark:hover:bg-zinc-100 transition-colors shadow-xl shadow-black/20"
               >
                 Analyze Your First Ad
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1119,7 +1120,7 @@ export default function LandingPage() {
       {/* ══════════════════════════════════════
           § 11  FOOTER
       ══════════════════════════════════════ */}
-      <footer className="border-t border-white/[0.05] bg-zinc-950">
+      <footer className="border-t border-gray-200 dark:border-white/[0.05] bg-gray-50 dark:bg-zinc-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
 
@@ -1130,7 +1131,7 @@ export default function LandingPage() {
                   <rect width="22" height="22" rx="5" fill="#22C55E" />
                   <path d="M11.5 4L5 12h6.5L10 18l7-10H10.5L11.5 4z" fill="white" strokeLinejoin="round" />
                 </svg>
-                <span className="text-[14px] font-bold text-white">AdScore</span>
+                <span className="text-[14px] font-bold text-gray-900 dark:text-white">AdScore</span>
               </Link>
               <p className="text-[13px] text-zinc-600 leading-relaxed max-w-[200px]">
                 Ad Performance Intelligence Platform for serious marketers.
@@ -1139,7 +1140,7 @@ export default function LandingPage() {
 
             {/* Product */}
             <div>
-              <h4 className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-5">
+              <h4 className="text-[11px] font-semibold text-gray-600 dark:text-zinc-400 uppercase tracking-widest mb-5">
                 Product
               </h4>
               <ul className="space-y-3">
@@ -1150,7 +1151,7 @@ export default function LandingPage() {
                   { label: "How It Works", href: "#workflow" },
                 ].map((l) => (
                   <li key={l.label}>
-                    <Link href={l.href} className="text-[13px] text-zinc-600 hover:text-zinc-300 transition-colors">
+                    <Link href={l.href} className="text-[13px] text-gray-500 dark:text-zinc-600 hover:text-gray-900 dark:hover:text-zinc-300 transition-colors">
                       {l.label}
                     </Link>
                   </li>
@@ -1160,7 +1161,7 @@ export default function LandingPage() {
 
             {/* Resources */}
             <div>
-              <h4 className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-5">
+              <h4 className="text-[11px] font-semibold text-gray-600 dark:text-zinc-400 uppercase tracking-widest mb-5">
                 Resources
               </h4>
               <ul className="space-y-3">
@@ -1170,7 +1171,7 @@ export default function LandingPage() {
                   { label: "FAQ", href: "#faq" },
                 ].map((l) => (
                   <li key={l.label}>
-                    <Link href={l.href} className="text-[13px] text-zinc-600 hover:text-zinc-300 transition-colors">
+                    <Link href={l.href} className="text-[13px] text-gray-500 dark:text-zinc-600 hover:text-gray-900 dark:hover:text-zinc-300 transition-colors">
                       {l.label}
                     </Link>
                   </li>
@@ -1180,7 +1181,7 @@ export default function LandingPage() {
 
             {/* Legal */}
             <div>
-              <h4 className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-5">
+              <h4 className="text-[11px] font-semibold text-gray-600 dark:text-zinc-400 uppercase tracking-widest mb-5">
                 Legal
               </h4>
               <ul className="space-y-3">
@@ -1190,7 +1191,7 @@ export default function LandingPage() {
                   { label: "Contact", href: "#" },
                 ].map((l) => (
                   <li key={l.label}>
-                    <Link href={l.href} className="text-[13px] text-zinc-600 hover:text-zinc-300 transition-colors">
+                    <Link href={l.href} className="text-[13px] text-gray-500 dark:text-zinc-600 hover:text-gray-900 dark:hover:text-zinc-300 transition-colors">
                       {l.label}
                     </Link>
                   </li>
@@ -1199,11 +1200,11 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="mt-16 pt-6 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-[12px] text-zinc-700">
+          <div className="mt-16 pt-6 border-t border-gray-100 dark:border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-[12px] text-gray-400 dark:text-zinc-700">
               &copy; {new Date().getFullYear()} AdScore. All rights reserved.
             </p>
-            <p className="text-[12px] text-zinc-700">
+            <p className="text-[12px] text-gray-400 dark:text-zinc-700">
               Built for performance marketers.
             </p>
           </div>

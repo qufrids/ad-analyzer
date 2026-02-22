@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const LINKS = [
   { label: "Product", href: "#features" },
@@ -30,7 +31,7 @@ export default function ClientNavbar() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
           solid
-            ? "bg-[#09090B]/90 backdrop-blur-md border-b border-white/[0.06]"
+            ? "bg-[var(--bg)]/90 backdrop-blur-md border-b border-black/[0.06] dark:border-white/[0.06]"
             : "bg-transparent"
         }`}
       >
@@ -45,7 +46,7 @@ export default function ClientNavbar() {
                 strokeLinejoin="round"
               />
             </svg>
-            <span className="text-[15px] font-bold text-white tracking-tight leading-none">
+            <span className="text-[15px] font-bold text-zinc-900 dark:text-white tracking-tight leading-none">
               AdScore
             </span>
           </Link>
@@ -56,7 +57,7 @@ export default function ClientNavbar() {
               <Link
                 key={l.label}
                 href={l.href}
-                className="text-[13px] text-zinc-400 hover:text-white transition-colors duration-150"
+                className="text-[13px] text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors duration-150"
               >
                 {l.label}
               </Link>
@@ -65,9 +66,10 @@ export default function ClientNavbar() {
 
           {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle />
             <Link
               href="/login"
-              className="text-[13px] text-zinc-400 hover:text-white transition-colors duration-150"
+              className="text-[13px] text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors duration-150"
             >
               Sign in
             </Link>
@@ -83,17 +85,20 @@ export default function ClientNavbar() {
           </div>
 
           {/* Mobile menu toggle */}
-          <button
-            onClick={() => setOpen(!open)}
-            className="md:hidden p-2 text-zinc-400 hover:text-white transition-colors"
-            aria-label="Menu"
-          >
+          <div className="md:hidden flex items-center gap-1">
+            <ThemeToggle />
+            <button
+              onClick={() => setOpen(!open)}
+              className="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+              aria-label="Menu"
+            >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {open
                 ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
                 : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />}
             </svg>
-          </button>
+            </button>
+          </div>
         </nav>
       </header>
 
@@ -114,11 +119,11 @@ export default function ClientNavbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 280 }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-80 bg-zinc-950 border-l border-white/[0.06] flex flex-col"
+              className="fixed top-0 right-0 bottom-0 z-50 w-80 bg-white dark:bg-zinc-950 border-l border-black/[0.06] dark:border-white/[0.06] flex flex-col"
             >
-              <div className="h-16 flex items-center justify-between px-6 border-b border-white/[0.06]">
-                <span className="text-sm font-semibold text-white">Menu</span>
-                <button onClick={() => setOpen(false)} className="p-1 text-zinc-500 hover:text-white transition-colors">
+              <div className="h-16 flex items-center justify-between px-6 border-b border-black/[0.06] dark:border-white/[0.06]">
+                <span className="text-sm font-semibold text-zinc-900 dark:text-white">Menu</span>
+                <button onClick={() => setOpen(false)} className="p-1 text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -130,7 +135,7 @@ export default function ClientNavbar() {
                     key={l.label}
                     href={l.href}
                     onClick={() => setOpen(false)}
-                    className="flex items-center py-3 text-sm text-zinc-300 hover:text-white border-b border-white/[0.04] transition-colors"
+                    className="flex items-center py-3 text-sm text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white border-b border-black/[0.04] dark:border-white/[0.04] transition-colors"
                   >
                     {l.label}
                   </Link>
@@ -140,7 +145,7 @@ export default function ClientNavbar() {
                 <Link
                   href="/login"
                   onClick={() => setOpen(false)}
-                  className="block text-center py-3 text-sm text-zinc-400 border border-white/[0.08] rounded-lg hover:text-white hover:border-white/[0.16] transition-colors"
+                  className="block text-center py-3 text-sm text-zinc-600 dark:text-zinc-400 border border-black/[0.08] dark:border-white/[0.08] rounded-lg hover:text-zinc-900 dark:hover:text-white hover:border-black/[0.16] dark:hover:border-white/[0.16] transition-colors"
                 >
                   Sign in
                 </Link>

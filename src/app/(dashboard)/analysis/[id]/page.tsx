@@ -79,7 +79,7 @@ export default async function AnalysisDetailPage({
       {/* Back link */}
       <Link
         href="/history"
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 transition"
+        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -88,10 +88,10 @@ export default async function AnalysisDetailPage({
       </Link>
 
       {/* ========== HERO ========== */}
-      <section className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
+      <section className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
           {/* Image */}
-          <div className="bg-gray-800 flex items-center justify-center p-4 sm:p-6 min-h-[200px] sm:min-h-[300px]">
+          <div className="bg-gray-200 dark:bg-gray-800 flex items-center justify-center p-4 sm:p-6 min-h-[200px] sm:min-h-[300px]">
             {imageUrl ? (
               <img
                 src={imageUrl}
@@ -99,7 +99,7 @@ export default async function AnalysisDetailPage({
                 className="max-h-[280px] sm:max-h-[400px] w-auto rounded-lg object-contain"
               />
             ) : (
-              <div className="text-gray-600">No image</div>
+              <div className="text-gray-400 dark:text-gray-600">No image</div>
             )}
           </div>
 
@@ -114,10 +114,10 @@ export default async function AnalysisDetailPage({
                 {analysis.niche}
               </span>
             </div>
-            <p className="text-gray-300 text-sm leading-relaxed max-w-md">
+            <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed max-w-md">
               {result.summary}
             </p>
-            <p className="text-xs text-gray-600 mt-4">
+            <p className="text-xs text-gray-400 dark:text-gray-600 mt-4">
               {new Date(analysis.created_at).toLocaleDateString("en-US", {
                 weekday: "long",
                 month: "long",
@@ -130,8 +130,8 @@ export default async function AnalysisDetailPage({
       </section>
 
       {/* ========== SCORE BREAKDOWN ========== */}
-      <section className="bg-gray-900 border border-gray-800 rounded-2xl p-4 sm:p-8">
-        <h2 className="text-lg font-semibold text-white mb-4 sm:mb-6">Score Breakdown</h2>
+      <section className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-8">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 sm:mb-6">Score Breakdown</h2>
         <div className="space-y-4">
           {Object.entries(SCORE_LABELS).map(([key, label]) => {
             const data = result.scores?.[key];
@@ -151,8 +151,8 @@ export default async function AnalysisDetailPage({
       {/* ========== STRENGTHS & WEAKNESSES ========== */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Strengths */}
-        <section className="bg-gray-900 border border-gray-800 rounded-2xl p-4 sm:p-6">
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <section className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -164,15 +164,15 @@ export default async function AnalysisDetailPage({
                 <svg className="w-5 h-5 text-green-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-gray-300 text-sm">{s}</span>
+                <span className="text-gray-700 dark:text-gray-300 text-sm">{s}</span>
               </li>
             ))}
           </ul>
         </section>
 
         {/* Weaknesses */}
-        <section className="bg-gray-900 border border-gray-800 rounded-2xl p-4 sm:p-6">
-          <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <section className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -184,7 +184,7 @@ export default async function AnalysisDetailPage({
                 <svg className="w-5 h-5 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
-                <span className="text-gray-300 text-sm">{w}</span>
+                <span className="text-gray-700 dark:text-gray-300 text-sm">{w}</span>
               </li>
             ))}
           </ul>
@@ -192,8 +192,8 @@ export default async function AnalysisDetailPage({
       </div>
 
       {/* ========== RECOMMENDATIONS ========== */}
-      <section className="bg-gray-900 border border-gray-800 rounded-2xl p-4 sm:p-8">
-        <h2 className="text-lg font-semibold text-white mb-4 sm:mb-6">Recommendations</h2>
+      <section className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-8">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 sm:mb-6">Recommendations</h2>
         <div className="space-y-3">
           {result.recommendations
             ?.sort((a, b) => {
@@ -203,7 +203,7 @@ export default async function AnalysisDetailPage({
             .map((rec, i) => (
               <div
                 key={i}
-                className="flex items-start gap-3 sm:gap-4 bg-gray-800/50 border border-gray-800 rounded-xl p-3 sm:p-4"
+                className="flex items-start gap-3 sm:gap-4 bg-gray-100 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-800 rounded-xl p-3 sm:p-4"
               >
                 <span
                   className={`shrink-0 text-xs font-semibold px-2 sm:px-2.5 py-1 rounded-full border uppercase ${priorityColor(
@@ -212,7 +212,7 @@ export default async function AnalysisDetailPage({
                 >
                   {rec.priority}
                 </span>
-                <p className="text-gray-300 text-sm">{rec.action}</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm">{rec.action}</p>
               </div>
             ))}
         </div>
@@ -228,7 +228,7 @@ export default async function AnalysisDetailPage({
             </svg>
             Competitor Insight
           </h2>
-          <p className="text-gray-300 text-sm leading-relaxed">
+          <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
             {result.competitor_insight}
           </p>
         </section>
@@ -241,7 +241,7 @@ export default async function AnalysisDetailPage({
             </svg>
             Predicted CTR
           </h2>
-          <p className="text-2xl font-bold text-white mb-1">
+          <p className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
             {result.predicted_ctr_range}
           </p>
           <p className="text-xs text-gray-500">
@@ -272,7 +272,7 @@ export default async function AnalysisDetailPage({
         />
         <button
           disabled
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gray-800 border border-gray-700 text-gray-500 font-medium rounded-lg cursor-not-allowed text-sm"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 font-medium rounded-lg cursor-not-allowed text-sm"
           title="Coming soon"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

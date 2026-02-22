@@ -68,20 +68,20 @@ export default async function HistoryPage({
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Analysis History</h1>
-        <p className="text-gray-400 mt-1">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Analysis History</h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-1">
           {totalCount} {totalCount === 1 ? "analysis" : "analyses"} total
         </p>
       </div>
 
       {!analyses || analyses.length === 0 ? (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-12 text-center">
-          <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-12 text-center">
+          <div className="w-16 h-16 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 className="text-white font-medium mb-1">No analyses yet</h3>
+          <h3 className="text-gray-900 dark:text-white font-medium mb-1">No analyses yet</h3>
           <p className="text-gray-500 text-sm mb-4">
             Your analysis history will appear here once you create your first one.
           </p>
@@ -100,9 +100,9 @@ export default async function HistoryPage({
               <Link
                 key={analysis.id}
                 href={`/analysis/${analysis.id}`}
-                className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-700 transition group"
+                className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:border-gray-300 dark:hover:border-gray-700 transition group"
               >
-                <div className="aspect-video bg-gray-800 relative">
+                <div className="aspect-video bg-gray-200 dark:bg-gray-800 relative">
                   {signedUrls[analysis.id] ? (
                     <img
                       src={signedUrls[analysis.id]}
@@ -111,7 +111,7 @@ export default async function HistoryPage({
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <svg className="w-10 h-10 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-10 h-10 text-gray-400 dark:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </div>
@@ -122,10 +122,10 @@ export default async function HistoryPage({
                 </div>
                 <div className="p-4">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-medium text-blue-400 uppercase">
+                    <span className="text-xs font-medium text-blue-600 dark:text-blue-400 uppercase">
                       {analysis.platform}
                     </span>
-                    <span className="text-gray-700">·</span>
+                    <span className="text-gray-400 dark:text-gray-700">·</span>
                     <span className="text-xs text-gray-500 capitalize">
                       {analysis.niche}
                     </span>
@@ -148,7 +148,7 @@ export default async function HistoryPage({
               {currentPage > 1 && (
                 <Link
                   href={`/history?page=${currentPage - 1}`}
-                  className="px-3 py-2 text-sm text-gray-400 bg-gray-900 border border-gray-800 rounded-lg hover:bg-gray-800 hover:text-white transition"
+                  className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition"
                 >
                   Previous
                 </Link>
@@ -160,7 +160,7 @@ export default async function HistoryPage({
                   className={`px-3 py-2 text-sm rounded-lg transition ${
                     page === currentPage
                       ? "bg-blue-600 text-white"
-                      : "text-gray-400 bg-gray-900 border border-gray-800 hover:bg-gray-800 hover:text-white"
+                      : "text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                   }`}
                 >
                   {page}
@@ -169,7 +169,7 @@ export default async function HistoryPage({
               {currentPage < totalPages && (
                 <Link
                   href={`/history?page=${currentPage + 1}`}
-                  className="px-3 py-2 text-sm text-gray-400 bg-gray-900 border border-gray-800 rounded-lg hover:bg-gray-800 hover:text-white transition"
+                  className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition"
                 >
                   Next
                 </Link>

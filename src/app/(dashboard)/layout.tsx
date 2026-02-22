@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ToastProvider } from "@/components/toast";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const navItems = [
   {
@@ -71,7 +72,7 @@ export default function DashboardLayout({
 
   return (
     <ToastProvider>
-    <div className="min-h-screen bg-gray-950 flex">
+    <div className="min-h-screen bg-white dark:bg-gray-950 flex">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -82,15 +83,15 @@ export default function DashboardLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 border-r border-gray-800 transform transition-transform duration-200 lg:translate-x-0 lg:static lg:z-auto ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transform transition-transform duration-200 lg:translate-x-0 lg:static lg:z-auto ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="p-6 border-b border-gray-800">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-800">
             <Link href="/dashboard" className="flex items-center gap-2">
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
                 AdScore AI
               </span>
             </Link>
@@ -109,8 +110,8 @@ export default function DashboardLayout({
                   onClick={() => setSidebarOpen(false)}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
                     isActive
-                      ? "bg-blue-600/10 text-blue-400"
-                      : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                      ? "bg-blue-600/10 text-blue-600 dark:text-blue-400"
+                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
                   }`}
                 >
                   {item.icon}
@@ -121,11 +122,11 @@ export default function DashboardLayout({
           </nav>
 
           {/* User section */}
-          <div className="p-4 border-t border-gray-800">
-            <div className="text-sm text-gray-400 truncate mb-2">{userEmail}</div>
+          <div className="p-4 border-t border-gray-200 dark:border-gray-800">
+            <div className="text-sm text-gray-500 dark:text-gray-400 truncate mb-2">{userEmail}</div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-400 transition w-full"
+              className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition w-full"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -139,21 +140,22 @@ export default function DashboardLayout({
       {/* Main content */}
       <div className="flex-1 flex flex-col min-h-screen">
         {/* Top bar */}
-        <header className="h-14 sm:h-16 border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
+        <header className="h-14 sm:h-16 border-b border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-400 hover:text-white transition"
+            className="lg:hidden text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
           <div className="hidden lg:block" />
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-400 hidden sm:block">{userEmail}</span>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <span className="text-sm text-gray-500 dark:text-gray-400 hidden sm:block">{userEmail}</span>
             <button
               onClick={handleLogout}
-              className="text-sm text-gray-500 hover:text-red-400 transition hidden sm:block"
+              className="text-sm text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition hidden sm:block"
             >
               Log out
             </button>

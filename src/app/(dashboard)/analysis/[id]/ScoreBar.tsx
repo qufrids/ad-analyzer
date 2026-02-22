@@ -32,9 +32,9 @@ export default function ScoreBar({
     >
       <div className="flex items-center justify-between mb-1.5">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-300">{label}</span>
+          <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
           <svg
-            className={`w-3.5 h-3.5 text-gray-600 transition-transform ${
+            className={`w-3.5 h-3.5 text-gray-400 dark:text-gray-600 transition-transform ${
               expanded ? "rotate-180" : ""
             }`}
             fill="none"
@@ -48,7 +48,7 @@ export default function ScoreBar({
           {score}
         </span>
       </div>
-      <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+      <div className="w-full h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-700 ease-out ${barColor(score)}`}
           style={{ width: `${score}%` }}
@@ -59,7 +59,7 @@ export default function ScoreBar({
           expanded ? "max-h-40 opacity-100 mt-2" : "max-h-0 opacity-0"
         }`}
       >
-        <p className="text-sm text-gray-400 leading-relaxed bg-gray-800/50 rounded-lg p-3">
+        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed bg-gray-100 dark:bg-gray-800/50 rounded-lg p-3">
           {feedback}
         </p>
       </div>

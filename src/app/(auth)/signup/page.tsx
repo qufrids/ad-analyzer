@@ -51,9 +51,9 @@ export default function SignUpPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
         </div>
-        <h2 className="text-xl font-semibold text-white mb-2">Check your email</h2>
-        <p className="text-gray-400 text-sm mb-6">
-          We sent a confirmation link to <span className="text-white">{email}</span>. Click the link to activate your account.
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Check your email</h2>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
+          We sent a confirmation link to <span className="text-gray-900 dark:text-white">{email}</span>. Click the link to activate your account.
         </p>
         <Link
           href="/login"
@@ -67,11 +67,11 @@ export default function SignUpPage() {
 
   return (
     <>
-      <h2 className="text-xl font-semibold text-white mb-6">Create your account</h2>
+      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Create your account</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Full name
           </label>
           <input
@@ -80,13 +80,13 @@ export default function SignUpPage() {
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             required
-            className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            className="w-full px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
             placeholder="John Doe"
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Email
           </label>
           <input
@@ -95,13 +95,13 @@ export default function SignUpPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            className="w-full px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
             placeholder="you@example.com"
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Password
           </label>
           <input
@@ -111,14 +111,14 @@ export default function SignUpPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            className="w-full px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
             placeholder="••••••••"
           />
           <p className="mt-1 text-xs text-gray-500">Minimum 6 characters</p>
         </div>
 
         {error && (
-          <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-2">
+          <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-400/10 border border-red-200 dark:border-red-400/20 rounded-lg px-4 py-2">
             {error}
           </p>
         )}
@@ -132,9 +132,9 @@ export default function SignUpPage() {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-gray-400">
+      <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
         Already have an account?{" "}
-        <Link href="/login" className="text-blue-400 hover:text-blue-300 transition">
+        <Link href="/login" className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition">
           Sign in
         </Link>
       </p>

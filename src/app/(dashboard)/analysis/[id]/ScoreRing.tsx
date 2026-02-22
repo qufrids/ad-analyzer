@@ -47,7 +47,7 @@ export default function ScoreRing({ score }: { score: number }) {
           fill="none"
           stroke="currentColor"
           strokeWidth="10"
-          className="text-gray-800"
+          className="text-gray-200 dark:text-gray-800"
         />
         {/* Score arc */}
         <circle

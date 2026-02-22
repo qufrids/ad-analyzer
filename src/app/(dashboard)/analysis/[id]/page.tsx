@@ -23,7 +23,7 @@ function priorityColor(priority: string) {
     case "low":
       return "text-blue-400 bg-blue-400/10 border-blue-400/20";
     default:
-      return "text-gray-400 bg-gray-800 border-gray-700";
+      return "text-gray-500 bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700";
   }
 }
 

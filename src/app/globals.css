@@ -6,8 +6,18 @@ html {
   scroll-behavior: smooth;
 }
 
-/* ── Dark theme (default) ── */
-:root,
+/* ── Light theme (default) ── */
+:root {
+  --bg: #FFFFFF;
+  --surface: #F4F4F5;
+  --border: rgba(0,0,0,0.08);
+  --text: #09090B;
+  --muted: #52525B;
+  --dim: #A1A1AA;
+  --accent: #16A34A;
+}
+
+/* ── Dark theme ── */
 .dark {
   --bg: #09090B;
   --surface: #18181B;
@@ -16,17 +26,6 @@ html {
   --muted: #A1A1AA;
   --dim: #52525B;
   --accent: #22C55E;
-}
-
-/* ── Light theme ── */
-.light {
-  --bg: #FFFFFF;
-  --surface: #F4F4F5;
-  --border: rgba(0,0,0,0.08);
-  --text: #09090B;
-  --muted: #52525B;
-  --dim: #A1A1AA;
-  --accent: #16A34A;
 }
 
 body {

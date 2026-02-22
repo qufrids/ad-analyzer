@@ -8,13 +8,13 @@ html {
 
 /* ── Light theme (default) ── */
 :root {
-  --bg: #FFFFFF;
-  --surface: #F4F4F5;
-  --border: rgba(0,0,0,0.08);
-  --text: #09090B;
-  --muted: #52525B;
-  --dim: #A1A1AA;
-  --accent: #16A34A;
+  --bg: #F8FAFC;          /* slate-50 off-white — editorial feel */
+  --surface: #FFFFFF;     /* white card surfaces */
+  --border: rgba(15,23,42,0.06);  /* slate-tinted whisper borders */
+  --text: #0F172A;        /* slate-900 near-black — warmer than pure */
+  --muted: #64748B;       /* slate-500 — proper body contrast */
+  --dim: #94A3B8;         /* slate-400 — muted labels */
+  --accent: #16A34A;      /* green-700 — premium in light mode */
 }
 
 /* ── Dark theme ── */
@@ -39,8 +39,8 @@ body {
 
 /* Premium selection color */
 ::selection {
-  background: rgba(34, 197, 94, 0.2);
-  color: #fff;
+  background: rgba(22, 163, 74, 0.15);
+  color: inherit;
 }
 
 /* Scrollbar */

@@ -31,7 +31,7 @@ export default function ClientNavbar() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
           solid
-            ? "bg-[var(--bg)]/90 backdrop-blur-md border-b border-black/[0.06] dark:border-white/[0.06]"
+            ? "bg-[#F8FAFC]/95 dark:bg-[#09090B]/95 backdrop-blur-md border-b border-slate-100 dark:border-white/[0.06] shadow-sm dark:shadow-none"
             : "bg-transparent"
         }`}
       >
@@ -46,7 +46,7 @@ export default function ClientNavbar() {
                 strokeLinejoin="round"
               />
             </svg>
-            <span className="text-[15px] font-bold text-zinc-900 dark:text-white tracking-tight leading-none">
+            <span className="text-[15px] font-bold text-slate-900 dark:text-white tracking-tight leading-none">
               AdScore
             </span>
           </Link>
@@ -57,7 +57,7 @@ export default function ClientNavbar() {
               <Link
                 key={l.label}
                 href={l.href}
-                className="text-[13px] text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors duration-150"
+                className="text-[13px] text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors duration-150"
               >
                 {l.label}
               </Link>
@@ -69,13 +69,13 @@ export default function ClientNavbar() {
             <ThemeToggle />
             <Link
               href="/login"
-              className="text-[13px] text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors duration-150"
+              className="text-[13px] text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors duration-150"
             >
               Sign in
             </Link>
             <Link
               href="/signup"
-              className="inline-flex items-center gap-1.5 text-[13px] px-4 py-2 bg-white text-zinc-900 font-semibold rounded-lg hover:bg-zinc-100 transition-colors duration-150"
+              className="inline-flex items-center gap-1.5 text-[13px] px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-zinc-900 font-semibold rounded-lg hover:bg-slate-800 dark:hover:bg-zinc-100 transition-colors duration-150 shadow-sm"
             >
               Start Free
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,7 +89,7 @@ export default function ClientNavbar() {
             <ThemeToggle />
             <button
               onClick={() => setOpen(!open)}
-              className="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+              className="p-2 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors"
               aria-label="Menu"
             >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -145,14 +145,14 @@ export default function ClientNavbar() {
                 <Link
                   href="/login"
                   onClick={() => setOpen(false)}
-                  className="block text-center py-3 text-sm text-zinc-600 dark:text-zinc-400 border border-black/[0.08] dark:border-white/[0.08] rounded-lg hover:text-zinc-900 dark:hover:text-white hover:border-black/[0.16] dark:hover:border-white/[0.16] transition-colors"
+                  className="block text-center py-3 text-sm text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-white/[0.08] rounded-lg hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-white/[0.16] transition-colors"
                 >
                   Sign in
                 </Link>
                 <Link
                   href="/signup"
                   onClick={() => setOpen(false)}
-                  className="block text-center py-3 text-sm font-semibold bg-white text-zinc-900 rounded-lg hover:bg-zinc-100 transition-colors"
+                  className="block text-center py-3 text-sm font-semibold bg-slate-900 dark:bg-white text-white dark:text-zinc-900 rounded-lg hover:bg-slate-800 dark:hover:bg-zinc-100 transition-colors"
                 >
                   Start Free
                 </Link>

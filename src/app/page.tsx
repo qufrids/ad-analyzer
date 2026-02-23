@@ -773,6 +773,302 @@ export default function LandingPage() {
       </section>
 
       {/* ══════════════════════════════════════
+          § 5.5  AI IMPROVER FEATURE
+      ══════════════════════════════════════ */}
+      <section className="py-24 sm:py-36 bg-zinc-950 border-y border-white/[0.05] overflow-hidden relative">
+        {/* Ambient cyan glow */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] opacity-[0.045]"
+          style={{ background: "radial-gradient(ellipse at 50% 0%, #06B6D4 0%, transparent 70%)" }}
+        />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+
+          {/* ── Section Header ── */}
+          <ScrollReveal>
+            <div className="text-center mb-14 sm:mb-18">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-cyan-500/20 bg-cyan-500/[0.06]">
+                <svg className="w-3 h-3 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span className="text-[12px] font-semibold text-cyan-400 tracking-wide">AI Ad Improver</span>
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.06] text-white mb-5">
+                Don&rsquo;t Just Score Your Ads.
+                <br />
+                <span className="text-cyan-400">Fix Them in One Click.</span>
+              </h2>
+              <p className="text-zinc-400 text-[17px] leading-[1.75] max-w-2xl mx-auto">
+                Other tools tell you what&rsquo;s wrong. We rewrite your entire ad — headlines, copy, CTAs, and hooks — ready to paste into your ad manager.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          {/* ── Before / After Mockup Card ── */}
+          <ScrollReveal>
+            <div className="relative max-w-4xl mx-auto mb-12">
+              {/* Soft cyan glow behind the card */}
+              <div
+                aria-hidden
+                className="absolute -inset-6 sm:-inset-10 rounded-3xl blur-3xl opacity-[0.12] pointer-events-none"
+                style={{ background: "radial-gradient(ellipse, #06B6D4 0%, transparent 70%)" }}
+              />
+
+              <div className="relative bg-zinc-900 border border-cyan-500/[0.18] rounded-2xl overflow-hidden shadow-2xl shadow-black/40">
+                {/* Top accent line */}
+                <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-cyan-500/30 via-cyan-400/70 to-cyan-500/30" />
+
+                {/* Card header */}
+                <div className="flex items-center justify-between px-5 sm:px-7 py-4 border-b border-white/[0.06]">
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#28CA41]" />
+                    </div>
+                    <span className="text-[11px] text-zinc-500 font-mono ml-1">AI Improver — Summer_Campaign.jpg</span>
+                  </div>
+                  <span className="flex items-center gap-1.5 text-[10px] text-cyan-400 font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse-dot" />
+                    Improvement ready
+                  </span>
+                </div>
+
+                <div className="p-5 sm:p-7">
+                  <div className="grid grid-cols-1 sm:grid-cols-[1fr_52px_1fr] gap-5 items-stretch">
+
+                    {/* LEFT — Original weak ad */}
+                    <div className="bg-zinc-800/60 border border-red-500/[0.18] rounded-xl p-4 sm:p-5">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-[10px] font-bold text-red-400 uppercase tracking-[0.14em]">Original Ad</span>
+                        <span className="text-[11px] font-black text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full">45</span>
+                      </div>
+                      <div className="bg-zinc-700/40 border border-white/[0.05] rounded-xl p-3.5 mb-4">
+                        <p className="text-[13px] font-bold text-white/50 mb-2">Buy Our Product Now</p>
+                        <p className="text-[11px] text-zinc-600 leading-relaxed mb-3">
+                          We sell great products that you will love. Check out our store and buy today for amazing deals.
+                        </p>
+                        <div className="inline-flex items-center px-3 py-1.5 bg-zinc-600/40 border border-white/[0.05] rounded-md">
+                          <span className="text-[11px] text-zinc-500">Click Here</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {[
+                          "Generic, benefit-free headline",
+                          "Zero social proof or trust",
+                          "Vague CTA drives no action",
+                        ].map((issue) => (
+                          <div key={issue} className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
+                              <svg className="w-1.5 h-1.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </div>
+                            <span className="text-[11px] text-zinc-600">{issue}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Middle arrow divider */}
+                    <div className="hidden sm:flex flex-col items-center justify-center gap-2">
+                      <div className="flex-1 w-px bg-gradient-to-b from-transparent via-cyan-500/25 to-transparent" />
+                      <div className="w-9 h-9 rounded-full bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center shrink-0">
+                        <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                      </div>
+                      <div className="flex-1 w-px bg-gradient-to-b from-transparent via-cyan-500/25 to-transparent" />
+                    </div>
+                    <div className="sm:hidden flex items-center justify-center py-1">
+                      <div className="w-9 h-9 rounded-full bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center">
+                        <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* RIGHT — AI improved version */}
+                    <div className="bg-cyan-500/[0.04] border border-cyan-500/[0.20] rounded-xl p-4 sm:p-5 relative">
+                      <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-cyan-500/20 via-cyan-400/50 to-cyan-500/20 rounded-t-xl" />
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="flex items-center gap-1.5 text-[10px] font-bold text-cyan-400 uppercase tracking-[0.14em]">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                          AI Improved
+                        </span>
+                        <span className="text-[11px] font-black text-green-400 bg-green-500/10 border border-green-500/20 px-2 py-0.5 rounded-full">92</span>
+                      </div>
+                      <div className="bg-cyan-500/[0.05] border border-cyan-500/[0.10] rounded-xl p-3.5 mb-4">
+                        <p className="text-[13px] font-bold text-white mb-2">Transform Your Workflow in 5 Minutes</p>
+                        <p className="text-[11px] text-zinc-300 leading-relaxed mb-3">
+                          Join 12,000+ teams who cut their workload in half. No setup, no learning curve — results from day one.
+                        </p>
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-cyan-500/20 border border-cyan-500/30 rounded-md">
+                          <span className="text-[11px] font-bold text-cyan-300">Start Free Trial →</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {[
+                          "Outcome-driven, specific headline",
+                          "12,000+ social proof embedded",
+                          "Direction + urgency in CTA",
+                        ].map((s) => (
+                          <div key={s} className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center shrink-0">
+                              <svg className="w-1.5 h-1.5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                            <span className="text-[11px] text-zinc-400">{s}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* ── Feature Pills ── */}
+          <ScrollReveal delay={0.05}>
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-14">
+              {[
+                { icon: "✍️", label: "3 Headline Options" },
+                { icon: "📝", label: "Ready-to-Paste Copy" },
+                { icon: "🎣", label: "5 Hook Variations" },
+                { icon: "📋", label: "3 Ad Frameworks (PAS, AIDA, BAB)" },
+              ].map((p) => (
+                <span
+                  key={p.label}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-white/[0.03] border border-white/[0.08] rounded-full text-[13px] text-zinc-400"
+                >
+                  <span>{p.icon}</span>
+                  {p.label}
+                </span>
+              ))}
+            </div>
+          </ScrollReveal>
+
+          {/* ── 3 Preview Cards ── */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
+
+            {/* Card 1 — Headlines */}
+            <ScrollReveal delay={0.04}>
+              <div className="bg-zinc-900 border border-white/[0.07] rounded-xl p-5 h-full hover:border-cyan-500/[0.18] transition-colors duration-200">
+                <div className="flex items-center gap-2 mb-5">
+                  <div className="w-6 h-6 rounded-md bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                    <svg className="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-[13px] font-semibold text-white">Headlines That Convert</h3>
+                </div>
+                <div className="space-y-3">
+                  {[
+                    "Stop Scrolling. Your Skin Deserves This.",
+                    "10,000 Women Switched. Here\u2019s Why.",
+                    "Still Using Products That Don\u2019t Work?",
+                  ].map((h, i) => (
+                    <div key={i} className="flex items-start justify-between gap-3 group py-2.5 border-b border-white/[0.05] last:border-0">
+                      <p className="text-[12px] text-zinc-300 leading-snug">{h}</p>
+                      <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="w-6 h-6 rounded-md bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
+                          <svg className="w-3 h-3 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
+
+            {/* Card 2 — Hooks */}
+            <ScrollReveal delay={0.08}>
+              <div className="bg-zinc-900 border border-white/[0.07] rounded-xl p-5 h-full hover:border-cyan-500/[0.18] transition-colors duration-200">
+                <div className="flex items-center gap-2 mb-5">
+                  <div className="w-6 h-6 rounded-md bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
+                    <svg className="w-3.5 h-3.5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-[13px] font-semibold text-white">Hooks That Stop The Scroll</h3>
+                </div>
+                <div className="space-y-3">
+                  {[
+                    { text: "Did you know 67% of ads fail in the first 3 seconds?", type: "Statistic", color: "bg-green-500/10 text-green-400 border-green-500/20" },
+                    { text: "What if your next ad could 3\u00d7 your ROAS overnight?", type: "Curiosity", color: "bg-purple-500/10 text-purple-400 border-purple-500/20" },
+                    { text: "You\u2019re wasting £50/day on ads that don\u2019t convert.", type: "Pain Point", color: "bg-red-500/10 text-red-400 border-red-500/20" },
+                  ].map((hook, i) => (
+                    <div key={i} className="py-2.5 border-b border-white/[0.05] last:border-0">
+                      <span className={`inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border mb-2 ${hook.color}`}>
+                        {hook.type}
+                      </span>
+                      <p className="text-[12px] text-zinc-300 leading-snug">{hook.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ScrollReveal>
+
+            {/* Card 3 — Frameworks */}
+            <ScrollReveal delay={0.12}>
+              <div className="bg-zinc-900 border border-white/[0.07] rounded-xl p-5 h-full hover:border-cyan-500/[0.18] transition-colors duration-200">
+                <div className="flex items-center gap-2 mb-5">
+                  <div className="w-6 h-6 rounded-md bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                    <svg className="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-[13px] font-semibold text-white">Complete Ad Frameworks</h3>
+                </div>
+                <div className="space-y-2">
+                  {[
+                    { label: "PAS Framework", preview: "You\u2019re losing customers every day your ad copy stays weak..." },
+                    { label: "AIDA Framework", preview: "What if one sentence could triple your click-through rate?" },
+                    { label: "BAB Framework", preview: "Before AdScore, our creative dud rate was 62%..." },
+                  ].map((fw, i) => (
+                    <div key={i} className="bg-white/[0.02] border border-white/[0.06] rounded-lg p-3">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[11px] font-bold text-blue-400">{fw.label}</span>
+                      </div>
+                      <p className="text-[11px] text-zinc-600 leading-snug line-clamp-1">{fw.preview}</p>
+                    </div>
+                  ))}
+                  <p className="text-[11px] text-zinc-600 text-center pt-1">Copy Full Ad →</p>
+                </div>
+              </div>
+            </ScrollReveal>
+
+          </div>
+
+          {/* ── Final CTA ── */}
+          <ScrollReveal delay={0.08}>
+            <div className="text-center">
+              <Link
+                href="/signup"
+                className="inline-flex items-center gap-2.5 px-8 py-4 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-bold text-[15px] rounded-xl shadow-lg shadow-blue-900/40 transition-all duration-200"
+              >
+                Try the AI Ad Improver Free
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+              <p className="mt-3 text-[12px] text-zinc-600">Get 1 free improvement with every account</p>
+            </div>
+          </ScrollReveal>
+
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════
           § 6  WORKFLOW
       ══════════════════════════════════════ */}
       <section id="workflow" className="py-24 sm:py-36 border-t border-slate-100 dark:border-white/[0.05]">

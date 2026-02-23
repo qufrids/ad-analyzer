@@ -775,11 +775,11 @@ export default function LandingPage() {
       {/* ══════════════════════════════════════
           § 5.5  AI IMPROVER FEATURE
       ══════════════════════════════════════ */}
-      <section className="py-24 sm:py-36 bg-zinc-950 border-y border-white/[0.05] overflow-hidden relative">
+      <section className="py-24 sm:py-36 bg-[#F8FAFC] dark:bg-zinc-950 border-y border-slate-100 dark:border-white/[0.05] overflow-hidden relative">
         {/* Ambient cyan glow */}
         <div
           aria-hidden
-          className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] opacity-[0.045]"
+          className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] opacity-[0.025] dark:opacity-[0.045]"
           style={{ background: "radial-gradient(ellipse at 50% 0%, #06B6D4 0%, transparent 70%)" }}
         />
 
@@ -788,19 +788,19 @@ export default function LandingPage() {
           {/* ── Section Header ── */}
           <ScrollReveal>
             <div className="text-center mb-14 sm:mb-18">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-cyan-500/20 bg-cyan-500/[0.06]">
-                <svg className="w-3 h-3 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-cyan-600/20 dark:border-cyan-500/20 bg-cyan-50 dark:bg-cyan-500/[0.06]">
+                <svg className="w-3 h-3 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
-                <span className="text-[12px] font-semibold text-cyan-400 tracking-wide">AI Ad Improver</span>
+                <span className="text-[12px] font-semibold text-cyan-600 dark:text-cyan-400 tracking-wide">AI Ad Improver</span>
               </div>
 
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.06] text-white mb-5">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.06] text-slate-900 dark:text-white mb-5">
                 Don&rsquo;t Just Score Your Ads.
                 <br />
-                <span className="text-cyan-400">Fix Them in One Click.</span>
+                <span className="text-cyan-500 dark:text-cyan-400">Fix Them in One Click.</span>
               </h2>
-              <p className="text-zinc-400 text-[17px] leading-[1.75] max-w-2xl mx-auto">
+              <p className="text-slate-500 dark:text-zinc-400 text-[17px] leading-[1.75] max-w-2xl mx-auto">
                 Other tools tell you what&rsquo;s wrong. We rewrite your entire ad — headlines, copy, CTAs, and hooks — ready to paste into your ad manager.
               </p>
             </div>
@@ -946,7 +946,7 @@ export default function LandingPage() {
               ].map((p) => (
                 <span
                   key={p.label}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-white/[0.03] border border-white/[0.08] rounded-full text-[13px] text-zinc-400"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.08] rounded-full text-[13px] text-slate-500 dark:text-zinc-400 shadow-sm dark:shadow-none"
                 >
                   <span>{p.icon}</span>
                   {p.label}
@@ -960,14 +960,14 @@ export default function LandingPage() {
 
             {/* Card 1 — Headlines */}
             <ScrollReveal delay={0.04}>
-              <div className="bg-zinc-900 border border-white/[0.07] rounded-xl p-5 h-full hover:border-cyan-500/[0.18] transition-colors duration-200">
+              <div className="bg-white dark:bg-zinc-900 border border-slate-100 dark:border-white/[0.07] rounded-xl p-5 h-full shadow-sm dark:shadow-none hover:border-cyan-400/30 dark:hover:border-cyan-500/[0.18] hover:shadow-md dark:hover:shadow-none transition-all duration-200">
                 <div className="flex items-center gap-2 mb-5">
-                  <div className="w-6 h-6 rounded-md bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
-                    <svg className="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-6 h-6 rounded-md bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/20 flex items-center justify-center">
+                    <svg className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                   </div>
-                  <h3 className="text-[13px] font-semibold text-white">Headlines That Convert</h3>
+                  <h3 className="text-[13px] font-semibold text-slate-900 dark:text-white">Headlines That Convert</h3>
                 </div>
                 <div className="space-y-3">
                   {[
@@ -975,11 +975,11 @@ export default function LandingPage() {
                     "10,000 Women Switched. Here\u2019s Why.",
                     "Still Using Products That Don\u2019t Work?",
                   ].map((h, i) => (
-                    <div key={i} className="flex items-start justify-between gap-3 group py-2.5 border-b border-white/[0.05] last:border-0">
-                      <p className="text-[12px] text-zinc-300 leading-snug">{h}</p>
+                    <div key={i} className="flex items-start justify-between gap-3 group py-2.5 border-b border-slate-100 dark:border-white/[0.05] last:border-0">
+                      <p className="text-[12px] text-slate-600 dark:text-zinc-300 leading-snug">{h}</p>
                       <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="w-6 h-6 rounded-md bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
-                          <svg className="w-3 h-3 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-6 h-6 rounded-md bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center justify-center">
+                          <svg className="w-3 h-3 text-slate-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                           </svg>
                         </div>
@@ -992,14 +992,14 @@ export default function LandingPage() {
 
             {/* Card 2 — Hooks */}
             <ScrollReveal delay={0.08}>
-              <div className="bg-zinc-900 border border-white/[0.07] rounded-xl p-5 h-full hover:border-cyan-500/[0.18] transition-colors duration-200">
+              <div className="bg-white dark:bg-zinc-900 border border-slate-100 dark:border-white/[0.07] rounded-xl p-5 h-full shadow-sm dark:shadow-none hover:border-cyan-400/30 dark:hover:border-cyan-500/[0.18] hover:shadow-md dark:hover:shadow-none transition-all duration-200">
                 <div className="flex items-center gap-2 mb-5">
-                  <div className="w-6 h-6 rounded-md bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
-                    <svg className="w-3.5 h-3.5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-6 h-6 rounded-md bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 flex items-center justify-center">
+                    <svg className="w-3.5 h-3.5 text-orange-500 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                   </div>
-                  <h3 className="text-[13px] font-semibold text-white">Hooks That Stop The Scroll</h3>
+                  <h3 className="text-[13px] font-semibold text-slate-900 dark:text-white">Hooks That Stop The Scroll</h3>
                 </div>
                 <div className="space-y-3">
                   {[
@@ -1007,11 +1007,11 @@ export default function LandingPage() {
                     { text: "What if your next ad could 3\u00d7 your ROAS overnight?", type: "Curiosity", color: "bg-purple-500/10 text-purple-400 border-purple-500/20" },
                     { text: "You\u2019re wasting £50/day on ads that don\u2019t convert.", type: "Pain Point", color: "bg-red-500/10 text-red-400 border-red-500/20" },
                   ].map((hook, i) => (
-                    <div key={i} className="py-2.5 border-b border-white/[0.05] last:border-0">
+                    <div key={i} className="py-2.5 border-b border-slate-100 dark:border-white/[0.05] last:border-0">
                       <span className={`inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border mb-2 ${hook.color}`}>
                         {hook.type}
                       </span>
-                      <p className="text-[12px] text-zinc-300 leading-snug">{hook.text}</p>
+                      <p className="text-[12px] text-slate-600 dark:text-zinc-300 leading-snug">{hook.text}</p>
                     </div>
                   ))}
                 </div>
@@ -1020,14 +1020,14 @@ export default function LandingPage() {
 
             {/* Card 3 — Frameworks */}
             <ScrollReveal delay={0.12}>
-              <div className="bg-zinc-900 border border-white/[0.07] rounded-xl p-5 h-full hover:border-cyan-500/[0.18] transition-colors duration-200">
+              <div className="bg-white dark:bg-zinc-900 border border-slate-100 dark:border-white/[0.07] rounded-xl p-5 h-full shadow-sm dark:shadow-none hover:border-cyan-400/30 dark:hover:border-cyan-500/[0.18] hover:shadow-md dark:hover:shadow-none transition-all duration-200">
                 <div className="flex items-center gap-2 mb-5">
-                  <div className="w-6 h-6 rounded-md bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                    <svg className="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-6 h-6 rounded-md bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 flex items-center justify-center">
+                    <svg className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
-                  <h3 className="text-[13px] font-semibold text-white">Complete Ad Frameworks</h3>
+                  <h3 className="text-[13px] font-semibold text-slate-900 dark:text-white">Complete Ad Frameworks</h3>
                 </div>
                 <div className="space-y-2">
                   {[
@@ -1035,14 +1035,14 @@ export default function LandingPage() {
                     { label: "AIDA Framework", preview: "What if one sentence could triple your click-through rate?" },
                     { label: "BAB Framework", preview: "Before AdScore, our creative dud rate was 62%..." },
                   ].map((fw, i) => (
-                    <div key={i} className="bg-white/[0.02] border border-white/[0.06] rounded-lg p-3">
+                    <div key={i} className="bg-slate-50 dark:bg-white/[0.02] border border-slate-100 dark:border-white/[0.06] rounded-lg p-3">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[11px] font-bold text-blue-400">{fw.label}</span>
+                        <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400">{fw.label}</span>
                       </div>
-                      <p className="text-[11px] text-zinc-600 leading-snug line-clamp-1">{fw.preview}</p>
+                      <p className="text-[11px] text-slate-400 dark:text-zinc-600 leading-snug line-clamp-1">{fw.preview}</p>
                     </div>
                   ))}
-                  <p className="text-[11px] text-zinc-600 text-center pt-1">Copy Full Ad →</p>
+                  <p className="text-[11px] text-slate-400 dark:text-zinc-600 text-center pt-1">Copy Full Ad →</p>
                 </div>
               </div>
             </ScrollReveal>

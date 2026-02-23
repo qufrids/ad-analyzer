@@ -4,6 +4,7 @@ import Link from "next/link";
 import ScoreRing from "./ScoreRing";
 import ScoreBar from "./ScoreBar";
 import DownloadPDF from "./DownloadPDF";
+import AdImprover from "./AdImprover";
 
 const SCORE_LABELS: Record<string, string> = {
   visual_impact: "Visual Impact",
@@ -48,6 +49,16 @@ export default async function AnalysisDetailPage({
     .single();
 
   if (!analysis) notFound();
+
+  // Fetch profile for improvement credits
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("subscription_status, improvements_remaining")
+    .eq("id", user.id)
+    .single();
+
+  const isPro = profile?.subscription_status === "active";
+  const improvementsRemaining = profile?.improvements_remaining ?? 0;
 
   // Generate signed URL for the image (bucket is private)
   let imageUrl = "";
@@ -280,6 +291,16 @@ export default async function AnalysisDetailPage({
           </svg>
           Share
         </button>
+      </div>
+
+      {/* ========== AI IMPROVER ========== */}
+      <div className="border-t border-gray-200 dark:border-gray-800 pt-8">
+        <AdImprover
+          analysisId={analysis.id}
+          existingResult={analysis.improvement_result ?? null}
+          improvementsRemaining={improvementsRemaining}
+          isPro={isPro}
+        />
       </div>
     </div>
   );

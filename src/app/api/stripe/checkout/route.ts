@@ -6,7 +6,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-01-28.clover",
 });
 
-export async function POST() {
+export async function POST(req: Request) {
+  const origin = new URL(req.url).origin;
   try {
     const supabase = createClient();
 
@@ -58,8 +59,8 @@ export async function POST() {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?upgraded=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
+      success_url: `${origin}/dashboard?upgraded=true`,
+      cancel_url: `${origin}/settings`,
     });
 
     return NextResponse.json({ url: session.url });

@@ -5,15 +5,25 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 
-const LINKS = [
-  { label: "Product", href: "#features" },
-  { label: "Pricing", href: "#pricing" },
+const FEATURE_LINKS = [
+  { label: "Ad Analysis",        href: "#features",          icon: "📊" },
+  { label: "AI Ad Improver",     href: "#ai-improver",       icon: "✨" },
+  { label: "A/B Compare",        href: "#ab-compare",        icon: "⚔️" },
+  { label: "Competitor Spy",     href: "#competitor-spy",    icon: "🕵️" },
+  { label: "Swipe File",         href: "#swipe-file",        icon: "📂" },
+  { label: "Generate from URL",  href: "#generate-from-url", icon: "🔗" },
+  { label: "Performance Tracker",href: "#tracker",           icon: "📈" },
+];
+
+const NAV_LINKS = [
+  { label: "Pricing",      href: "#pricing"  },
   { label: "How It Works", href: "#workflow" },
 ];
 
 export default function ClientNavbar() {
   const [open, setOpen] = useState(false);
   const [solid, setSolid] = useState(false);
+  const [featuresOpen, setFeaturesOpen] = useState(false);
 
   useEffect(() => {
     const fn = () => setSolid(window.scrollY > 16);
@@ -40,11 +50,7 @@ export default function ClientNavbar() {
           <Link href="/" className="flex items-center gap-2.5 shrink-0">
             <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
               <rect width="22" height="22" rx="5" fill="#22C55E" />
-              <path
-                d="M11.5 4L5 12h6.5L10 18l7-10H10.5L11.5 4z"
-                fill="white"
-                strokeLinejoin="round"
-              />
+              <path d="M11.5 4L5 12h6.5L10 18l7-10H10.5L11.5 4z" fill="white" strokeLinejoin="round" />
             </svg>
             <span className="text-[15px] font-bold text-slate-900 dark:text-white tracking-tight leading-none">
               AdScore
@@ -53,7 +59,48 @@ export default function ClientNavbar() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8">
-            {LINKS.map((l) => (
+            {/* Features dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setFeaturesOpen(true)}
+              onMouseLeave={() => setFeaturesOpen(false)}
+            >
+              <button className="flex items-center gap-1 text-[13px] text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors duration-150">
+                Features
+                <svg
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${featuresOpen ? "rotate-180" : ""}`}
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <AnimatePresence>
+                {featuresOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-white dark:bg-zinc-950 border border-slate-100 dark:border-white/[0.08] rounded-xl shadow-xl dark:shadow-black/60 overflow-hidden py-1"
+                  >
+                    {FEATURE_LINKS.map((f) => (
+                      <a
+                        key={f.href}
+                        href={f.href}
+                        onClick={() => setFeaturesOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-[13px] text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04] transition-colors"
+                      >
+                        <span className="text-[14px]">{f.icon}</span>
+                        {f.label}
+                      </a>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {NAV_LINKS.map((l) => (
               <Link
                 key={l.label}
                 href={l.href}
@@ -92,11 +139,11 @@ export default function ClientNavbar() {
               className="p-2 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors"
               aria-label="Menu"
             >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {open
-                ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
-                : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />}
-            </svg>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {open
+                  ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                  : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />}
+              </svg>
             </button>
           </div>
         </nav>
@@ -129,19 +176,35 @@ export default function ClientNavbar() {
                   </svg>
                 </button>
               </div>
-              <div className="flex-1 px-6 py-6 space-y-1">
-                {LINKS.map((l) => (
+
+              <div className="flex-1 px-6 py-4 overflow-y-auto">
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500 mb-3 mt-1">Features</p>
+                {FEATURE_LINKS.map((f) => (
+                  <a
+                    key={f.href}
+                    href={f.href}
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2.5 py-2.5 text-sm text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white border-b border-black/[0.04] dark:border-white/[0.04] transition-colors last:border-0"
+                  >
+                    <span>{f.icon}</span>
+                    {f.label}
+                  </a>
+                ))}
+
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500 mb-3 mt-6">Navigation</p>
+                {NAV_LINKS.map((l) => (
                   <Link
                     key={l.label}
                     href={l.href}
                     onClick={() => setOpen(false)}
-                    className="flex items-center py-3 text-sm text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white border-b border-black/[0.04] dark:border-white/[0.04] transition-colors"
+                    className="flex items-center py-2.5 text-sm text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white border-b border-black/[0.04] dark:border-white/[0.04] transition-colors last:border-0"
                   >
                     {l.label}
                   </Link>
                 ))}
               </div>
-              <div className="px-6 pb-8 space-y-3">
+
+              <div className="px-6 pb-8 space-y-3 border-t border-black/[0.06] dark:border-white/[0.06] pt-4">
                 <Link
                   href="/login"
                   onClick={() => setOpen(false)}

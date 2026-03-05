@@ -1053,7 +1053,7 @@ export default function LandingPage() {
           <ScrollReveal delay={0.08}>
             <div className="text-center">
               <Link
-                href="/signup"
+                href="/signup?redirect=/analyze"
                 className="inline-flex items-center gap-2.5 px-8 py-4 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-bold text-[15px] rounded-xl shadow-lg shadow-blue-900/40 transition-all duration-200"
               >
                 Try the AI Ad Improver Free
@@ -1101,7 +1101,7 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <Link href="/signup" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-semibold text-[14px] rounded-xl shadow-lg shadow-blue-900/30 transition-all duration-200">
+              <Link href="/signup?redirect=/ab-compare" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-semibold text-[14px] rounded-xl shadow-lg shadow-blue-900/30 transition-all duration-200">
                 Compare Your Ads Free →
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -1283,7 +1283,7 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <Link href="/signup" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-semibold text-[14px] rounded-xl shadow-lg shadow-blue-900/30 transition-all duration-200">
+              <Link href="/signup?redirect=/spy" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-semibold text-[14px] rounded-xl shadow-lg shadow-blue-900/30 transition-all duration-200">
                 Spy on a Competitor →
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -1328,7 +1328,7 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <Link href="/signup" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-semibold text-[14px] rounded-xl shadow-lg shadow-blue-900/30 transition-all duration-200">
+              <Link href="/signup?redirect=/analyze" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-semibold text-[14px] rounded-xl shadow-lg shadow-blue-900/30 transition-all duration-200">
                 Browse Templates →
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -1461,7 +1461,7 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <Link href="/signup" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-semibold text-[14px] rounded-xl shadow-lg shadow-blue-900/30 transition-all duration-200">
+              <Link href="/signup?redirect=/generate" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-semibold text-[14px] rounded-xl shadow-lg shadow-blue-900/30 transition-all duration-200">
                 Generate Ads from URL →
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -1593,7 +1593,7 @@ export default function LandingPage() {
                   </span>
                 ))}
               </div>
-              <Link href="/signup" className="inline-flex items-center gap-2.5 px-8 py-4 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-bold text-[15px] rounded-xl shadow-lg shadow-blue-900/40 transition-all duration-200">
+              <Link href="/signup?redirect=/dashboard" className="inline-flex items-center gap-2.5 px-8 py-4 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-bold text-[15px] rounded-xl shadow-lg shadow-blue-900/40 transition-all duration-200">
                 Start Tracking Your Ads →
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -1872,7 +1872,7 @@ export default function LandingPage() {
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                href="/signup"
+                href="/signup?redirect=/analyze"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-zinc-900 font-bold text-[15px] rounded-xl hover:bg-slate-800 dark:hover:bg-zinc-100 transition-colors shadow-sm"
               >
                 Analyze Your First Ad

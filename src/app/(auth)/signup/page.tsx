@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export default function SignUpPage() {
   const [fullName, setFullName] = useState("");
@@ -12,18 +13,24 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [confirmEmail, setConfirmEmail] = useState(false);
   const supabase = createClient();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") ?? "/dashboard";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
 
+    const callbackUrl = redirect !== "/dashboard"
+      ? `${window.location.origin}/callback?next=${encodeURIComponent(redirect)}`
+      : `${window.location.origin}/callback`;
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: { full_name: fullName },
-        emailRedirectTo: `${window.location.origin}/callback`,
+        emailRedirectTo: callbackUrl,
       },
     });
 
@@ -134,7 +141,7 @@ export default function SignUpPage() {
 
       <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
         Already have an account?{" "}
-        <Link href="/login" className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition">
+        <Link href={`/login${redirect !== "/dashboard" ? `?redirect=${redirect}` : ""}`} className="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition">
           Sign in
         </Link>
       </p>

@@ -6,13 +6,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const FEATURE_LINKS = [
-  { label: "Ad Analysis",        href: "#features",          icon: "📊" },
-  { label: "AI Ad Improver",     href: "#ai-improver",       icon: "✨" },
-  { label: "A/B Compare",        href: "#ab-compare",        icon: "⚔️" },
-  { label: "Competitor Spy",     href: "#competitor-spy",    icon: "🕵️" },
-  { label: "Swipe File",         href: "#swipe-file",        icon: "📂" },
-  { label: "Generate from URL",  href: "#generate-from-url", icon: "🔗" },
-  { label: "Performance Tracker",href: "#tracker",           icon: "📈" },
+  { label: "Ad Analysis",        href: "/analyze",    icon: "📊" },
+  { label: "AI Ad Improver",     href: "/analyze",    icon: "✨" },
+  { label: "A/B Compare",        href: "/ab-compare", icon: "⚔️" },
+  { label: "Competitor Spy",     href: "/spy",        icon: "🕵️" },
+  { label: "Swipe File",         href: "/analyze",    icon: "📂" },
+  { label: "Generate from URL",  href: "/generate",   icon: "🔗" },
+  { label: "Performance Tracker",href: "/dashboard",  icon: "📈" },
 ];
 
 const NAV_LINKS = [
@@ -85,15 +85,15 @@ export default function ClientNavbar() {
                     className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-white dark:bg-zinc-950 border border-slate-100 dark:border-white/[0.08] rounded-xl shadow-xl dark:shadow-black/60 overflow-hidden py-1"
                   >
                     {FEATURE_LINKS.map((f) => (
-                      <a
-                        key={f.href}
+                      <Link
+                        key={f.label}
                         href={f.href}
                         onClick={() => setFeaturesOpen(false)}
                         className="flex items-center gap-2.5 px-4 py-2.5 text-[13px] text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04] transition-colors"
                       >
                         <span className="text-[14px]">{f.icon}</span>
                         {f.label}
-                      </a>
+                      </Link>
                     ))}
                   </motion.div>
                 )}
@@ -180,15 +180,15 @@ export default function ClientNavbar() {
               <div className="flex-1 px-6 py-4 overflow-y-auto">
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500 mb-3 mt-1">Features</p>
                 {FEATURE_LINKS.map((f) => (
-                  <a
-                    key={f.href}
+                  <Link
+                    key={f.label}
                     href={f.href}
                     onClick={() => setOpen(false)}
                     className="flex items-center gap-2.5 py-2.5 text-sm text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white border-b border-black/[0.04] dark:border-white/[0.04] transition-colors last:border-0"
                   >
                     <span>{f.icon}</span>
                     {f.label}
-                  </a>
+                  </Link>
                 ))}
 
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500 mb-3 mt-6">Navigation</p>

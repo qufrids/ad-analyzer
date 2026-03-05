@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/components/toast";
 
 interface Profile {
@@ -25,6 +25,42 @@ export default function SettingsPage() {
   const [deleting, setDeleting] = useState(false);
   const [stripeLoading, setStripeLoading] = useState(false);
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const [syncing, setSyncing] = useState(false);
+
+  async function syncSubscription(silent = false) {
+    setSyncing(true);
+    try {
+      const res = await fetch("/api/stripe/sync", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Sync failed");
+
+      if (data.synced) {
+        // Reload profile from DB
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: p } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", user.id)
+            .single();
+          if (p) {
+            setProfile({ ...p, email: user.email ?? "" });
+            setFullName(p.full_name ?? "");
+          }
+        }
+        if (!silent) toast("Subscription synced — you're now on Pro!", "success");
+        // Clean up URL param
+        router.replace("/settings");
+      } else if (!silent) {
+        toast("Already up to date.", "info");
+      }
+    } catch (err) {
+      if (!silent) toast(err instanceof Error ? err.message : "Sync failed", "error");
+    } finally {
+      setSyncing(false);
+    }
+  }
 
   useEffect(() => {
     async function load() {
@@ -43,8 +79,14 @@ export default function SettingsPage() {
         setProfile({ ...data, email: user.email ?? "" });
         setFullName(data.full_name ?? "");
       }
+
+      // Auto-sync if returning from Stripe checkout
+      if (searchParams.get("upgraded") === "true") {
+        await syncSubscription(true);
+      }
     }
     load();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supabase]);
 
   async function handleSaveProfile(e: React.FormEvent) {
@@ -202,23 +244,37 @@ export default function SettingsPage() {
               : "3 free analyses included"}
           </span>
         </div>
-        {isPro ? (
-          <button
-            onClick={handleManageSubscription}
-            disabled={stripeLoading}
-            className="px-4 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-750 hover:text-gray-900 dark:hover:text-white transition disabled:opacity-50"
-          >
-            {stripeLoading ? "Loading..." : "Manage Subscription"}
-          </button>
-        ) : (
-          <button
-            onClick={handleUpgrade}
-            disabled={stripeLoading}
-            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white text-sm font-medium rounded-lg transition disabled:opacity-50"
-          >
-            {stripeLoading ? "Loading..." : "Upgrade to Pro — $29/mo"}
-          </button>
-        )}
+        <div className="flex items-center gap-3 flex-wrap">
+          {isPro ? (
+            <button
+              onClick={handleManageSubscription}
+              disabled={stripeLoading}
+              className="px-4 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-750 hover:text-gray-900 dark:hover:text-white transition disabled:opacity-50"
+            >
+              {stripeLoading ? "Loading..." : "Manage Subscription"}
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={handleUpgrade}
+                disabled={stripeLoading}
+                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white text-sm font-medium rounded-lg transition disabled:opacity-50"
+              >
+                {stripeLoading ? "Loading..." : "Upgrade to Pro — $29/mo"}
+              </button>
+              <button
+                onClick={() => syncSubscription(false)}
+                disabled={syncing}
+                className="px-4 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-400 text-sm font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition disabled:opacity-50 flex items-center gap-2"
+              >
+                <svg className={`w-3.5 h-3.5 ${syncing ? "animate-spin" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                {syncing ? "Syncing..." : "Sync status"}
+              </button>
+            </>
+          )}
+        </div>
       </section>
 
       {/* Usage */}

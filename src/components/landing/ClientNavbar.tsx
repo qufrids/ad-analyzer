@@ -8,7 +8,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 const FEATURE_LINKS = [
   { label: "Ad Analysis",        href: "/analyze",    icon: "📊" },
   { label: "AI Ad Improver",     href: "/analyze",    icon: "✨" },
-  { label: "A/B Compare",        href: "/ab-compare", icon: "⚔️" },
+  { label: "A/B Compare",        href: "/compare",    icon: "⚔️" },
   { label: "Competitor Spy",     href: "/spy",        icon: "🕵️" },
   { label: "Swipe File",         href: "/analyze",    icon: "📂" },
   { label: "Generate from URL",  href: "/generate",   icon: "🔗" },

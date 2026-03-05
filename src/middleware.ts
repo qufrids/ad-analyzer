@@ -32,7 +32,17 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Protected routes — require authentication
-  const protectedPaths = ["/dashboard", "/analyze", "/history", "/settings", "/analysis"];
+  const protectedPaths = [
+    "/dashboard",
+    "/analyze",
+    "/history",
+    "/settings",
+    "/analysis",
+    "/ab-compare",
+    "/compare",
+    "/spy",
+    "/generate",
+  ];
   const isProtected = protectedPaths.some(
     (p) => path === p || path.startsWith(p + "/")
   );
@@ -40,13 +50,16 @@ export async function middleware(request: NextRequest) {
   if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
+    url.searchParams.set("redirect", path);
     return NextResponse.redirect(url);
   }
 
-  // Redirect authenticated users away from auth pages (but NOT reset-password)
+  // Redirect authenticated users away from auth pages
   if (user && (path === "/login" || path === "/signup")) {
+    const redirectTo = request.nextUrl.searchParams.get("redirect") ?? "/dashboard";
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = redirectTo;
+    url.search = "";
     return NextResponse.redirect(url);
   }
 
@@ -60,6 +73,14 @@ export const config = {
     "/history/:path*",
     "/settings/:path*",
     "/analysis/:path*",
+    "/ab-compare/:path*",
+    "/ab-compare",
+    "/compare/:path*",
+    "/compare",
+    "/spy/:path*",
+    "/spy",
+    "/generate/:path*",
+    "/generate",
     "/login",
     "/signup",
     "/reset-password",

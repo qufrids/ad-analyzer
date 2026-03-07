@@ -1,6 +1,8 @@
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+function getOpenAIClient() {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "" });
+}
 
 export async function generateImprovedAdImage({
   improvedHeadline,
@@ -19,6 +21,13 @@ export async function generateImprovedAdImage({
   weaknesses: string[];
   strengths: string[];
 }): Promise<string | null> {
+  if (!process.env.OPENAI_API_KEY) {
+    console.log("OPENAI_API_KEY not set, skipping image generation");
+    return null;
+  }
+
+  const openai = getOpenAIClient();
+
   try {
     const isVertical = ["tiktok", "stories", "reels", "story"].some((p) =>
       platform.toLowerCase().includes(p)

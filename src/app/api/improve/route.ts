@@ -6,6 +6,7 @@ import {
   buildImproverPrompt,
 } from "@/lib/prompts/ad-improver";
 import { rateLimit } from "@/lib/rate-limit";
+import { generateImprovedAdImage } from "@/lib/openai-image";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -188,7 +189,73 @@ export async function POST(request: Request) {
       }
     }
 
-    // 7. Save improvement result to analyses table
+    // 7. Generate improved ad image via DALL-E (best-effort — never blocks the response)
+    let improvedImageSignedUrl: string | null = null;
+
+    try {
+      const headlines = improvementResult.headlines as Array<{ text: string }> | undefined;
+      const bodyCopy = improvementResult.body_copy as { short?: string } | undefined;
+      const ctaOptions = improvementResult.cta_options as string[] | undefined;
+
+      const improvedHeadline = headlines?.[0]?.text ?? "";
+      const improvedBodyCopy = bodyCopy?.short ?? "";
+      const improvedCTA = ctaOptions?.[0] ?? "";
+
+      if (improvedHeadline) {
+        const openaiImageUrl = await generateImprovedAdImage({
+          improvedHeadline,
+          improvedBodyCopy,
+          improvedCTA,
+          platform: analysis.platform,
+          niche: analysis.niche,
+          weaknesses: (analysisResult.weaknesses ?? []) as string[],
+          strengths: ((analysis.analysis_result as { strengths?: string[] }).strengths ?? []) as string[],
+        });
+
+        if (openaiImageUrl) {
+          // Download from OpenAI (URL expires in 1 hour)
+          const imgRes = await fetch(openaiImageUrl);
+          if (imgRes.ok) {
+            const imgBuffer = await imgRes.arrayBuffer();
+            const uploadPath = `${user.id}/improved/${analysisId}.png`;
+
+            const { error: uploadErr } = await supabase.storage
+              .from("ad-images")
+              .upload(uploadPath, imgBuffer, {
+                contentType: "image/png",
+                upsert: true,
+              });
+
+            if (!uploadErr) {
+              // Store as public-style URL (same format as image_url)
+              const { data: urlData } = supabase.storage
+                .from("ad-images")
+                .getPublicUrl(uploadPath);
+
+              const storedUrl = urlData.publicUrl;
+
+              // Also get a signed URL to return immediately
+              const { data: signedData } = await supabase.storage
+                .from("ad-images")
+                .createSignedUrl(uploadPath, 3600);
+
+              improvedImageSignedUrl = signedData?.signedUrl ?? null;
+
+              // Update the improved_image_url in DB (non-blocking, separate update)
+              await supabase
+                .from("analyses")
+                .update({ improved_image_url: storedUrl })
+                .eq("id", analysisId)
+                .eq("user_id", user.id);
+            }
+          }
+        }
+      }
+    } catch (imgError) {
+      console.error("Image generation pipeline failed (non-fatal):", imgError);
+    }
+
+    // 8. Save improvement result to analyses table
     const { error: updateErr } = await supabase
       .from("analyses")
       .update({
@@ -206,7 +273,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 8. Deduct improvement credit for free users
+    // 9. Deduct improvement credit for free users
     if (!isPro) {
       await supabase
         .from("profiles")
@@ -217,7 +284,10 @@ export async function POST(request: Request) {
         .eq("id", user.id);
     }
 
-    return NextResponse.json({ result: improvementResult });
+    return NextResponse.json({
+      result: improvementResult,
+      improved_image_url: improvedImageSignedUrl,
+    });
   } catch (err) {
     console.error("Improve error:", err);
     return NextResponse.json(

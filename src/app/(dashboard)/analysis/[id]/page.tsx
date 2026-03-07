@@ -72,6 +72,18 @@ export default async function AnalysisDetailPage({
     }
   }
 
+  // Generate signed URL for the improved image (if it exists)
+  let improvedImageUrl = "";
+  if (analysis.improved_image_url) {
+    const path = (analysis.improved_image_url as string).split("/ad-images/").pop();
+    if (path) {
+      const { data: signedData } = await supabase.storage
+        .from("ad-images")
+        .createSignedUrl(decodeURIComponent(path), 3600);
+      if (signedData?.signedUrl) improvedImageUrl = signedData.signedUrl;
+    }
+  }
+
   const result = analysis.analysis_result as {
     overall_score: number;
     summary: string;
@@ -298,8 +310,11 @@ export default async function AnalysisDetailPage({
         <AdImprover
           analysisId={analysis.id}
           existingResult={analysis.improvement_result ?? null}
+          existingImprovedImageUrl={improvedImageUrl}
           improvementsRemaining={improvementsRemaining}
           isPro={isPro}
+          originalImageUrl={imageUrl}
+          originalScore={overallScore}
         />
       </div>
     </div>

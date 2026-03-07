@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 /* ─── Types ─────────────────────────────────────── */
 interface Headline {
@@ -46,8 +46,11 @@ interface ImprovementResult {
 interface Props {
   analysisId: string;
   existingResult: ImprovementResult | null;
+  existingImprovedImageUrl: string;
   improvementsRemaining: number;
   isPro: boolean;
+  originalImageUrl: string;
+  originalScore: number;
 }
 
 /* ─── Hook badge colors ──────────────────────────── */
@@ -152,20 +155,66 @@ function LoadingSkeleton() {
   );
 }
 
+const LOADING_MESSAGES = [
+  "Analyzing your ad...",
+  "Generating improved copy...",
+  "Creating improved ad image...",
+];
+
+async function downloadImage(url: string, filename: string) {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(blobUrl);
+  } catch {
+    window.open(url, "_blank");
+  }
+}
+
 /* ─── Main component ─────────────────────────────── */
-export default function AdImprover({ analysisId, existingResult, improvementsRemaining, isPro }: Props) {
+export default function AdImprover({
+  analysisId,
+  existingResult,
+  existingImprovedImageUrl,
+  improvementsRemaining,
+  isPro,
+  originalImageUrl,
+  originalScore,
+}: Props) {
   const [result, setResult] = useState<ImprovementResult | null>(existingResult);
+  const [improvedImageUrl, setImprovedImageUrl] = useState<string>(existingImprovedImageUrl);
   const [loading, setLoading] = useState(false);
+  const [loadingPhase, setLoadingPhase] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [bodyCopyTab, setBodyCopyTab] = useState<"short" | "medium" | "long">("medium");
   const [openTemplate, setOpenTemplate] = useState<number | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const phaseTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const canGenerate = isPro || improvementsRemaining > 0;
 
+  useEffect(() => {
+    return () => {
+      phaseTimersRef.current.forEach(clearTimeout);
+    };
+  }, []);
+
   async function generate() {
     setLoading(true);
+    setLoadingPhase(0);
     setError(null);
+
+    // Phase timers — visual only
+    phaseTimersRef.current.forEach(clearTimeout);
+    phaseTimersRef.current = [
+      setTimeout(() => setLoadingPhase(1), 3000),
+      setTimeout(() => setLoadingPhase(2), 8000),
+    ];
 
     try {
       const res = await fetch("/api/improve", {
@@ -182,12 +231,14 @@ export default function AdImprover({ analysisId, existingResult, improvementsRem
       }
 
       setResult(data.result);
+      setImprovedImageUrl(data.improved_image_url ?? "");
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 100);
     } catch {
       setError("Network error. Please check your connection and try again.");
     } finally {
+      phaseTimersRef.current.forEach(clearTimeout);
       setLoading(false);
     }
   }
@@ -242,7 +293,7 @@ export default function AdImprover({ analysisId, existingResult, improvementsRem
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
-              {loading ? "Generating..." : "✨ Generate Improved Ad Copy"}
+              {loading ? LOADING_MESSAGES[loadingPhase] : "✨ Generate Improved Ad Copy"}
             </button>
           ) : (
             <div className="flex flex-col items-center gap-4">
@@ -279,6 +330,100 @@ export default function AdImprover({ analysisId, existingResult, improvementsRem
       {/* ── Results ── */}
       {result && !loading && (
         <div ref={resultsRef} className="space-y-5">
+          {/* ── AI Generated Image comparison ── */}
+          {improvedImageUrl ? (
+            <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 sm:p-7 animate-sparkle-pop">
+              <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900 dark:text-white mb-5">
+                <span className="text-purple-500 dark:text-purple-400">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                </span>
+                Your Improved Ad Creative
+              </h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                {/* Original */}
+                <div className="flex flex-col gap-3">
+                  <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                    {originalImageUrl ? (
+                      <img
+                        src={originalImageUrl}
+                        alt="Original ad"
+                        className="w-full object-contain max-h-72"
+                      />
+                    ) : (
+                      <div className="w-full h-48 flex items-center justify-center text-gray-400 text-sm">
+                        No image
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                      Original
+                    </span>
+                    <span
+                      className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                        originalScore >= 70
+                          ? "bg-green-500/10 text-green-500 border border-green-500/20"
+                          : originalScore >= 40
+                          ? "bg-orange-500/10 text-orange-500 border border-orange-500/20"
+                          : "bg-red-500/10 text-red-500 border border-red-500/20"
+                      }`}
+                    >
+                      Score: {originalScore}
+                    </span>
+                  </div>
+                </div>
+
+                {/* AI Improved */}
+                <div className="flex flex-col gap-3">
+                  <div className="rounded-xl overflow-hidden ring-2 ring-green-500/40 shadow-lg shadow-green-500/10">
+                    <img
+                      src={improvedImageUrl}
+                      alt="AI improved ad"
+                      className="w-full object-contain max-h-72"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <span className="text-xs font-semibold text-green-500 dark:text-green-400 uppercase tracking-wide">
+                      AI Improved ✨
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => downloadImage(improvedImageUrl, "improved-ad.png")}
+                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Download
+                      </button>
+                      {canGenerate && (
+                        <button
+                          onClick={generate}
+                          className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                          </svg>
+                          Regenerate
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-400 dark:text-gray-600">
+                    Generated by AI based on your analysis results
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-gray-400 dark:text-gray-600 text-center py-2">
+              Image generation unavailable. Your improved copy is ready below.
+            </p>
+          )}
+
           {/* Header row */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>

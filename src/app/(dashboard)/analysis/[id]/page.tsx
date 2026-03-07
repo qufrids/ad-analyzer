@@ -31,8 +31,9 @@ function priorityColor(priority: string) {
 export default async function AnalysisDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const supabase = await createClient();
 
   const {
@@ -44,7 +45,7 @@ export default async function AnalysisDetailPage({
   const { data: analysis } = await supabase
     .from("analyses")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .eq("user_id", user.id)
     .single();
 

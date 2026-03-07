@@ -82,14 +82,15 @@ function ConfettiDots() {
 export default async function CompareResultPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const supabase = await createClient();
 
   const { data: comparison, error } = await supabase
     .from("comparisons")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (error || !comparison) notFound();

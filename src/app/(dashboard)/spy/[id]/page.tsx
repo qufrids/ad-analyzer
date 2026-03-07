@@ -63,14 +63,15 @@ const BUDGET_LABELS: Record<string, { label: string; color: string }> = {
 export default async function SpyResultPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const supabase = await createClient();
 
   const { data: spy, error } = await supabase
     .from("spy_analyses")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (error || !spy) notFound();

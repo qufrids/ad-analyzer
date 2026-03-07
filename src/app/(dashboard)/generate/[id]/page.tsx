@@ -5,8 +5,9 @@ import GenerateResults from "./GenerateResults";
 export default async function GenerateResultPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const supabase = await createClient();
 
   const {
@@ -17,7 +18,7 @@ export default async function GenerateResultPage({
   const { data: gen, error } = await supabase
     .from("generated_ads")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .eq("user_id", user.id)
     .single();
 

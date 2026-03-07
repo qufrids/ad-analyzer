@@ -20,7 +20,7 @@ function parseJSON(text: string): Record<string, unknown> {
   return JSON.parse(cleaned);
 }
 
-async function downloadImage(supabase: ReturnType<typeof createClient>, imageUrl: string) {
+async function downloadImage(supabase: Awaited<ReturnType<typeof createClient>>, imageUrl: string) {
   const storagePath = imageUrl.split("/ad-images/").pop();
   if (!storagePath) throw new Error("Invalid image URL");
 

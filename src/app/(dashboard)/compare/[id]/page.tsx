@@ -84,7 +84,7 @@ export default async function CompareResultPage({
 }: {
   params: { id: string };
 }) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: comparison, error } = await supabase
     .from("comparisons")

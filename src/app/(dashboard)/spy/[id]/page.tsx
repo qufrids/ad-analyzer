@@ -65,7 +65,7 @@ export default async function SpyResultPage({
 }: {
   params: { id: string };
 }) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: spy, error } = await supabase
     .from("spy_analyses")

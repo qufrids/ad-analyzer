@@ -57,7 +57,7 @@ function parseJSON(text: string): Record<string, unknown> {
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     // 1. Verify authentication
     const {

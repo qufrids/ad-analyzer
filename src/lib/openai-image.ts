@@ -50,7 +50,8 @@ export async function generateImprovedAdImage({
       response_format: "url",
     });
 
-    return response.data[0]?.url ?? null;
+    const url = response.data && response.data[0] ? response.data[0].url : undefined;
+    return url ?? null;
   } catch (error) {
     console.error("DALL-E image generation failed:", error);
     return null;

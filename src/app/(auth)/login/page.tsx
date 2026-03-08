@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import OAuthButtons from "../OAuthButtons";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -44,7 +45,9 @@ function LoginForm() {
     <>
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Welcome back</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <OAuthButtons />
+
+      <form onSubmit={handleSubmit} className="space-y-4 mt-2">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Email

@@ -84,9 +84,7 @@ function SignUpForm() {
     <>
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Create your account</h2>
 
-      <OAuthButtons />
-
-      <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Full name
@@ -149,7 +147,9 @@ function SignUpForm() {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+      <OAuthButtons />
+
+      <p className="mt-5 text-center text-sm text-gray-500 dark:text-gray-400">
         Already have an account?{" "}
         <Link
           href={`/login${redirect !== "/dashboard" ? `?redirect=${redirect}` : ""}`}

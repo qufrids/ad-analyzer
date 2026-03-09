@@ -94,7 +94,7 @@ export default function OAuthButtons() {
       </div>
 
       {/* 3-column button grid */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="flex items-center justify-center gap-4">
         {PROVIDERS.map((p) => (
           <button
             key={p.id}
@@ -103,16 +103,13 @@ export default function OAuthButtons() {
             disabled={!!loading}
             title={p.label}
             className={`
-              relative flex flex-col items-center justify-center gap-1.5 px-2 py-3 rounded-xl
-              font-medium text-xs transition-all duration-150
+              w-12 h-12 flex items-center justify-center rounded-full
+              transition-all duration-150
               disabled:opacity-50 disabled:cursor-not-allowed
               ${p.className}
             `}
           >
             {loading === p.id ? <Spinner /> : p.icon}
-            <span className="text-[11px] font-semibold tracking-wide">
-              {loading === p.id ? "…" : p.label}
-            </span>
           </button>
         ))}
       </div>

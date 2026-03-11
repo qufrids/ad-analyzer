@@ -201,6 +201,8 @@ export async function POST(request: Request) {
       const improvedBodyCopy = bodyCopy?.short ?? "";
       const improvedCTA = ctaOptions?.[0] ?? "";
 
+      console.log("[improve] headline for image:", improvedHeadline || "(empty — skipping image gen)");
+
       if (improvedHeadline) {
         const openaiImageUrl = await generateImprovedAdImage({
           improvedHeadline,
@@ -212,12 +214,16 @@ export async function POST(request: Request) {
           strengths: ((analysis.analysis_result as { strengths?: string[] }).strengths ?? []) as string[],
         });
 
+        console.log("[improve] DALL-E URL received:", openaiImageUrl ? "yes" : "null");
+
         if (openaiImageUrl) {
           // Download from OpenAI (URL expires in 1 hour)
           const imgRes = await fetch(openaiImageUrl);
+          console.log("[improve] OpenAI image fetch status:", imgRes.status);
           if (imgRes.ok) {
             const imgBuffer = await imgRes.arrayBuffer();
             const uploadPath = `${user.id}/improved/${analysisId}.png`;
+            console.log("[improve] Uploading to storage path:", uploadPath);
 
             const { error: uploadErr } = await supabase.storage
               .from("ad-images")
@@ -226,6 +232,8 @@ export async function POST(request: Request) {
                 upsert: true,
               });
 
+            console.log("[improve] Storage upload error:", uploadErr ?? "none");
+
             if (!uploadErr) {
               // Store as public-style URL (same format as image_url)
               const { data: urlData } = supabase.storage
@@ -233,6 +241,7 @@ export async function POST(request: Request) {
                 .getPublicUrl(uploadPath);
 
               const storedUrl = urlData.publicUrl;
+              console.log("[improve] Public URL for DB:", storedUrl);
 
               // Also get a signed URL to return immediately
               const { data: signedData } = await supabase.storage
@@ -240,19 +249,21 @@ export async function POST(request: Request) {
                 .createSignedUrl(uploadPath, 3600);
 
               improvedImageSignedUrl = signedData?.signedUrl ?? null;
+              console.log("[improve] Signed URL for response:", improvedImageSignedUrl ? "yes" : "null");
 
               // Update the improved_image_url in DB (non-blocking, separate update)
-              await supabase
+              const { error: dbUpdateErr } = await supabase
                 .from("analyses")
                 .update({ improved_image_url: storedUrl })
                 .eq("id", analysisId)
                 .eq("user_id", user.id);
+              console.log("[improve] DB update error:", dbUpdateErr ?? "none");
             }
           }
         }
       }
     } catch (imgError) {
-      console.error("Image generation pipeline failed (non-fatal):", imgError);
+      console.error("[improve] Image generation pipeline failed:", imgError);
     }
 
     // 8. Save improvement result to analyses table

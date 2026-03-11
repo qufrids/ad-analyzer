@@ -22,10 +22,11 @@ export async function generateImprovedAdImage({
   strengths: string[];
 }): Promise<string | null> {
   if (!process.env.OPENAI_API_KEY) {
-    console.log("OPENAI_API_KEY not set, skipping image generation");
+    console.log("[DALL-E] OPENAI_API_KEY not set — skipping");
     return null;
   }
 
+  console.log("[DALL-E] Starting image generation for platform:", platform, "niche:", niche);
   const openai = getOpenAIClient();
 
   try {
@@ -60,9 +61,10 @@ export async function generateImprovedAdImage({
     });
 
     const url = response.data && response.data[0] ? response.data[0].url : undefined;
+    console.log("[DALL-E] Got URL:", url ? "yes (length " + url.length + ")" : "undefined");
     return url ?? null;
   } catch (error) {
-    console.error("DALL-E image generation failed:", error);
+    console.error("[DALL-E] Generation failed:", error);
     return null;
   }
 }

@@ -246,19 +246,11 @@ export async function composeAdImage({
   platform,
   niche,
 }: ComposeParams): Promise<Buffer> {
-  console.log('=== SHARP COMPOSE START ===');
-  console.log('sharp version:', sharp.versions);
-  console.log('imageUrl length:', imageUrl?.length);
-  console.log('platform:', platform, 'niche:', niche);
-
   const res = await fetch(imageUrl);
-  console.log('fetch status:', res.status, res.ok);
   if (!res.ok) throw new Error(`Failed to fetch DALL-E image: ${res.status}`);
   const imageBuffer = Buffer.from(await res.arrayBuffer());
-  console.log('imageBuffer size:', imageBuffer.length);
 
   const metadata = await sharp(imageBuffer).metadata();
-  console.log('image metadata:', JSON.stringify(metadata));
   const width = metadata.width ?? 1024;
   const height = metadata.height ?? 1024;
 
@@ -299,18 +291,5 @@ export async function composeAdImage({
     });
   }
 
-  console.log('=== SHARP COMPOSITE STARTING, overlays:', overlays.length);
-  try {
-    const result = await sharp(imageBuffer).composite(overlays).png({ quality: 95 }).toBuffer();
-    console.log('=== SHARP COMPOSE SUCCESS, result size:', result.length);
-    return result;
-  } catch (error) {
-    const err = error as Error;
-    console.error('=== SHARP COMPOSE FAILED ===');
-    console.error('Error name:', err?.name);
-    console.error('Error message:', err?.message);
-    console.error('Full error:', JSON.stringify(error, null, 2));
-    console.error('Stack trace:', err?.stack);
-    throw error;
-  }
+  return sharp(imageBuffer).composite(overlays).png({ quality: 95 }).toBuffer();
 }

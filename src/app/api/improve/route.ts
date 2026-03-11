@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createServiceClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 import {
@@ -202,11 +203,6 @@ export async function POST(request: Request) {
       const improvedHeadline = headlines?.[0]?.text ?? "";
       const improvedCTA = ctaOptions?.[0] ?? "";
 
-      console.log('=== STARTING IMAGE GENERATION ===');
-      console.log('OPENAI_API_KEY exists:', !!process.env.OPENAI_API_KEY);
-      console.log('OPENAI_API_KEY starts with:', process.env.OPENAI_API_KEY?.substring(0, 7));
-      console.log('[img] headline:', improvedHeadline || "(empty)");
-
       if (improvedHeadline) {
         // Step 1: Generate base image with DALL-E 3 (HD, no text in image)
         const openaiImageUrl = await generateImprovedAdImage({
@@ -228,11 +224,8 @@ export async function POST(request: Request) {
           niche: analysis.niche,
         });
 
-        console.log("[img] DALL-E URL:", openaiImageUrl ? "received" : "null");
-
         if (openaiImageUrl) {
           // Step 2: Composite headline + CTA button onto image using Sharp
-          console.log("[img] Starting Sharp compose...");
           const composedBuffer = await composeAdImage({
             imageUrl: openaiImageUrl,
             headline: improvedHeadline,
@@ -240,32 +233,34 @@ export async function POST(request: Request) {
             platform: analysis.platform,
             niche: analysis.niche,
           });
-          console.log("[img] Composed buffer size:", composedBuffer.length);
 
           const uploadPath = `${user.id}/improved/${analysisId}.png`;
 
-          const { error: uploadErr } = await supabase.storage
+          // Use service role client to bypass storage RLS for subfolder uploads
+          const adminStorage = createServiceClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.SUPABASE_SERVICE_ROLE_KEY!
+          ).storage;
+
+          const { error: uploadErr } = await adminStorage
             .from("ad-images")
             .upload(uploadPath, composedBuffer, {
               contentType: "image/png",
               upsert: true,
             });
 
-          console.log("[img] Storage upload error:", uploadErr ?? "none");
-
           if (!uploadErr) {
-            const { data: urlData } = supabase.storage
+            const { data: urlData } = adminStorage
               .from("ad-images")
               .getPublicUrl(uploadPath);
 
             const storedUrl = urlData.publicUrl;
 
-            const { data: signedData } = await supabase.storage
+            const { data: signedData } = await adminStorage
               .from("ad-images")
               .createSignedUrl(uploadPath, 3600);
 
             improvedImageSignedUrl = signedData?.signedUrl ?? null;
-            console.log("[img] Signed URL:", improvedImageSignedUrl ? "ok" : "null");
 
             await supabase
               .from("analyses")
@@ -276,12 +271,7 @@ export async function POST(request: Request) {
         }
       }
     } catch (imgError) {
-      const error = imgError as Error;
-      console.error('=== IMAGE GENERATION FAILED ===');
-      console.error('Error name:', error?.name);
-      console.error('Error message:', error?.message);
-      console.error('Full error:', JSON.stringify(imgError, null, 2));
-      console.error('Stack trace:', error?.stack);
+      console.error("Image generation pipeline failed (non-fatal):", imgError);
     }
 
     // 8. Save improvement result to analyses table

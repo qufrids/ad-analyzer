@@ -231,8 +231,7 @@ export async function generateImprovedAdImage({
       ? ` The creative direction emphasizes: ${[visualHint, colorHint].filter(Boolean).join(". ")}.`
       : "";
 
-  // Determine focal point from original weaknesses
-  const weaknesses = originalAnalysis.weaknesses ?? [];
+  // Determine focal point from original visual score
   const hadLowVisualImpact =
     (originalAnalysis.scores?.visual_impact?.score ?? 100) < 60;
   const focalPointDesc = hadLowVisualImpact
@@ -275,12 +274,7 @@ export async function generateImprovedAdImage({
     const url = response.data?.[0]?.url;
     return url ?? null;
   } catch (error) {
-    const err = error as Error;
-    console.error('=== DALL-E GENERATION FAILED ===');
-    console.error('Error name:', err?.name);
-    console.error('Error message:', err?.message);
-    console.error('Full error:', JSON.stringify(error, null, 2));
-    console.error('Stack trace:', err?.stack);
+    console.error("DALL-E image generation failed:", error);
     return null;
   }
 }

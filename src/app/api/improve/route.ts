@@ -202,6 +202,8 @@ export async function POST(request: Request) {
       const improvedHeadline = headlines?.[0]?.text ?? "";
       const improvedCTA = ctaOptions?.[0] ?? "";
 
+      console.log("[img] headline:", improvedHeadline || "(empty)");
+
       if (improvedHeadline) {
         // Step 1: Generate base image with DALL-E 3 (HD, no text in image)
         const openaiImageUrl = await generateImprovedAdImage({
@@ -223,8 +225,11 @@ export async function POST(request: Request) {
           niche: analysis.niche,
         });
 
+        console.log("[img] DALL-E URL:", openaiImageUrl ? "received" : "null");
+
         if (openaiImageUrl) {
           // Step 2: Composite headline + CTA button onto image using Sharp
+          console.log("[img] Starting Sharp compose...");
           const composedBuffer = await composeAdImage({
             imageUrl: openaiImageUrl,
             headline: improvedHeadline,
@@ -232,6 +237,7 @@ export async function POST(request: Request) {
             platform: analysis.platform,
             niche: analysis.niche,
           });
+          console.log("[img] Composed buffer size:", composedBuffer.length);
 
           const uploadPath = `${user.id}/improved/${analysisId}.png`;
 
@@ -241,6 +247,8 @@ export async function POST(request: Request) {
               contentType: "image/png",
               upsert: true,
             });
+
+          console.log("[img] Storage upload error:", uploadErr ?? "none");
 
           if (!uploadErr) {
             const { data: urlData } = supabase.storage
@@ -254,6 +262,7 @@ export async function POST(request: Request) {
               .createSignedUrl(uploadPath, 3600);
 
             improvedImageSignedUrl = signedData?.signedUrl ?? null;
+            console.log("[img] Signed URL:", improvedImageSignedUrl ? "ok" : "null");
 
             await supabase
               .from("analyses")
@@ -264,7 +273,7 @@ export async function POST(request: Request) {
         }
       }
     } catch (imgError) {
-      console.error("Image generation pipeline failed (non-fatal):", imgError);
+      console.error("[img] Pipeline failed:", imgError);
     }
 
     // 8. Save improvement result to analyses table

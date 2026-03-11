@@ -7,6 +7,7 @@ import {
 } from "@/lib/prompts/ad-improver";
 import { rateLimit } from "@/lib/rate-limit";
 import { generateImprovedAdImage } from "@/lib/openai-image";
+import { composeAdImage } from "@/lib/image-composer";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -159,6 +160,8 @@ export async function POST(request: Request) {
       overall_score: number;
       summary: string;
       weaknesses: string[];
+      strengths: string[];
+      scores?: Record<string, { score: number; feedback: string }>;
     };
 
     const userPrompt = buildImproverPrompt({
@@ -189,65 +192,74 @@ export async function POST(request: Request) {
       }
     }
 
-    // 7. Generate improved ad image via DALL-E (best-effort — never blocks the response)
+    // 7. Generate improved ad image via DALL-E + Sharp text overlay (best-effort)
     let improvedImageSignedUrl: string | null = null;
 
     try {
       const headlines = improvementResult.headlines as Array<{ text: string }> | undefined;
-      const bodyCopy = improvementResult.body_copy as { short?: string } | undefined;
       const ctaOptions = improvementResult.cta_options as string[] | undefined;
 
       const improvedHeadline = headlines?.[0]?.text ?? "";
-      const improvedBodyCopy = bodyCopy?.short ?? "";
       const improvedCTA = ctaOptions?.[0] ?? "";
 
       if (improvedHeadline) {
+        // Step 1: Generate base image with DALL-E 3 (HD, no text in image)
         const openaiImageUrl = await generateImprovedAdImage({
-          improvedHeadline,
-          improvedBodyCopy,
-          improvedCTA,
+          originalAnalysis: {
+            overall_score: analysis.overall_score,
+            weaknesses: analysisResult.weaknesses ?? [],
+            strengths: analysisResult.strengths ?? [],
+            scores: analysisResult.scores,
+          },
+          improvementResult: {
+            headlines: headlines,
+            cta_options: ctaOptions,
+            creative_direction: (improvementResult.creative_direction as {
+              visual_improvements?: string;
+              color_psychology?: string;
+            } | undefined),
+          },
           platform: analysis.platform,
           niche: analysis.niche,
-          weaknesses: (analysisResult.weaknesses ?? []) as string[],
-          strengths: ((analysis.analysis_result as { strengths?: string[] }).strengths ?? []) as string[],
         });
 
         if (openaiImageUrl) {
-          // Download from OpenAI (URL expires in 1 hour)
-          const imgRes = await fetch(openaiImageUrl);
-          if (imgRes.ok) {
-            const imgBuffer = await imgRes.arrayBuffer();
-            const uploadPath = `${user.id}/improved/${analysisId}.png`;
+          // Step 2: Composite headline + CTA button onto image using Sharp
+          const composedBuffer = await composeAdImage({
+            imageUrl: openaiImageUrl,
+            headline: improvedHeadline,
+            ctaText: improvedCTA,
+            platform: analysis.platform,
+            niche: analysis.niche,
+          });
 
-            const { error: uploadErr } = await supabase.storage
+          const uploadPath = `${user.id}/improved/${analysisId}.png`;
+
+          const { error: uploadErr } = await supabase.storage
+            .from("ad-images")
+            .upload(uploadPath, composedBuffer, {
+              contentType: "image/png",
+              upsert: true,
+            });
+
+          if (!uploadErr) {
+            const { data: urlData } = supabase.storage
               .from("ad-images")
-              .upload(uploadPath, imgBuffer, {
-                contentType: "image/png",
-                upsert: true,
-              });
+              .getPublicUrl(uploadPath);
 
-            if (!uploadErr) {
-              // Store as public-style URL (same format as image_url)
-              const { data: urlData } = supabase.storage
-                .from("ad-images")
-                .getPublicUrl(uploadPath);
+            const storedUrl = urlData.publicUrl;
 
-              const storedUrl = urlData.publicUrl;
+            const { data: signedData } = await supabase.storage
+              .from("ad-images")
+              .createSignedUrl(uploadPath, 3600);
 
-              // Also get a signed URL to return immediately
-              const { data: signedData } = await supabase.storage
-                .from("ad-images")
-                .createSignedUrl(uploadPath, 3600);
+            improvedImageSignedUrl = signedData?.signedUrl ?? null;
 
-              improvedImageSignedUrl = signedData?.signedUrl ?? null;
-
-              // Update the improved_image_url in DB (non-blocking, separate update)
-              await supabase
-                .from("analyses")
-                .update({ improved_image_url: storedUrl })
-                .eq("id", analysisId)
-                .eq("user_id", user.id);
-            }
+            await supabase
+              .from("analyses")
+              .update({ improved_image_url: storedUrl })
+              .eq("id", analysisId)
+              .eq("user_id", user.id);
           }
         }
       }

@@ -73,15 +73,30 @@ export default async function AnalysisDetailPage({
     }
   }
 
-  // Generate signed URL for the improved image (if it exists)
-  let improvedImageUrl = "";
-  if (analysis.improved_image_url) {
+  // Generate signed URLs for all improved image variations
+  let improvedImageUrls: string[] = [];
+
+  if (analysis.improved_image_urls && Array.isArray(analysis.improved_image_urls)) {
+    const paths = analysis.improved_image_urls as string[];
+    const signed = await Promise.all(
+      paths.map(async (p: string) => {
+        const { data } = await supabase.storage
+          .from("ad-images")
+          .createSignedUrl(decodeURIComponent(p), 3600);
+        return data?.signedUrl ?? "";
+      })
+    );
+    improvedImageUrls = signed.filter(Boolean);
+  }
+
+  // Fall back to single improved_image_url for older analyses
+  if (improvedImageUrls.length === 0 && analysis.improved_image_url) {
     const path = (analysis.improved_image_url as string).split("/ad-images/").pop();
     if (path) {
       const { data: signedData } = await supabase.storage
         .from("ad-images")
         .createSignedUrl(decodeURIComponent(path), 3600);
-      if (signedData?.signedUrl) improvedImageUrl = signedData.signedUrl;
+      if (signedData?.signedUrl) improvedImageUrls = [signedData.signedUrl];
     }
   }
 
@@ -311,7 +326,7 @@ export default async function AnalysisDetailPage({
         <AdImprover
           analysisId={analysis.id}
           existingResult={analysis.improvement_result ?? null}
-          existingImprovedImageUrl={improvedImageUrl}
+          existingImprovedImageUrls={improvedImageUrls}
           improvementsRemaining={improvementsRemaining}
           isPro={isPro}
           originalImageUrl={imageUrl}

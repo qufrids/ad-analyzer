@@ -46,7 +46,7 @@ interface ImprovementResult {
 interface Props {
   analysisId: string;
   existingResult: ImprovementResult | null;
-  existingImprovedImageUrl: string;
+  existingImprovedImageUrls: string[];
   improvementsRemaining: number;
   isPro: boolean;
   originalImageUrl: string;
@@ -180,14 +180,15 @@ async function downloadImage(url: string, filename: string) {
 export default function AdImprover({
   analysisId,
   existingResult,
-  existingImprovedImageUrl,
+  existingImprovedImageUrls,
   improvementsRemaining,
   isPro,
   originalImageUrl,
   originalScore,
 }: Props) {
   const [result, setResult] = useState<ImprovementResult | null>(existingResult);
-  const [improvedImageUrl, setImprovedImageUrl] = useState<string>(existingImprovedImageUrl);
+  const [improvedImageUrls, setImprovedImageUrls] = useState<string[]>(existingImprovedImageUrls);
+  const [selectedIdx, setSelectedIdx] = useState(0);
   const [loading, setLoading] = useState(false);
   const [loadingPhase, setLoadingPhase] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -231,7 +232,8 @@ export default function AdImprover({
       }
 
       setResult(data.result);
-      setImprovedImageUrl(data.improved_image_url ?? "");
+      setImprovedImageUrls(data.improved_image_urls ?? []);
+      setSelectedIdx(0);
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 100);
@@ -330,8 +332,8 @@ export default function AdImprover({
       {/* ── Results ── */}
       {result && !loading && (
         <div ref={resultsRef} className="space-y-5">
-          {/* ── AI Generated Image comparison ── */}
-          {improvedImageUrl ? (
+          {/* ── AI Generated Image Variations ── */}
+          {improvedImageUrls.length > 0 ? (
             <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 sm:p-7 animate-sparkle-pop">
               <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900 dark:text-white mb-5">
                 <span className="text-purple-500 dark:text-purple-400">
@@ -339,59 +341,78 @@ export default function AdImprover({
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 </span>
-                Your Improved Ad Creative
+                Your Improved Ad Creatives
+                <span className="ml-auto text-xs font-normal text-gray-400">{improvedImageUrls.length} variations</span>
               </h3>
 
+              {/* Thumbnail selector */}
+              <div className="flex gap-3 mb-5 overflow-x-auto pb-1">
+                {improvedImageUrls.map((url, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedIdx(i)}
+                    className={`shrink-0 rounded-xl overflow-hidden border-2 transition-all duration-150 ${
+                      selectedIdx === i
+                        ? "border-cyan-500 shadow-lg shadow-cyan-500/20 scale-105"
+                        : "border-gray-200 dark:border-gray-700 opacity-60 hover:opacity-90"
+                    }`}
+                    title={`Variation ${i + 1}`}
+                  >
+                    <img
+                      src={url}
+                      alt={`Variation ${i + 1}`}
+                      className="w-24 h-24 object-cover"
+                    />
+                    <div className={`text-center text-xs py-1 font-medium ${
+                      selectedIdx === i ? "text-cyan-500 bg-cyan-500/10" : "text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800"
+                    }`}>
+                      Option {i + 1}
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Before / After large preview */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {/* Original */}
                 <div className="flex flex-col gap-3">
                   <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
                     {originalImageUrl ? (
-                      <img
-                        src={originalImageUrl}
-                        alt="Original ad"
-                        className="w-full object-contain max-h-72"
-                      />
+                      <img src={originalImageUrl} alt="Original ad" className="w-full object-contain max-h-72" />
                     ) : (
-                      <div className="w-full h-48 flex items-center justify-center text-gray-400 text-sm">
-                        No image
-                      </div>
+                      <div className="w-full h-48 flex items-center justify-center text-gray-400 text-sm">No image</div>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                      Original
-                    </span>
-                    <span
-                      className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                        originalScore >= 70
-                          ? "bg-green-500/10 text-green-500 border border-green-500/20"
-                          : originalScore >= 40
-                          ? "bg-orange-500/10 text-orange-500 border border-orange-500/20"
-                          : "bg-red-500/10 text-red-500 border border-red-500/20"
-                      }`}
-                    >
+                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Original</span>
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                      originalScore >= 70
+                        ? "bg-green-500/10 text-green-500 border border-green-500/20"
+                        : originalScore >= 40
+                        ? "bg-orange-500/10 text-orange-500 border border-orange-500/20"
+                        : "bg-red-500/10 text-red-500 border border-red-500/20"
+                    }`}>
                       Score: {originalScore}
                     </span>
                   </div>
                 </div>
 
-                {/* AI Improved */}
+                {/* Selected variation */}
                 <div className="flex flex-col gap-3">
-                  <div className="rounded-xl overflow-hidden ring-2 ring-green-500/40 shadow-lg shadow-green-500/10">
+                  <div className="rounded-xl overflow-hidden ring-2 ring-cyan-500/40 shadow-lg shadow-cyan-500/10">
                     <img
-                      src={improvedImageUrl}
-                      alt="AI improved ad"
+                      src={improvedImageUrls[selectedIdx]}
+                      alt={`Improved variation ${selectedIdx + 1}`}
                       className="w-full object-contain max-h-72"
                     />
                   </div>
                   <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <span className="text-xs font-semibold text-green-500 dark:text-green-400 uppercase tracking-wide">
-                      AI Improved ✨
+                    <span className="text-xs font-semibold text-cyan-500 dark:text-cyan-400 uppercase tracking-wide">
+                      AI Improved — Option {selectedIdx + 1} ✨
                     </span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <button
-                        onClick={() => downloadImage(improvedImageUrl, "improved-ad.png")}
+                        onClick={() => downloadImage(improvedImageUrls[selectedIdx], `improved-ad-option-${selectedIdx + 1}.png`)}
                         className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
                       >
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -399,6 +420,17 @@ export default function AdImprover({
                         </svg>
                         Download
                       </button>
+                      {improvedImageUrls.length > 1 && (
+                        <button
+                          onClick={() => improvedImageUrls.forEach((url, i) => downloadImage(url, `improved-ad-option-${i + 1}.png`))}
+                          className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                          All {improvedImageUrls.length}
+                        </button>
+                      )}
                       {canGenerate && (
                         <button
                           onClick={generate}
@@ -412,17 +444,10 @@ export default function AdImprover({
                       )}
                     </div>
                   </div>
-                  <p className="text-xs text-gray-400 dark:text-gray-600">
-                    Generated by AI based on your analysis results
-                  </p>
                 </div>
               </div>
             </div>
-          ) : (
-            <p className="text-sm text-gray-400 dark:text-gray-600 text-center py-2">
-              Image generation unavailable. Your improved copy is ready below.
-            </p>
-          )}
+          ) : null}
 
           {/* Header row */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">

@@ -7,8 +7,7 @@ import {
   buildImproverPrompt,
 } from "@/lib/prompts/ad-improver";
 import { rateLimit } from "@/lib/rate-limit";
-import { generateImprovedAdImage } from "@/lib/openai-image";
-import { composeAdImage } from "@/lib/image-composer";
+import { renderAdImage, getTemplatesForNiche } from "@/lib/ad-image-renderer";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -193,81 +192,70 @@ export async function POST(request: Request) {
       }
     }
 
-    // 7. Generate improved ad image via DALL-E + Sharp text overlay (best-effort)
-    let improvedImageSignedUrl: string | null = null;
+    // 7. Generate 3 improved ad image variations via Satori (best-effort)
+    const improvedImageSignedUrls: string[] = [];
+    const improvedImagePaths: string[] = [];
 
     try {
       const headlines = improvementResult.headlines as Array<{ text: string }> | undefined;
       const ctaOptions = improvementResult.cta_options as string[] | undefined;
+      const bodyCopyObj = improvementResult.body_copy as { short?: string; medium?: string; long?: string } | undefined;
 
-      const improvedHeadline = headlines?.[0]?.text ?? "";
-      const improvedCTA = ctaOptions?.[0] ?? "";
+      const bestHeadline = headlines?.[0]?.text ?? "";
+      const bestBodyCopy = bodyCopyObj?.short ?? bodyCopyObj?.medium ?? "";
+      const bestCTA = ctaOptions?.[0] ?? "";
 
-      if (improvedHeadline) {
-        // Step 1: Generate base image with DALL-E 3 (HD, no text in image)
-        const openaiImageUrl = await generateImprovedAdImage({
-          originalAnalysis: {
-            overall_score: analysis.overall_score,
-            weaknesses: analysisResult.weaknesses ?? [],
-            strengths: analysisResult.strengths ?? [],
-            scores: analysisResult.scores,
-          },
-          improvementResult: {
-            headlines: headlines,
-            cta_options: ctaOptions,
-            creative_direction: (improvementResult.creative_direction as {
-              visual_improvements?: string;
-              color_psychology?: string;
-            } | undefined),
-          },
-          platform: analysis.platform,
-          niche: analysis.niche,
-        });
+      if (bestHeadline) {
+        const templates = getTemplatesForNiche(analysis.niche);
+        const adminStorage = createServiceClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.SUPABASE_SERVICE_ROLE_KEY!
+        ).storage;
 
-        if (openaiImageUrl) {
-          // Step 2: Composite headline + CTA button onto image using Sharp
-          const composedBuffer = await composeAdImage({
-            imageUrl: openaiImageUrl,
-            headline: improvedHeadline,
-            ctaText: improvedCTA,
-            platform: analysis.platform,
-            niche: analysis.niche,
-          });
-
-          const uploadPath = `${user.id}/improved/${analysisId}.png`;
-
-          // Use service role client to bypass storage RLS for subfolder uploads
-          const adminStorage = createServiceClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.SUPABASE_SERVICE_ROLE_KEY!
-          ).storage;
-
-          const { error: uploadErr } = await adminStorage
-            .from("ad-images")
-            .upload(uploadPath, composedBuffer, {
-              contentType: "image/png",
-              upsert: true,
+        for (let i = 0; i < templates.length; i++) {
+          try {
+            const pngBuffer = await renderAdImage({
+              headline: bestHeadline,
+              bodyCopy: bestBodyCopy,
+              ctaText: bestCTA,
+              brandName: "",
+              platform: analysis.platform,
+              niche: analysis.niche,
+              template: templates[i],
             });
 
-          if (!uploadErr) {
-            const { data: urlData } = adminStorage
+            const storagePath = `${user.id}/improved/${analysisId}_variation_${i + 1}.png`;
+            const { error: uploadErr } = await adminStorage
               .from("ad-images")
-              .getPublicUrl(uploadPath);
+              .upload(storagePath, pngBuffer, { contentType: "image/png", upsert: true });
 
-            const storedUrl = urlData.publicUrl;
-
-            const { data: signedData } = await adminStorage
-              .from("ad-images")
-              .createSignedUrl(uploadPath, 3600);
-
-            improvedImageSignedUrl = signedData?.signedUrl ?? null;
-
-            await supabase
-              .from("analyses")
-              .update({ improved_image_url: storedUrl })
-              .eq("id", analysisId)
-              .eq("user_id", user.id);
+            if (!uploadErr) {
+              const { data: signedData } = await adminStorage
+                .from("ad-images")
+                .createSignedUrl(storagePath, 3600);
+              if (signedData?.signedUrl) {
+                improvedImageSignedUrls.push(signedData.signedUrl);
+                improvedImagePaths.push(storagePath);
+              }
+            }
+          } catch (varErr) {
+            console.error(`Variation ${i + 1} failed:`, varErr);
           }
+        }
+
+        if (improvedImagePaths.length > 0) {
+          const firstPublicUrl = adminStorage
+            .from("ad-images")
+            .getPublicUrl(improvedImagePaths[0]).data.publicUrl;
+
+          await supabase
+            .from("analyses")
+            .update({
+              improved_image_url: firstPublicUrl,
+              improved_image_urls: improvedImagePaths,
+            })
+            .eq("id", analysisId)
+            .eq("user_id", user.id);
         }
       }
     } catch (imgError) {
@@ -305,7 +293,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       result: improvementResult,
-      improved_image_url: improvedImageSignedUrl,
+      improved_image_urls: improvedImageSignedUrls,
     });
   } catch (err) {
     console.error("Improve error:", err);

@@ -202,7 +202,10 @@ export async function POST(request: Request) {
       const improvedHeadline = headlines?.[0]?.text ?? "";
       const improvedCTA = ctaOptions?.[0] ?? "";
 
-      console.log("[img] headline:", improvedHeadline || "(empty)");
+      console.log('=== STARTING IMAGE GENERATION ===');
+      console.log('OPENAI_API_KEY exists:', !!process.env.OPENAI_API_KEY);
+      console.log('OPENAI_API_KEY starts with:', process.env.OPENAI_API_KEY?.substring(0, 7));
+      console.log('[img] headline:', improvedHeadline || "(empty)");
 
       if (improvedHeadline) {
         // Step 1: Generate base image with DALL-E 3 (HD, no text in image)
@@ -273,7 +276,12 @@ export async function POST(request: Request) {
         }
       }
     } catch (imgError) {
-      console.error("[img] Pipeline failed:", imgError);
+      const error = imgError as Error;
+      console.error('=== IMAGE GENERATION FAILED ===');
+      console.error('Error name:', error?.name);
+      console.error('Error message:', error?.message);
+      console.error('Full error:', JSON.stringify(imgError, null, 2));
+      console.error('Stack trace:', error?.stack);
     }
 
     // 8. Save improvement result to analyses table

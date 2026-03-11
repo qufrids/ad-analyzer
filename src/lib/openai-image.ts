@@ -275,7 +275,12 @@ export async function generateImprovedAdImage({
     const url = response.data?.[0]?.url;
     return url ?? null;
   } catch (error) {
-    console.error("DALL-E image generation failed:", error);
+    const err = error as Error;
+    console.error('=== DALL-E GENERATION FAILED ===');
+    console.error('Error name:', err?.name);
+    console.error('Error message:', err?.message);
+    console.error('Full error:', JSON.stringify(error, null, 2));
+    console.error('Stack trace:', err?.stack);
     return null;
   }
 }

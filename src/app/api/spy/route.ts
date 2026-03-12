@@ -3,6 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 import { COMPETITOR_SPY_SYSTEM_PROMPT, buildSpyUserPrompt } from "@/lib/prompts/competitor-spy";
 import { rateLimit } from "@/lib/rate-limit";
+import { canPerformAction, incrementUsage } from "@/lib/usage";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -43,13 +44,17 @@ export async function POST(request: Request) {
     // Credit check
     const { data: profile } = await supabase
       .from("profiles")
-      .select("spy_credits_remaining, subscription_status")
+      .select("subscription_tier, subscription_status")
       .eq("id", user.id)
       .single();
 
-    const isPro = profile?.subscription_status === "active";
-    if (!isPro && (profile?.spy_credits_remaining ?? 0) <= 0) {
-      return NextResponse.json({ error: "No spy credits remaining" }, { status: 403 });
+    const tier = profile?.subscription_tier ?? 'free';
+    const quota = await canPerformAction(user.id, 'spy', tier);
+    if (!quota.allowed) {
+      return NextResponse.json(
+        { error: 'limit_reached', used: quota.used, limit: quota.limit, upgrade_tier: tier === 'free' ? 'starter' : tier === 'starter' ? 'pro' : 'agency' },
+        { status: 403 }
+      );
     }
 
     // Download image from storage
@@ -131,13 +136,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Failed to save analysis" }, { status: 500 });
     }
 
-    // Deduct credit for free users
-    if (!isPro) {
-      await supabase
-        .from("profiles")
-        .update({ spy_credits_remaining: Math.max(0, (profile?.spy_credits_remaining ?? 1) - 1) })
-        .eq("id", user.id);
-    }
+    // Increment usage
+    await incrementUsage(user.id, 'spy');
 
     return NextResponse.json(
       { spyId: spyAnalysis.id },

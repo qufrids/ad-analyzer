@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/toast";
 import Link from "next/link";
+import FeatureGate from "@/components/FeatureGate";
 
 const PLATFORMS = ["Facebook", "Instagram", "TikTok", "Google Ads"] as const;
 const NICHES = [
@@ -25,6 +26,15 @@ export default function SpyPage() {
   const router = useRouter();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [userTier, setUserTier] = useState('');
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      supabase.from('profiles').select('subscription_tier').eq('id', user.id).single()
+        .then(({ data }) => setUserTier(data?.subscription_tier ?? 'free'));
+    });
+  }, [supabase]);
 
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -182,6 +192,7 @@ export default function SpyPage() {
   }
 
   return (
+    <FeatureGate userTier={userTier} requiredTier="pro" featureName="Competitor Spy">
     <div className="max-w-2xl mx-auto space-y-6 sm:space-y-8">
       {/* Header */}
       <div>
@@ -389,5 +400,6 @@ export default function SpyPage() {
         </p>
       )}
     </div>
+    </FeatureGate>
   );
 }

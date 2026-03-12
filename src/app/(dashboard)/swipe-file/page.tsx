@@ -230,6 +230,10 @@ export default function SwipeFilePage() {
         }),
       });
       const data = await res.json();
+      if (res.status === 403 && data.error === 'upgrade_required') {
+        setError("Copy generation requires Starter plan or above. Upgrade in Settings →");
+        return;
+      }
       if (!res.ok) throw new Error(data.error || "Generation failed");
       setCopy(data.copy);
     } catch (e: unknown) {

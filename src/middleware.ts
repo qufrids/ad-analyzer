@@ -82,7 +82,6 @@ export const config = {
     "/generate",
     "/improve",
     "/swipe-file",
-    "/swipe-file",
     "/login",
     "/signup",
     "/reset-password",

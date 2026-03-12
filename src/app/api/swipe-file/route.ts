@@ -14,6 +14,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Check tier — free users cannot generate copy
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("subscription_tier")
+    .eq("id", user.id)
+    .single();
+
+  const tier = profile?.subscription_tier ?? 'free';
+  if (tier === 'free') {
+    return NextResponse.json(
+      { error: 'upgrade_required', message: 'Swipe file copy generation requires Starter plan or above.' },
+      { status: 403 }
+    );
+  }
+
   const { templateName, framework, platform, productDescription } = await request.json();
 
   if (!templateName || !framework || !platform || !productDescription?.trim()) {

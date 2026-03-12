@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import ScoreChart, { ChartPoint } from "@/components/dashboard/ScoreChart";
+import { getCurrentUsage, getTierLimits, getMonthYear } from "@/lib/usage";
 
 /* ── Helpers ── */
 function ScoreBadge({ score }: { score: number }) {
@@ -112,10 +113,16 @@ export default async function DashboardPage() {
       : null;
   const avgTrend = lastMonthAvg !== null && avgScore > 0 ? avgScore - lastMonthAvg : 0;
 
-  const creditsDisplay =
-    profile?.subscription_status === "active"
-      ? "Unlimited"
-      : `${profile?.credits_remaining ?? 0} / 3`;
+  const tier = profile?.subscription_tier ?? 'free';
+  const limits = getTierLimits(tier);
+  let usage = null;
+  try {
+    usage = await getCurrentUsage(user.id);
+  } catch {
+    // monthly_usage table may not exist yet
+  }
+
+  const creditsDisplay = tier === 'agency' ? "Unlimited" : `${usage?.analyses_used ?? 0} / ${limits.analyses}`;
   const userName = profile?.full_name || user.email?.split("@")[0] || "there";
 
   return (
@@ -233,6 +240,56 @@ export default async function DashboardPage() {
           )}
         </div>
 
+      </div>
+
+      {/* ── Usage This Month ── */}
+      <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 sm:p-7">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="text-base font-semibold text-gray-900 dark:text-white">Usage This Month</h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+              Resets on the 1st · {tier.charAt(0).toUpperCase() + tier.slice(1)} plan
+            </p>
+          </div>
+          {tier === 'free' && (
+            <a href="/settings" className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline">
+              Upgrade →
+            </a>
+          )}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            { label: 'Ad Analyses', used: usage?.analyses_used ?? 0, limit: limits.analyses, key: 'analyses' },
+            { label: 'AI Improvements', used: usage?.improvements_used ?? 0, limit: limits.improvements, key: 'improvements' },
+            { label: 'A/B Comparisons', used: usage?.comparisons_used ?? 0, limit: limits.comparisons, key: 'comparisons', requiredTier: 'starter' },
+            { label: 'Competitor Spy', used: usage?.spy_used ?? 0, limit: limits.spy, key: 'spy', requiredTier: 'pro' },
+            { label: 'URL to Ads', used: usage?.url_generations_used ?? 0, limit: limits.urlGenerations, key: 'urlGenerations', requiredTier: 'pro' },
+          ].map(({ label, used, limit: lim, requiredTier }) => {
+            const hasFeature = lim > 0;
+            const pct = hasFeature ? Math.min(100, (used / lim) * 100) : 0;
+            const barColor = pct >= 80 ? 'bg-red-500' : pct >= 50 ? 'bg-yellow-500' : 'bg-green-500';
+            const limitDisplay = lim >= 999999 ? '∞' : String(lim);
+            return (
+              <div key={label} className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{label}</span>
+                  {hasFeature ? (
+                    <span className="text-xs text-gray-500 dark:text-gray-400">{used} / {limitDisplay}</span>
+                  ) : (
+                    <a href="/settings" className="text-xs text-blue-600 dark:text-blue-400 hover:underline">
+                      Upgrade to {requiredTier} →
+                    </a>
+                  )}
+                </div>
+                {hasFeature && (
+                  <div className="h-1.5 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full transition-all ${barColor}`} style={{ width: `${pct}%` }} />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* ── Recent Analyses ── */}

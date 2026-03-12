@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { STRIPE_PRICES } from "@/lib/stripe-config";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2026-01-28.clover",
@@ -17,6 +18,14 @@ export async function POST(req: Request) {
 
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const tier = (body.tier as 'starter' | 'pro' | 'agency') ?? 'pro';
+
+    const priceId = STRIPE_PRICES[tier];
+    if (!priceId) {
+      return NextResponse.json({ error: `No price configured for tier: ${tier}` }, { status: 400 });
     }
 
     // Get or create Stripe customer
@@ -45,22 +54,14 @@ export async function POST(req: Request) {
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: "subscription",
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: "AdScore AI Pro",
-              description: "Unlimited ad creative analyses per month",
-            },
-            unit_amount: 2900, // $29/month
-            recurring: { interval: "month" },
-          },
-          quantity: 1,
-        },
-      ],
+      line_items: [{ price: priceId, quantity: 1 }],
+      subscription_data: {
+        trial_period_days: 7,
+        metadata: { tier, user_id: user.id },
+      },
       success_url: `${origin}/dashboard?upgraded=true`,
       cancel_url: `${origin}/settings`,
+      metadata: { tier, user_id: user.id },
     });
 
     return NextResponse.json({ url: session.url });

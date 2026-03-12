@@ -130,69 +130,76 @@ const PRICING = [
     name: "Free",
     price: "$0",
     cadence: "forever",
-    desc: "Start validating creatives today.",
-    features: [
-      "3 full analyses",
-      "6-dimension scoring",
-      "Actionable recommendations",
-      "CTR predictions",
-      "PDF export",
-    ],
-    cta: "Get Started",
-    href: "/signup",
+    desc: "Try AdScore AI — no card needed.",
     highlight: false,
-    soon: false,
+    cta: "Get Started Free",
+    href: "/signup",
+    features: [
+      { text: "3 ad analyses", included: true },
+      { text: "1 AI ad improvement", included: true },
+      { text: "Browse swipe file templates", included: true },
+      { text: "A/B Compare", included: false },
+      { text: "Competitor Spy", included: false },
+      { text: "URL to Ads generator", included: false },
+      { text: "Performance Tracker", included: false },
+    ],
+  },
+  {
+    name: "Starter",
+    price: "$19",
+    cadence: "/month",
+    desc: "For sellers testing and iterating creatives.",
+    highlight: false,
+    cta: "Start Free Trial",
+    href: "/signup?tier=starter",
+    features: [
+      { text: "50 analyses/month", included: true },
+      { text: "10 AI improvements/month", included: true },
+      { text: "5 A/B comparisons/month", included: true },
+      { text: "Full swipe file + copy gen", included: true },
+      { text: "Basic performance tracker", included: true },
+      { text: "Competitor Spy", included: false },
+      { text: "URL to Ads generator", included: false },
+      { text: "Email support", included: true },
+    ],
   },
   {
     name: "Pro",
-    price: "$29",
+    price: "$39",
     cadence: "/month",
     desc: "For marketers who ship consistently.",
-    features: [
-      "Unlimited analyses",
-      "Everything in Free",
-      "Priority AI processing",
-      "Full PDF reports",
-      "Cancel anytime",
-    ],
-    cta: "Upgrade to Pro",
-    href: "/signup",
     highlight: true,
-    soon: false,
+    cta: "Start Free Trial",
+    href: "/signup?tier=pro",
+    features: [
+      { text: "200 analyses/month", included: true },
+      { text: "40 AI improvements/month", included: true },
+      { text: "20 A/B comparisons/month", included: true },
+      { text: "10 Competitor Spy/month", included: true },
+      { text: "5 URL to Ads/month", included: true },
+      { text: "Full swipe file + copy gen", included: true },
+      { text: "Full tracker + export", included: true },
+      { text: "Priority analysis speed", included: true },
+    ],
   },
   {
     name: "Agency",
-    price: "$99",
+    price: "$79",
     cadence: "/month",
     desc: "For teams managing multiple brands.",
-    features: [
-      "Everything in Pro",
-      "Team collaboration",
-      "Client reporting",
-      "A/B comparison mode",
-      "API access",
-    ],
-    cta: "Coming Soon",
-    href: "#",
     highlight: false,
-    soon: true,
-  },
-  {
-    name: "Performance",
-    price: "$249",
-    cadence: "/month",
-    desc: "For agencies at scale.",
+    cta: "Start Free Trial",
+    href: "/signup?tier=agency",
     features: [
-      "Everything in Agency",
-      "Custom scoring models",
-      "Dedicated support",
-      "Bulk analysis",
-      "Priority roadmap",
+      { text: "Unlimited analyses", included: true },
+      { text: "Unlimited improvements", included: true },
+      { text: "Unlimited A/B compare", included: true },
+      { text: "Unlimited Competitor Spy", included: true },
+      { text: "Unlimited URL to Ads", included: true },
+      { text: "Weekly email reports", included: true },
+      { text: "Priority support", included: true },
+      { text: "API access (coming soon)", included: true },
     ],
-    cta: "Coming Soon",
-    href: "#",
-    highlight: false,
-    soon: true,
   },
 ];
 
@@ -1700,7 +1707,7 @@ export default function LandingPage() {
               <Overline>Pricing</Overline>
               <SectionHeading>Start Free. Scale When Ready.</SectionHeading>
               <p className="mt-5 text-slate-500 dark:text-zinc-400 text-[16px] max-w-md mx-auto leading-[1.75]">
-                No contracts. No hidden fees. Cancel anytime.
+                No contracts. 7-day free trial on all paid plans. Cancel anytime.
               </p>
             </div>
           </ScrollReveal>
@@ -1711,103 +1718,91 @@ export default function LandingPage() {
                 <div
                   className={`relative rounded-xl overflow-hidden h-full flex flex-col ${
                     p.highlight
-                      ? "bg-slate-900 dark:bg-white text-white dark:text-zinc-900 shadow-xl shadow-slate-900/20 dark:shadow-none"
-                      : p.soon
-                      ? "bg-slate-50/80 dark:bg-zinc-900/50 border border-slate-100 dark:border-white/[0.05]"
+                      ? "bg-slate-900 dark:bg-zinc-900 border-2 border-cyan-500/60 shadow-xl shadow-cyan-900/20"
                       : "bg-white dark:bg-zinc-900 border border-slate-100 dark:border-white/[0.07] shadow-sm dark:shadow-none"
                   }`}
                 >
                   {p.highlight && (
-                    <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-green-400/60 via-green-300 to-green-400/60" />
-                  )}
-                  {p.soon && (
-                    <div className="absolute top-4 right-4">
-                      <span className="text-[9px] font-semibold text-slate-400 dark:text-zinc-600 uppercase tracking-wider px-2 py-0.5 border border-slate-200 dark:border-white/[0.06] rounded">
-                        Soon
-                      </span>
-                    </div>
+                    <>
+                      <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-cyan-400/60 via-cyan-300 to-purple-400/60" />
+                      <div className="absolute top-4 right-4">
+                        <span className="text-[9px] font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 uppercase tracking-widest px-2.5 py-1 rounded-full">
+                          Most Popular
+                        </span>
+                      </div>
+                    </>
                   )}
 
-                  <div className="p-7 flex-1 flex flex-col">
+                  <div className="p-6 flex-1 flex flex-col">
                     <h3 className={`text-[13px] font-semibold mb-4 ${
-                      p.highlight ? "text-slate-400 dark:text-zinc-600" : "text-slate-500 dark:text-zinc-400"
+                      p.highlight ? "text-cyan-400" : "text-slate-500 dark:text-zinc-400"
                     }`}>
                       {p.name}
                     </h3>
 
                     <div className="flex items-baseline gap-1 mb-2">
                       <span className={`text-4xl font-black tracking-tight ${
-                        p.highlight ? "text-white dark:text-zinc-900" : p.soon ? "text-slate-300 dark:text-zinc-600" : "text-slate-900 dark:text-white"
+                        p.highlight ? "text-white" : "text-slate-900 dark:text-white"
                       }`}>
                         {p.price}
                       </span>
                       <span className={`text-sm ${
-                        p.highlight ? "text-slate-400 dark:text-zinc-500" : "text-slate-400 dark:text-zinc-600"
+                        p.highlight ? "text-slate-400" : "text-slate-400 dark:text-zinc-600"
                       }`}>
                         {p.cadence}
                       </span>
                     </div>
 
-                    <p className={`text-[12px] mb-7 ${
-                      p.highlight ? "text-slate-400 dark:text-zinc-500" : "text-slate-400 dark:text-zinc-600"
+                    <p className={`text-[12px] mb-6 ${
+                      p.highlight ? "text-slate-400" : "text-slate-400 dark:text-zinc-600"
                     }`}>
                       {p.desc}
                     </p>
 
-                    <ul className="space-y-2.5 flex-1 mb-8">
+                    <ul className="space-y-2 flex-1 mb-7">
                       {p.features.map((f) => (
-                        <li key={f} className="flex items-center gap-2.5">
-                          <svg
-                            className={`w-4 h-4 shrink-0 ${
-                              p.highlight
-                                ? "text-green-400 dark:text-green-500"
-                                : p.soon
-                                ? "text-slate-300 dark:text-zinc-700"
-                                : "text-green-500 dark:text-green-400"
-                            }`}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                          </svg>
+                        <li key={f.text} className="flex items-center gap-2.5">
+                          {f.included ? (
+                            <svg className={`w-4 h-4 shrink-0 ${p.highlight ? "text-cyan-400" : "text-green-500 dark:text-green-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : (
+                            <svg className="w-4 h-4 shrink-0 text-slate-300 dark:text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          )}
                           <span className={`text-[13px] ${
-                            p.highlight
-                              ? "text-slate-300 dark:text-zinc-700"
-                              : p.soon
-                              ? "text-slate-400 dark:text-zinc-600"
-                              : "text-slate-600 dark:text-zinc-300"
+                            f.included
+                              ? p.highlight ? "text-slate-300" : "text-slate-600 dark:text-zinc-300"
+                              : "text-slate-300 dark:text-zinc-600 line-through"
                           }`}>
-                            {f}
+                            {f.text}
                           </span>
                         </li>
                       ))}
                     </ul>
 
-                    {p.soon ? (
-                      <button
-                        disabled
-                        className="w-full py-2.5 border border-slate-200 dark:border-white/[0.06] rounded-lg text-slate-400 dark:text-zinc-600 text-[13px] font-semibold cursor-not-allowed"
-                      >
-                        {p.cta}
-                      </button>
-                    ) : (
-                      <Link
-                        href={p.href}
-                        className={`block w-full text-center py-2.5 rounded-lg text-[13px] font-semibold transition-colors ${
-                          p.highlight
-                            ? "bg-white dark:bg-zinc-900 text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-zinc-800"
-                            : "bg-slate-900 dark:bg-white/[0.06] text-white hover:bg-slate-800 dark:hover:bg-white/[0.10] border border-slate-800 dark:border-white/[0.08]"
-                        }`}
-                      >
-                        {p.cta}
-                      </Link>
-                    )}
+                    <Link
+                      href={p.href}
+                      className={`block w-full text-center py-2.5 rounded-lg text-[13px] font-semibold transition-colors ${
+                        p.highlight
+                          ? "bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white shadow-lg shadow-purple-900/30"
+                          : p.name === "Free"
+                          ? "border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-white/[0.04]"
+                          : "bg-slate-900 dark:bg-white/[0.06] text-white hover:bg-slate-800 dark:hover:bg-white/[0.10] border border-slate-800 dark:border-white/[0.08]"
+                      }`}
+                    >
+                      {p.cta}
+                    </Link>
                   </div>
                 </div>
               </ScrollReveal>
             ))}
           </div>
+
+          <p className="text-center mt-8 text-[13px] text-slate-400 dark:text-zinc-600">
+            All paid plans include a 7-day free trial. Cancel anytime. · Trusted by 500+ e-commerce sellers.
+          </p>
         </div>
       </section>
 

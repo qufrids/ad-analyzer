@@ -6,6 +6,7 @@ import {
   buildUserPrompt,
 } from "@/lib/prompts/ad-analysis";
 import { rateLimit } from "@/lib/rate-limit";
+import { canPerformAction, incrementUsage } from "@/lib/usage";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -93,19 +94,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Check credits / subscription
+    // 2. Check monthly quota
     const { data: profile } = await supabase
       .from("profiles")
-      .select("credits_remaining, subscription_status")
+      .select("subscription_tier, subscription_status")
       .eq("id", user.id)
       .single();
 
-    if (
-      profile?.subscription_status !== "active" &&
-      (profile?.credits_remaining ?? 0) <= 0
-    ) {
+    const tier = profile?.subscription_tier ?? 'free';
+    const quota = await canPerformAction(user.id, 'analyses', tier);
+    if (!quota.allowed) {
       return NextResponse.json(
-        { error: "No credits remaining" },
+        { error: 'limit_reached', used: quota.used, limit: quota.limit, upgrade_tier: tier === 'free' ? 'starter' : tier === 'starter' ? 'pro' : 'agency' },
         { status: 403 }
       );
     }
@@ -215,16 +215,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // 9. Deduct credit for free users
-    if (profile?.subscription_status !== "active") {
-      await supabase
-        .from("profiles")
-        .update({
-          credits_remaining: (profile?.credits_remaining ?? 1) - 1,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", user.id);
-    }
+    // 9. Increment usage
+    await incrementUsage(user.id, 'analyses');
 
     return NextResponse.json(
       { analysisId: analysis.id },

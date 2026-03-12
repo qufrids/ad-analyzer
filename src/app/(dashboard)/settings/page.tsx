@@ -10,7 +10,7 @@ interface Profile {
   email: string;
   full_name: string | null;
   subscription_status: string;
-  credits_remaining: number;
+  subscription_tier: string;
 }
 
 export default function SettingsPage() {
@@ -110,10 +110,14 @@ export default function SettingsPage() {
     setTimeout(() => setSaved(false), 3000);
   }
 
-  async function handleUpgrade() {
+  async function handleUpgrade(tier: string = 'pro') {
     setStripeLoading(true);
     try {
-      const res = await fetch("/api/stripe/checkout", { method: "POST" });
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tier }),
+      });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error || "Failed to start checkout");
@@ -158,9 +162,6 @@ export default function SettingsPage() {
       setDeleting(false);
     }
   }
-
-  const isPro = profile?.subscription_status === "active";
-  const creditsUsed = 3 - (profile?.credits_remaining ?? 0);
 
   if (!profile) {
     return (
@@ -228,81 +229,65 @@ export default function SettingsPage() {
       {/* Subscription */}
       <section className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 sm:p-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Subscription</h2>
-        <div className="flex items-center gap-3 mb-4">
-          <span
-            className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${
-              isPro
-                ? "text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-400/10 border-purple-200 dark:border-purple-400/20"
-                : "text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700"
-            }`}
-          >
-            {isPro ? "Pro" : "Free"}
+
+        {/* Current plan badge */}
+        <div className="flex items-center gap-3 mb-5">
+          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border ${
+            profile.subscription_tier === 'agency'
+              ? 'text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-400/10 border-purple-200 dark:border-purple-400/20'
+              : profile.subscription_tier === 'pro'
+              ? 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-400/10 border-blue-200 dark:border-blue-400/20'
+              : profile.subscription_tier === 'starter'
+              ? 'text-cyan-600 dark:text-cyan-400 bg-cyan-100 dark:bg-cyan-400/10 border-cyan-200 dark:border-cyan-400/20'
+              : 'text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700'
+          }`}>
+            {(profile.subscription_tier || 'free').charAt(0).toUpperCase() + (profile.subscription_tier || 'free').slice(1)}
           </span>
           <span className="text-sm text-gray-500">
-            {isPro
-              ? "Unlimited analyses per month"
-              : "3 free analyses included"}
+            {profile.subscription_tier === 'agency' ? 'Unlimited everything'
+              : profile.subscription_tier === 'pro' ? '200 analyses, 40 improvements/month'
+              : profile.subscription_tier === 'starter' ? '50 analyses, 10 improvements/month'
+              : '3 analyses, 1 improvement per month'}
           </span>
         </div>
+
+        {/* Action buttons */}
         <div className="flex items-center gap-3 flex-wrap">
-          {isPro ? (
+          {profile.subscription_tier !== 'free' ? (
             <button
               onClick={handleManageSubscription}
               disabled={stripeLoading}
-              className="px-4 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-750 hover:text-gray-900 dark:hover:text-white transition disabled:opacity-50"
+              className="px-4 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-750 transition disabled:opacity-50"
             >
               {stripeLoading ? "Loading..." : "Manage Subscription"}
             </button>
-          ) : (
-            <>
-              <button
-                onClick={handleUpgrade}
-                disabled={stripeLoading}
-                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white text-sm font-medium rounded-lg transition disabled:opacity-50"
-              >
-                {stripeLoading ? "Loading..." : "Upgrade to Pro — $29/mo"}
+          ) : null}
+
+          {/* Upgrade options for non-agency tiers */}
+          {profile.subscription_tier !== 'agency' && (
+            <div className="flex items-center gap-2 flex-wrap">
+              {profile.subscription_tier === 'free' && (
+                <button onClick={() => handleUpgrade('starter')} disabled={stripeLoading}
+                  className="px-4 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition disabled:opacity-50">
+                  {stripeLoading ? "..." : "Starter — $19/mo"}
+                </button>
+              )}
+              {(profile.subscription_tier === 'free' || profile.subscription_tier === 'starter') && (
+                <button onClick={() => handleUpgrade('pro')} disabled={stripeLoading}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white text-sm font-medium rounded-lg transition disabled:opacity-50">
+                  {stripeLoading ? "Loading..." : "Pro — $39/mo ⭐"}
+                </button>
+              )}
+              <button onClick={() => handleUpgrade('agency')} disabled={stripeLoading}
+                className="px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-700 dark:hover:bg-gray-100 transition disabled:opacity-50">
+                {stripeLoading ? "..." : "Agency — $79/mo"}
               </button>
-              <button
-                onClick={() => syncSubscription(false)}
-                disabled={syncing}
-                className="px-4 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-400 text-sm font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition disabled:opacity-50 flex items-center gap-2"
-              >
-                <svg className={`w-3.5 h-3.5 ${syncing ? "animate-spin" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                {syncing ? "Syncing..." : "Sync status"}
-              </button>
-            </>
+            </div>
           )}
         </div>
-      </section>
 
-      {/* Usage */}
-      <section className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 sm:p-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Usage</h2>
-        {isPro ? (
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
-            You have <span className="text-gray-900 dark:text-white font-medium">unlimited</span> analyses on the Pro plan.
-          </p>
-        ) : (
-          <>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Credits used</span>
-              <span className="text-sm text-gray-900 dark:text-white font-medium">
-                {creditsUsed} / 3
-              </span>
-            </div>
-            <div className="w-full h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all"
-                style={{ width: `${(creditsUsed / 3) * 100}%` }}
-              />
-            </div>
-            <p className="text-xs text-gray-500 mt-2">
-              {profile.credits_remaining} {profile.credits_remaining === 1 ? "credit" : "credits"} remaining.
-              Upgrade to Pro for unlimited analyses.
-            </p>
-          </>
+        {profile.subscription_tier === 'free' && (
+          <p className="mt-3 text-xs text-gray-400 dark:text-gray-600">7-day free trial on all paid plans. Cancel anytime.</p>
         )}
       </section>
 

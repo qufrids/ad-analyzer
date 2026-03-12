@@ -7,6 +7,7 @@ import {
   buildGenerateUserPrompt,
 } from "@/lib/prompts/generate-from-url";
 import { rateLimit } from "@/lib/rate-limit";
+import { canPerformAction, incrementUsage } from "@/lib/usage";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -209,14 +210,15 @@ export async function POST(request: Request) {
     // Credit check
     const { data: profile } = await supabase
       .from("profiles")
-      .select("generations_remaining, subscription_status")
+      .select("subscription_tier, subscription_status")
       .eq("id", user.id)
       .single();
 
-    const isPro = profile?.subscription_status === "active";
-    if (!isPro && (profile?.generations_remaining ?? 0) <= 0) {
+    const tier = profile?.subscription_tier ?? 'free';
+    const quota = await canPerformAction(user.id, 'urlGenerations', tier);
+    if (!quota.allowed) {
       return NextResponse.json(
-        { error: "No generations remaining" },
+        { error: 'limit_reached', used: quota.used, limit: quota.limit, upgrade_tier: tier === 'free' ? 'starter' : tier === 'starter' ? 'pro' : 'agency' },
         { status: 403 }
       );
     }
@@ -299,18 +301,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Deduct credit for free users
-    if (!isPro) {
-      await supabase
-        .from("profiles")
-        .update({
-          generations_remaining: Math.max(
-            0,
-            (profile?.generations_remaining ?? 1) - 1
-          ),
-        })
-        .eq("id", user.id);
-    }
+    // Increment usage
+    await incrementUsage(user.id, 'urlGenerations');
 
     return NextResponse.json(
       { generationId: gen.id },

@@ -46,7 +46,7 @@ const PROVIDERS: {
       </svg>
     ),
     className:
-      "bg-[#2F2F2F] border border-[#2F2F2F] text-white hover:bg-[#3a3a3a] hover:border-[#3a3a3a] hover:shadow-sm",
+      "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-750 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-sm",
   },
 ];
 

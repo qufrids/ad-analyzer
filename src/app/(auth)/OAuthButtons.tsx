@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { signInWithOAuth } from "@/lib/supabase/auth";
 
-type Provider = "google" | "apple" | "facebook";
+type Provider = "google" | "azure";
 
 function Spinner() {
   return (
@@ -35,32 +35,18 @@ const PROVIDERS: {
       "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-750 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-sm",
   },
   {
-    id: "apple",
-    label: "Apple",
+    id: "azure",
+    label: "Microsoft",
     icon: (
-      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" className="shrink-0">
-        <path
-          d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"
-          className="fill-gray-900 dark:fill-white"
-        />
+      <svg viewBox="0 0 21 21" width="20" height="20" aria-hidden="true" className="shrink-0">
+        <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+        <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+        <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+        <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
       </svg>
     ),
     className:
-      "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-750 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-sm",
-  },
-  {
-    id: "facebook",
-    label: "Facebook",
-    icon: (
-      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" className="shrink-0">
-        <path
-          d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
-          fill="#1877F2"
-        />
-      </svg>
-    ),
-    className:
-      "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-[#1877F2] hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:border-blue-200 dark:hover:border-blue-800 hover:shadow-sm",
+      "bg-[#2F2F2F] border border-[#2F2F2F] text-white hover:bg-[#3a3a3a] hover:border-[#3a3a3a] hover:shadow-sm",
   },
 ];
 

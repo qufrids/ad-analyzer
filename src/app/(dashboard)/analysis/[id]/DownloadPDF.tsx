@@ -137,7 +137,7 @@ export default function DownloadPDF({ data }: { data: AnalysisData }) {
       doc.text("Strengths", margin, y);
       y += 7;
 
-      data.result.strengths?.forEach((s) => {
+      data.result.strengths?.forEach((s: string) => {
         checkPage(12);
         doc.setFontSize(10);
         doc.setFont("helvetica", "normal");
@@ -156,7 +156,7 @@ export default function DownloadPDF({ data }: { data: AnalysisData }) {
       doc.text("Weaknesses", margin, y);
       y += 7;
 
-      data.result.weaknesses?.forEach((w2) => {
+      data.result.weaknesses?.forEach((w2: string) => {
         checkPage(12);
         doc.setFontSize(10);
         doc.setFont("helvetica", "normal");
@@ -180,7 +180,7 @@ export default function DownloadPDF({ data }: { data: AnalysisData }) {
         return (order[a.priority] ?? 3) - (order[b.priority] ?? 3);
       });
 
-      sorted.forEach((rec) => {
+      sorted.forEach((rec: { priority: string; action: string }) => {
         checkPage(14);
         doc.setFontSize(8);
         doc.setFont("helvetica", "bold");

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import ClientNavbar from "@/components/landing/ClientNavbar";
 import ScrollReveal from "@/components/landing/ScrollReveal";
-import LandingScoreRing from "@/components/landing/LandingScoreRing";
 import PricingButton from "@/components/PricingButton";
 
 /* ─────────── JSON-LD ─────────── */
@@ -31,13 +30,6 @@ const jsonLd = {
 };
 
 /* ─────────── DATA ─────────── */
-
-const HERO_METRICS = [
-  { label: "Hook Strength",    score: 91, hi: true  },
-  { label: "CTA Clarity",      score: 78, hi: false },
-  { label: "Visual Impact",    score: 88, hi: true  },
-  { label: "Platform Fit",     score: 95, hi: true  },
-];
 
 const TRUST_ITEMS = [
   "6-dimension scoring framework",
@@ -249,26 +241,6 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* MetricBar lives inside the intentionally-dark product mock card */
-function MetricBar({ label, score, hi }: { label: string; score: number; hi: boolean }) {
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[11px] text-zinc-400">{label}</span>
-        <span className={`text-[11px] font-bold ${hi ? "text-green-400" : "text-yellow-400"}`}>
-          {score}
-        </span>
-      </div>
-      <div className="h-[3px] bg-white/[0.06] rounded-full overflow-hidden">
-        <div
-          className="h-full rounded-full transition-all"
-          style={{ width: `${score}%`, background: hi ? "#22C55E" : "#EAB308" }}
-        />
-      </div>
-    </div>
-  );
-}
-
 const capColor: Record<string, string> = {
   green:  "text-green-600  dark:text-green-400  bg-green-50  dark:bg-green-500/10  border-green-200  dark:border-green-500/20",
   blue:   "text-blue-600   dark:text-blue-400   bg-blue-50   dark:bg-blue-500/10   border-blue-200   dark:border-blue-500/20",
@@ -371,54 +343,57 @@ export default function LandingPage() {
 
             {/* ── RIGHT: Product Mock — Analysis Results (always dark) ── */}
             <ScrollReveal delay={0.18} className="w-full">
-              <div className="relative" style={{ transform: "rotate(2deg)" }}>
-                {/* Multi-layer glow */}
+              <div className="relative" style={{ transform: "rotate(1.5deg)" }}>
+                {/* Ambient glow */}
                 <div
                   aria-hidden
                   className="absolute -inset-8 rounded-3xl blur-3xl pointer-events-none"
-                  style={{ background: "radial-gradient(ellipse at 60% 40%, rgba(34,197,94,0.18) 0%, rgba(6,182,212,0.08) 50%, transparent 70%)" }}
+                  style={{ background: "radial-gradient(ellipse at 60% 40%, rgba(34,197,94,0.14) 0%, rgba(6,182,212,0.06) 55%, transparent 75%)" }}
                 />
                 <div
                   className="relative bg-[#0d1117] rounded-2xl overflow-hidden"
-                  style={{ border: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 30px 90px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05)" }}
+                  style={{
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    boxShadow: "0 4px 6px rgba(0,0,0,0.3), 0 12px 24px rgba(0,0,0,0.4), 0 24px 48px rgba(0,0,0,0.25)",
+                  }}
                 >
-                  {/* Shine overlay */}
+                  {/* Glass sheen diagonal */}
                   <div
                     aria-hidden
                     className="pointer-events-none absolute inset-0 rounded-2xl z-10"
-                    style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)" }}
+                    style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 30%, transparent 55%)" }}
                   />
                   {/* Window chrome */}
-                  <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.06] bg-white/[0.015]">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-white/[0.01]">
                     <div className="flex items-center gap-2.5">
-                      <div className="flex gap-1.5">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#28CA41]" />
+                      <div className="flex gap-[6px]">
+                        <span className="w-[10px] h-[10px] rounded-full bg-[#ff5f57]" />
+                        <span className="w-[10px] h-[10px] rounded-full bg-[#febc2e]" />
+                        <span className="w-[10px] h-[10px] rounded-full bg-[#28c840]" />
                       </div>
                       <span className="text-[11px] text-zinc-500 font-mono ml-1">Summer_Campaign_V4.jpg</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-400" style={{ boxShadow: "0 0 6px #22c55e" }} />
-                      <span className="text-[10px] text-green-400/80">Analysis complete</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" style={{ boxShadow: "0 0 5px #22c55e" }} />
+                      <span className="text-[10px] text-green-400">Analysis complete</span>
                     </div>
                   </div>
 
                   <div className="p-5 space-y-4">
-                    {/* Score + CTR */}
-                    <div className="flex items-start justify-between">
+                    {/* Score + CTR row */}
+                    <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="text-[9px] font-semibold tracking-[0.16em] uppercase text-zinc-600 mb-1.5">Performance Score</p>
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-[58px] font-black leading-none" style={{ color: "#22c55e" }}>84</span>
-                          <span className="text-zinc-600 text-sm">/100</span>
+                          <span className="text-[64px] font-black leading-none text-white" style={{ textShadow: "0 0 28px rgba(34,197,94,0.25)" }}>84</span>
+                          <span className="text-zinc-600 font-light" style={{ fontSize: "20px" }}>/100</span>
                         </div>
-                        <div className="flex items-center gap-1.5 mt-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                          <span className="text-[10px] text-zinc-400">Top 28% for Meta E-commerce</span>
+                        <div className="flex items-center gap-1.5 mt-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                          <span className="text-[10px] text-green-400">Top 28% for Meta E-commerce</span>
                         </div>
                       </div>
-                      <div className="px-3 py-2.5 bg-green-500/[0.08] border border-green-500/[0.2] rounded-xl" style={{ boxShadow: "0 0 24px rgba(34,197,94,0.08)" }}>
+                      <div className="shrink-0 px-3 py-2.5 rounded-xl" style={{ background: "#0a1f12", border: "1px solid rgba(34,197,94,0.22)", boxShadow: "0 0 18px rgba(34,197,94,0.07)" }}>
                         <p className="text-[8px] font-semibold tracking-[0.14em] uppercase text-zinc-600 mb-0.5">Est. CTR</p>
                         <p className="text-[22px] font-black text-green-400 leading-tight">2.8–4.1%</p>
                         <p className="text-[9px] text-cyan-400/70 mt-0.5">Above avg for niche</p>
@@ -426,21 +401,21 @@ export default function LandingPage() {
                     </div>
 
                     {/* Mock ad preview */}
-                    <div className="bg-[#161b22] border border-white/[0.05] rounded-xl h-[82px] flex items-start pt-2.5 px-3 relative overflow-hidden">
-                      <span className="text-[8px] font-semibold text-zinc-600 uppercase tracking-[0.12em]">Sponsored</span>
-                      <div className="absolute inset-0 flex items-center justify-center px-8 pt-4">
-                        <div className="w-full">
-                          <div className="h-[6px] bg-white/[0.14] rounded-full w-full mb-2" />
-                          <div className="h-[5px] bg-white/[0.08] rounded-full w-4/5 mb-1.5" />
-                          <div className="h-[5px] bg-white/[0.06] rounded-full w-3/5 mb-3" />
-                          <div className="h-5 bg-green-500/[0.15] border border-green-500/[0.2] rounded w-20 flex items-center justify-center">
-                            <div className="h-[3px] bg-green-400/40 rounded w-14" />
+                    <div className="rounded-xl h-[80px] relative overflow-hidden" style={{ background: "#161b22", border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <span className="absolute top-2.5 left-3 text-[8px] font-semibold text-zinc-600 uppercase tracking-[0.12em] z-10">Sponsored</span>
+                      <div className="absolute inset-0 flex items-center justify-center px-5">
+                        <div className="w-full pt-2">
+                          <div className="h-[6px] rounded-full mb-2.5" style={{ background: "rgba(255,255,255,0.15)", width: "100%" }} />
+                          <div className="h-[5px] rounded-full mb-2" style={{ background: "rgba(255,255,255,0.10)", width: "82%" }} />
+                          <div className="h-[5px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.07)", width: "63%" }} />
+                          <div className="h-[22px] rounded-md flex items-center justify-center" style={{ width: "88px", background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.22)" }}>
+                            <div className="h-[4px] rounded-full" style={{ background: "rgba(34,197,94,0.4)", width: "60px" }} />
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Score breakdown — color coded by value */}
+                    {/* Score breakdown — 6px bars, dark track, gradient fill */}
                     <div className="space-y-3">
                       {[
                         { label: "Hook Strength", score: 91 },
@@ -448,15 +423,16 @@ export default function LandingPage() {
                         { label: "Visual Impact", score: 88 },
                         { label: "Platform Fit",  score: 95 },
                       ].map((m) => {
-                        const c = m.score > 75 ? "#22c55e" : m.score >= 60 ? "#eab308" : m.score >= 40 ? "#f97316" : "#ef4444";
+                        const base  = m.score > 75 ? "#22c55e" : m.score >= 60 ? "#eab308" : m.score >= 40 ? "#f97316" : "#ef4444";
+                        const light = m.score > 75 ? "#4ade80" : m.score >= 60 ? "#facc15" : m.score >= 40 ? "#fb923c" : "#f87171";
                         return (
                           <div key={m.label}>
                             <div className="flex items-center justify-between mb-1.5">
                               <span className="text-[10px] text-zinc-500">{m.label}</span>
-                              <span className="text-[10px] font-bold" style={{ color: c }}>{m.score}</span>
+                              <span className="text-[11px] font-bold" style={{ color: base }}>{m.score}</span>
                             </div>
-                            <div className="h-[4px] bg-white/[0.06] rounded-full overflow-hidden">
-                              <div className="h-full rounded-full" style={{ width: `${m.score}%`, background: c }} />
+                            <div className="h-[6px] rounded-full overflow-hidden" style={{ background: "#1a1f2e" }}>
+                              <div className="h-full rounded-full" style={{ width: `${m.score}%`, background: `linear-gradient(90deg, ${base} 0%, ${light} 100%)` }} />
                             </div>
                           </div>
                         );
@@ -464,9 +440,9 @@ export default function LandingPage() {
                     </div>
 
                     {/* Top recommendation */}
-                    <div className="bg-[#161b22] border border-white/[0.05] rounded-xl p-3.5">
+                    <div className="rounded-xl p-3.5" style={{ background: "#161b22", borderLeft: "2px solid rgba(6,182,212,0.35)" }}>
                       <p className="text-[8px] font-semibold tracking-[0.16em] uppercase text-zinc-600 mb-1.5">Top Recommendation</p>
-                      <p className="text-[11px] text-zinc-300 leading-relaxed">
+                      <p className="text-[11px] text-zinc-200 leading-relaxed">
                         Headline is strong. Tighten the CTA from &ldquo;Learn More&rdquo; to a specific outcome — could push CTR above 4%.
                       </p>
                     </div>
@@ -649,65 +625,67 @@ export default function LandingPage() {
             {/* ── Ad A — LOSER ── */}
             <ScrollReveal delay={0.05}>
               <div
-                className="group relative bg-[#0d1117] rounded-2xl overflow-hidden h-full transition-all duration-500"
-                style={{ border: "1px solid rgba(239,68,68,0.18)", boxShadow: "0 0 0 1px rgba(239,68,68,0.08), 0 24px 64px rgba(0,0,0,0.45)" }}
+                className="group relative bg-[#0d1117] rounded-2xl overflow-hidden h-full transition-all duration-300 hover:-translate-y-0.5"
+                style={{
+                  border: "1px solid rgba(239,68,68,0.2)",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)",
+                }}
               >
                 {/* Red top glow line */}
-                <div className="h-[2px] w-full" style={{ background: "linear-gradient(90deg, transparent 0%, #ef4444 50%, transparent 100%)", boxShadow: "0 0 14px rgba(239,68,68,0.7)" }} />
-                {/* Hover inner glow */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" style={{ boxShadow: "inset 0 0 50px rgba(239,68,68,0.05)" }} />
+                <div className="h-[2px] w-full" style={{ background: "linear-gradient(90deg, transparent 5%, #ef4444 50%, transparent 95%)", boxShadow: "0 0 16px rgba(239,68,68,0.6)" }} />
+                {/* Hover border glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl" style={{ boxShadow: "0 0 0 1px rgba(239,68,68,0.35), inset 0 0 40px rgba(239,68,68,0.04)" }} />
 
-                <div className="px-6 py-5">
-                  {/* Header: filename + score */}
-                  <div className="flex items-center justify-between mb-5">
+                <div className="px-6 py-6">
+                  {/* Header: filename + score gauge */}
+                  <div className="flex items-center justify-between mb-6">
                     <span className="text-[11px] text-zinc-600 font-mono">Summer_Campaign_V2.jpg</span>
                     <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <div className="flex items-baseline gap-1 justify-end">
-                          <span className="text-[38px] font-black leading-none" style={{ color: "#ef4444" }}>38</span>
-                          <span className="text-zinc-600 text-xs">/100</span>
-                        </div>
+                      <div className="text-right leading-none">
+                        <span className="text-[40px] font-black leading-none" style={{ color: "#ef4444" }}>38</span>
+                        <span className="text-zinc-600 text-[11px] ml-0.5">/100</span>
                       </div>
-                      <svg width="52" height="52" viewBox="0 0 52 52" className="shrink-0">
-                        <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
-                        <circle cx="26" cy="26" r="20" fill="none" stroke="#ef4444" strokeWidth="3"
-                          strokeDasharray={`${2 * Math.PI * 20}`}
-                          strokeDashoffset={`${2 * Math.PI * 20 * (1 - 0.38)}`}
-                          strokeLinecap="round" transform="rotate(-90 26 26)"
+                      <svg width="64" height="64" viewBox="0 0 64 64" className="shrink-0">
+                        <circle cx="32" cy="32" r="26" fill="none" stroke="#1a1f2e" strokeWidth="4" />
+                        <circle cx="32" cy="32" r="26" fill="none" stroke="#ef4444" strokeWidth="4"
+                          strokeDasharray={`${2 * Math.PI * 26}`}
+                          strokeDashoffset={`${2 * Math.PI * 26 * (1 - 0.38)}`}
+                          strokeLinecap="round" transform="rotate(-90 32 32)"
                           style={{ filter: "drop-shadow(0 0 4px rgba(239,68,68,0.5))" }} />
                       </svg>
                     </div>
                   </div>
 
                   {/* Mock ad preview */}
-                  <div className="bg-[#161b22] border border-white/[0.05] rounded-xl h-[96px] flex items-start pt-2.5 px-3 relative overflow-hidden mb-5">
-                    <span className="text-[8px] font-semibold text-zinc-600 uppercase tracking-[0.12em]">Sponsored</span>
-                    <div className="absolute inset-0 flex items-center justify-center px-6 pt-5">
+                  <div className="rounded-xl h-[100px] relative overflow-hidden mb-6" style={{ background: "#161b22", border: "1px solid rgba(255,255,255,0.05)" }}>
+                    <span className="absolute top-2.5 left-3 text-[8px] font-semibold text-zinc-600 uppercase tracking-[0.12em] z-10">Sponsored</span>
+                    <div className="absolute inset-0 flex items-center justify-center px-5 pt-3">
                       <div className="w-full">
-                        <div className="h-[6px] bg-white/[0.09] rounded-full w-full mb-2" />
-                        <div className="h-[5px] bg-white/[0.06] rounded-full w-4/5 mb-1.5" />
-                        <div className="h-[5px] bg-white/[0.05] rounded-full w-3/5 mb-3" />
-                        <div className="h-6 bg-zinc-700/50 border border-white/[0.06] rounded w-24" />
+                        <div className="h-[6px] rounded-full mb-2.5" style={{ background: "rgba(255,255,255,0.09)", width: "100%" }} />
+                        <div className="h-[5px] rounded-full mb-2" style={{ background: "rgba(255,255,255,0.06)", width: "78%" }} />
+                        <div className="h-[5px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.05)", width: "58%" }} />
+                        <div className="h-[22px] rounded-md" style={{ width: "80px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }} />
                       </div>
                     </div>
                   </div>
 
-                  {/* Score breakdown */}
-                  <div className="space-y-3 mb-5">
+                  {/* Score breakdown — 6px bars, dark track */}
+                  <div className="space-y-3 mb-6">
                     {[
                       { label: "Hook Strength", score: 29 },
                       { label: "CTA Clarity",   score: 41 },
                       { label: "Visual Impact", score: 38 },
                     ].map((m) => {
-                      const c = m.score < 40 ? "#ef4444" : m.score < 60 ? "#f97316" : m.score < 75 ? "#eab308" : "#22c55e";
+                      const base  = m.score < 50 ? "#ef4444" : m.score < 70 ? "#f97316" : "#22c55e";
+                      const light = m.score < 50 ? "#f87171" : m.score < 70 ? "#fb923c" : "#4ade80";
                       return (
                         <div key={m.label}>
                           <div className="flex items-center justify-between mb-1.5">
                             <span className="text-[11px] text-zinc-500">{m.label}</span>
-                            <span className="text-[11px] font-bold" style={{ color: c }}>{m.score}</span>
+                            <span className="text-[12px] font-bold" style={{ color: base }}>{m.score}</span>
                           </div>
-                          <div className="h-[4px] bg-white/[0.06] rounded-full overflow-hidden">
-                            <div className="h-full rounded-full" style={{ width: `${m.score}%`, background: c }} />
+                          <div className="h-[6px] rounded-full overflow-hidden" style={{ background: "#1a1f2e" }}>
+                            <div className="h-full rounded-full" style={{ width: `${m.score}%`, background: `linear-gradient(90deg, ${base} 0%, ${light} 100%)` }} />
                           </div>
                         </div>
                       );
@@ -715,14 +693,14 @@ export default function LandingPage() {
                   </div>
 
                   {/* Issues list */}
-                  <div className="space-y-2 mb-5">
+                  <div className="space-y-2.5 mb-6">
                     {[
                       "Generic headline — no specific benefit",
                       "No social proof or credibility",
                       "CTA too vague to drive action",
                     ].map((issue) => (
-                      <div key={issue} className="flex items-start gap-2">
-                        <span className="w-4 h-4 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                      <div key={issue} className="flex items-start gap-2.5">
+                        <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.25)" }}>
                           <svg className="w-2.5 h-2.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                           </svg>
@@ -733,15 +711,15 @@ export default function LandingPage() {
                   </div>
 
                   {/* Stats bar */}
-                  <div className="pt-4 border-t border-white/[0.05] grid grid-cols-3 text-center">
+                  <div className="grid grid-cols-3 text-center pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
                     {[
-                      { label: "EST. CTR",    val: "0.7%" },
-                      { label: "HOOK",        val: "Weak" },
-                      { label: "CONFIDENCE",  val: "Low"  },
+                      { label: "EST. CTR",   val: "0.7%" },
+                      { label: "HOOK",       val: "Weak" },
+                      { label: "CONFIDENCE", val: "Low"  },
                     ].map((s) => (
                       <div key={s.label}>
-                        <p className="text-[8px] font-semibold uppercase tracking-widest text-zinc-600 mb-1">{s.label}</p>
-                        <p className="text-[13px] font-bold" style={{ color: "#ef4444" }}>{s.val}</p>
+                        <p className="text-[9px] font-semibold uppercase tracking-widest text-zinc-600 mb-1.5">{s.label}</p>
+                        <p className="text-[16px] font-bold" style={{ color: "#ef4444" }}>{s.val}</p>
                       </div>
                     ))}
                   </div>
@@ -751,73 +729,74 @@ export default function LandingPage() {
 
             {/* VS divider */}
             <div className="hidden lg:flex flex-col items-center justify-center gap-3 py-8">
-              <div className="flex-1 w-px bg-white/[0.05]" />
-              <div className="w-10 h-10 rounded-full bg-zinc-800/80 border border-white/[0.08] flex items-center justify-center shadow-lg backdrop-blur-sm">
-                <span className="text-[9px] font-black text-zinc-500 tracking-widest">VS</span>
+              <div className="flex-1 w-px" style={{ background: "rgba(255,255,255,0.05)" }} />
+              <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg" style={{ background: "#1a1f2e", border: "1px solid rgba(255,255,255,0.10)" }}>
+                <span className="text-[13px] font-bold text-zinc-500">VS</span>
               </div>
-              <div className="flex-1 w-px bg-white/[0.05]" />
+              <div className="flex-1 w-px" style={{ background: "rgba(255,255,255,0.05)" }} />
             </div>
-            <div className="lg:hidden flex items-center justify-center py-2">
-              <div className="w-10 h-10 rounded-full bg-zinc-800/80 border border-white/[0.08] flex items-center justify-center">
-                <span className="text-[9px] font-black text-zinc-500 tracking-widest">VS</span>
+            <div className="lg:hidden flex items-center justify-center py-4">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "#1a1f2e", border: "1px solid rgba(255,255,255,0.10)" }}>
+                <span className="text-[13px] font-bold text-zinc-500">VS</span>
               </div>
             </div>
 
             {/* ── Ad B — WINNER ── */}
             <ScrollReveal delay={0.12}>
               <div
-                className="group relative bg-[#0d1117] rounded-2xl overflow-hidden h-full transition-all duration-500"
-                style={{ border: "1px solid rgba(34,197,94,0.2)", boxShadow: "0 0 0 1px rgba(34,197,94,0.08), 0 24px 64px rgba(0,0,0,0.45)" }}
+                className="group relative bg-[#0d1117] rounded-2xl overflow-hidden h-full transition-all duration-300 hover:-translate-y-0.5"
+                style={{
+                  border: "1px solid rgba(34,197,94,0.22)",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)",
+                }}
               >
                 {/* Green top glow line */}
-                <div className="h-[2px] w-full" style={{ background: "linear-gradient(90deg, transparent 0%, #22c55e 50%, transparent 100%)", boxShadow: "0 0 14px rgba(34,197,94,0.7)" }} />
-                {/* Hover inner glow */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" style={{ boxShadow: "inset 0 0 50px rgba(34,197,94,0.05)" }} />
+                <div className="h-[2px] w-full" style={{ background: "linear-gradient(90deg, transparent 5%, #22c55e 50%, transparent 95%)", boxShadow: "0 0 16px rgba(34,197,94,0.65)" }} />
+                {/* Hover border glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl" style={{ boxShadow: "0 0 0 1px rgba(34,197,94,0.4), inset 0 0 40px rgba(34,197,94,0.04)" }} />
 
-                <div className="px-6 py-5">
-                  {/* Header: filename + winner badge + score */}
-                  <div className="flex items-center justify-between mb-5">
+                <div className="px-6 py-6">
+                  {/* Header: filename + winner badge + score gauge */}
+                  <div className="flex items-center justify-between mb-6">
                     <div className="flex flex-col gap-1.5">
                       <span className="text-[11px] text-zinc-600 font-mono">Summer_Campaign_V4.jpg</span>
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[9px] font-black text-green-400 bg-green-500/10 border border-green-500/20 rounded-full uppercase tracking-widest w-fit">
-                        <span>✦</span> WINNER
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[9px] font-black text-white rounded-full uppercase tracking-widest w-fit" style={{ background: "#22c55e", boxShadow: "0 2px 8px rgba(34,197,94,0.4)" }}>
+                        ✦ WINNER
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <div className="flex items-baseline gap-1 justify-end">
-                          <span className="text-[38px] font-black leading-none" style={{ color: "#22c55e" }}>91</span>
-                          <span className="text-zinc-600 text-xs">/100</span>
-                        </div>
+                      <div className="text-right leading-none">
+                        <span className="text-[40px] font-black leading-none" style={{ color: "#22c55e" }}>91</span>
+                        <span className="text-zinc-600 text-[11px] ml-0.5">/100</span>
                       </div>
-                      <svg width="52" height="52" viewBox="0 0 52 52" className="shrink-0">
-                        <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
-                        <circle cx="26" cy="26" r="20" fill="none" stroke="#22c55e" strokeWidth="3"
-                          strokeDasharray={`${2 * Math.PI * 20}`}
-                          strokeDashoffset={`${2 * Math.PI * 20 * (1 - 0.91)}`}
-                          strokeLinecap="round" transform="rotate(-90 26 26)"
+                      <svg width="64" height="64" viewBox="0 0 64 64" className="shrink-0">
+                        <circle cx="32" cy="32" r="26" fill="none" stroke="#1a1f2e" strokeWidth="4" />
+                        <circle cx="32" cy="32" r="26" fill="none" stroke="#22c55e" strokeWidth="4"
+                          strokeDasharray={`${2 * Math.PI * 26}`}
+                          strokeDashoffset={`${2 * Math.PI * 26 * (1 - 0.91)}`}
+                          strokeLinecap="round" transform="rotate(-90 32 32)"
                           style={{ filter: "drop-shadow(0 0 5px rgba(34,197,94,0.7))" }} />
                       </svg>
                     </div>
                   </div>
 
                   {/* Mock ad preview */}
-                  <div className="bg-[#161b22] border border-green-500/[0.08] rounded-xl h-[96px] flex items-start pt-2.5 px-3 relative overflow-hidden mb-5">
-                    <span className="text-[8px] font-semibold text-zinc-600 uppercase tracking-[0.12em]">Sponsored</span>
-                    <div className="absolute inset-0 flex items-center justify-center px-6 pt-5">
+                  <div className="rounded-xl h-[100px] relative overflow-hidden mb-6" style={{ background: "#161b22", border: "1px solid rgba(34,197,94,0.08)" }}>
+                    <span className="absolute top-2.5 left-3 text-[8px] font-semibold text-zinc-600 uppercase tracking-[0.12em] z-10">Sponsored</span>
+                    <div className="absolute inset-0 flex items-center justify-center px-5 pt-3">
                       <div className="w-full">
-                        <div className="h-[6px] bg-white/[0.16] rounded-full w-full mb-2" />
-                        <div className="h-[5px] bg-white/[0.10] rounded-full w-5/6 mb-1.5" />
-                        <div className="h-[5px] bg-white/[0.07] rounded-full w-2/3 mb-3" />
-                        <div className="h-6 bg-green-500/20 border border-green-500/30 rounded w-28 flex items-center justify-center">
-                          <div className="h-[3px] bg-green-400/50 rounded w-20" />
+                        <div className="h-[6px] rounded-full mb-2.5" style={{ background: "rgba(255,255,255,0.16)", width: "100%" }} />
+                        <div className="h-[5px] rounded-full mb-2" style={{ background: "rgba(255,255,255,0.11)", width: "85%" }} />
+                        <div className="h-[5px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.08)", width: "67%" }} />
+                        <div className="h-[22px] rounded-md flex items-center justify-center" style={{ width: "96px", background: "rgba(34,197,94,0.14)", border: "1px solid rgba(34,197,94,0.25)" }}>
+                          <div className="h-[4px] rounded-full" style={{ background: "rgba(34,197,94,0.45)", width: "72px" }} />
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Score breakdown */}
-                  <div className="space-y-3 mb-5">
+                  {/* Score breakdown — 6px bars, dark track, gradient */}
+                  <div className="space-y-3 mb-6">
                     {[
                       { label: "Hook Strength", score: 94 },
                       { label: "CTA Clarity",   score: 88 },
@@ -826,24 +805,24 @@ export default function LandingPage() {
                       <div key={m.label}>
                         <div className="flex items-center justify-between mb-1.5">
                           <span className="text-[11px] text-zinc-400">{m.label}</span>
-                          <span className="text-[11px] font-bold text-green-400">{m.score}</span>
+                          <span className="text-[12px] font-bold text-green-400">{m.score}</span>
                         </div>
-                        <div className="h-[4px] bg-white/[0.06] rounded-full overflow-hidden">
-                          <div className="h-full rounded-full" style={{ width: `${m.score}%`, background: "#22c55e", boxShadow: "0 0 6px rgba(34,197,94,0.4)" }} />
+                        <div className="h-[6px] rounded-full overflow-hidden" style={{ background: "#1a1f2e" }}>
+                          <div className="h-full rounded-full" style={{ width: `${m.score}%`, background: "linear-gradient(90deg, #22c55e 0%, #4ade80 100%)", boxShadow: "0 0 6px rgba(34,197,94,0.35)" }} />
                         </div>
                       </div>
                     ))}
                   </div>
 
                   {/* Improvements list */}
-                  <div className="space-y-2 mb-5">
+                  <div className="space-y-2.5 mb-6">
                     {[
                       "Specific headline with clear outcome",
                       "12,000+ customers social proof",
                       "Urgency-driven CTA with value",
                     ].map((item) => (
-                      <div key={item} className="flex items-start gap-2">
-                        <span className="w-4 h-4 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                      <div key={item} className="flex items-start gap-2.5">
+                        <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.28)" }}>
                           <svg className="w-2.5 h-2.5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                           </svg>
@@ -854,15 +833,15 @@ export default function LandingPage() {
                   </div>
 
                   {/* Stats bar */}
-                  <div className="pt-4 border-t border-green-500/[0.08] grid grid-cols-3 text-center">
+                  <div className="grid grid-cols-3 text-center pt-4" style={{ borderTop: "1px solid rgba(34,197,94,0.08)" }}>
                     {[
-                      { label: "EST. CTR",    val: "3.6%" },
-                      { label: "HOOK",        val: "Strong" },
-                      { label: "CONFIDENCE",  val: "High"  },
+                      { label: "EST. CTR",   val: "3.6%" },
+                      { label: "HOOK",       val: "Strong" },
+                      { label: "CONFIDENCE", val: "High"  },
                     ].map((s) => (
                       <div key={s.label}>
-                        <p className="text-[8px] font-semibold uppercase tracking-widest text-zinc-600 mb-1">{s.label}</p>
-                        <p className="text-[13px] font-bold text-green-400">{s.val}</p>
+                        <p className="text-[9px] font-semibold uppercase tracking-widest text-zinc-600 mb-1.5">{s.label}</p>
+                        <p className="text-[16px] font-bold text-green-400">{s.val}</p>
                       </div>
                     ))}
                   </div>

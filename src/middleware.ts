@@ -43,6 +43,7 @@ export async function middleware(request: NextRequest) {
     "/generate",
     "/improve",
     "/swipe-file",
+    "/pricing",
   ];
   const isProtected = protectedPaths.some(
     (p) => path === p || path.startsWith(p + "/")
@@ -82,6 +83,7 @@ export const config = {
     "/generate",
     "/improve",
     "/swipe-file",
+    "/pricing",
     "/login",
     "/signup",
     "/reset-password",

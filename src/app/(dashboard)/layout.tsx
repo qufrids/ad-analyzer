@@ -6,6 +6,20 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ToastProvider } from "@/components/toast";
 import ThemeToggle from "@/components/ThemeToggle";
+import { TIER_DISPLAY } from "@/lib/stripe-config";
+
+const TIER_BADGE: Record<string, string> = {
+  free: "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400",
+  starter: "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400",
+  pro: "bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.25)]",
+  agency: "bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 shadow-[0_0_8px_rgba(139,92,246,0.25)]",
+};
+
+const TRIAL_PRICES: Record<string, string> = {
+  starter: "$19",
+  pro: "$39",
+  agency: "$79",
+};
 
 const navItems = [
   {
@@ -90,6 +104,16 @@ const navItems = [
     ),
   },
   {
+    label: "Pricing",
+    href: "/pricing",
+    activeMatch: "/pricing",
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+      </svg>
+    ),
+  },
+  {
     label: "Settings",
     href: "/settings",
     activeMatch: "/settings",
@@ -102,22 +126,106 @@ const navItems = [
   },
 ];
 
-export default function DashboardLayout({
-  children,
+interface ProfileData {
+  subscription_tier: string;
+  subscription_status: string;
+  current_period_end: string | null;
+}
+
+function TrialBanner({
+  tier,
+  periodEnd,
+  onDismiss,
 }: {
-  children: React.ReactNode;
+  tier: string;
+  periodEnd: string | null;
+  onDismiss: () => void;
 }) {
+  const daysLeft = periodEnd
+    ? Math.max(0, Math.ceil((new Date(periodEnd).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : 3;
+
+  const chargeDate = periodEnd
+    ? new Date(periodEnd).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+    : "in 3 days";
+
+  return (
+    <div className="relative bg-blue-50 dark:bg-blue-950/40 border-b border-blue-100 dark:border-blue-900/50 px-4 py-2.5 flex items-center justify-between gap-4">
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center">
+          <svg className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <p className="text-[12px] text-blue-700 dark:text-blue-300 truncate">
+          <span className="font-semibold">
+            {daysLeft === 0 ? "Trial ends today" : `${daysLeft} day${daysLeft !== 1 ? "s" : ""} left on your free trial`}
+          </span>
+          {" — "}
+          Your card will be charged{" "}
+          <span className="font-semibold">{TRIAL_PRICES[tier] ?? "$39"}</span> on {chargeDate}.{" "}
+          <Link href="/settings" className="underline underline-offset-2 hover:text-blue-900 dark:hover:text-blue-100">
+            Manage
+          </Link>
+        </p>
+      </div>
+      <button
+        onClick={onDismiss}
+        className="shrink-0 text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-200 transition"
+        aria-label="Dismiss"
+      >
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+function isWithinTrial(periodEnd: string | null): boolean {
+  if (!periodEnd) return false;
+  const end = new Date(periodEnd);
+  const start = new Date(end.getTime() - 3 * 24 * 60 * 60 * 1000);
+  const now = new Date();
+  return now < end && now >= start;
+}
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [trialDismissed, setTrialDismissed] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) setUserEmail(user.email ?? "");
+    // Check if trial banner was dismissed this session
+    if (typeof window !== "undefined") {
+      setTrialDismissed(sessionStorage.getItem("trial_banner_dismissed") === "1");
+    }
+
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) return;
+      setUserEmail(user.email ?? "");
+
+      const { data: p } = await supabase
+        .from("profiles")
+        .select("subscription_tier, subscription_status, current_period_end")
+        .eq("id", user.id)
+        .single();
+
+      if (p) setProfile(p as ProfileData);
     });
-  }, [supabase.auth]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function handleDismissTrialBanner() {
+    setTrialDismissed(true);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("trial_banner_dismissed", "1");
+    }
+  }
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -125,102 +233,134 @@ export default function DashboardLayout({
     router.refresh();
   }
 
+  const tier = profile?.subscription_tier ?? "free";
+  const showTrialBanner =
+    !trialDismissed &&
+    profile?.subscription_status === "active" &&
+    tier !== "free" &&
+    isWithinTrial(profile?.current_period_end ?? null);
+
   return (
     <ToastProvider>
-    <div className="min-h-screen bg-white dark:bg-gray-950 flex">
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      <div className="min-h-screen bg-white dark:bg-gray-950 flex flex-col">
+        {/* Trial banner */}
+        {showTrialBanner && (
+          <TrialBanner
+            tier={tier}
+            periodEnd={profile?.current_period_end ?? null}
+            onDismiss={handleDismissTrialBanner}
+          />
+        )}
 
-      {/* Sidebar */}
-      <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transform transition-transform duration-200 lg:translate-x-0 lg:static lg:z-auto ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="p-6 border-b border-gray-200 dark:border-gray-800">
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-                AdScore AI
-              </span>
-            </Link>
-          </div>
+        <div className="flex flex-1">
+          {/* Mobile overlay */}
+          {sidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
 
-          {/* Nav */}
-          <nav className="flex-1 p-4 space-y-1">
-            {navItems.map((item) => {
-              const isActive =
-                pathname === item.activeMatch ||
-                (item.activeMatch !== "/dashboard" && pathname.startsWith(item.activeMatch));
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
-                    isActive
-                      ? "bg-blue-600/10 text-blue-600 dark:text-blue-400"
-                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
-                  }`}
-                >
-                  {item.icon}
-                  {item.label}
+          {/* Sidebar */}
+          <aside
+            className={`fixed inset-y-0 left-0 z-50 w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transform transition-transform duration-200 lg:translate-x-0 lg:static lg:z-auto ${
+              sidebarOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+          >
+            <div className="flex flex-col h-full">
+              {/* Logo */}
+              <div className="p-6 border-b border-gray-200 dark:border-gray-800">
+                <Link href="/dashboard" className="flex items-center gap-2">
+                  <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                    AdScore AI
+                  </span>
                 </Link>
-              );
-            })}
-          </nav>
+              </div>
 
-          {/* User section */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-800">
-            <div className="text-sm text-gray-500 dark:text-gray-400 truncate mb-2">{userEmail}</div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition w-full"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              Log out
-            </button>
+              {/* Nav */}
+              <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+                {navItems.map((item) => {
+                  const isActive =
+                    pathname === item.activeMatch ||
+                    (item.activeMatch !== "/dashboard" && pathname.startsWith(item.activeMatch));
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setSidebarOpen(false)}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+                        isActive
+                          ? "bg-blue-600/10 text-blue-600 dark:text-blue-400"
+                          : "text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                      }`}
+                    >
+                      {item.icon}
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              {/* User section */}
+              <div className="p-4 border-t border-gray-200 dark:border-gray-800">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm text-gray-500 dark:text-gray-400 truncate flex-1">{userEmail}</span>
+                  {tier && (
+                    <span className={`shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${TIER_BADGE[tier] ?? TIER_BADGE.free}`}>
+                      {TIER_DISPLAY[tier]?.label ?? "Free"}
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition w-full"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  Log out
+                </button>
+              </div>
+            </div>
+          </aside>
+
+          {/* Main content */}
+          <div className="flex-1 flex flex-col min-h-screen">
+            {/* Top bar */}
+            <header className="h-14 sm:h-16 border-b border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <div className="hidden lg:block" />
+              <div className="flex items-center gap-3">
+                <ThemeToggle />
+                <div className="hidden sm:flex items-center gap-2">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{userEmail}</span>
+                  {tier && (
+                    <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${TIER_BADGE[tier] ?? TIER_BADGE.free}`}>
+                      {TIER_DISPLAY[tier]?.label ?? "Free"}
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="text-sm text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition hidden sm:block"
+                >
+                  Log out
+                </button>
+              </div>
+            </header>
+
+            {/* Page content */}
+            <main className="flex-1 p-4 sm:p-6">{children}</main>
           </div>
         </div>
-      </aside>
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-screen">
-        {/* Top bar */}
-        <header className="h-14 sm:h-16 border-b border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <div className="hidden lg:block" />
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <span className="text-sm text-gray-500 dark:text-gray-400 hidden sm:block">{userEmail}</span>
-            <button
-              onClick={handleLogout}
-              className="text-sm text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition hidden sm:block"
-            >
-              Log out
-            </button>
-          </div>
-        </header>
-
-        {/* Page content */}
-        <main className="flex-1 p-4 sm:p-6">{children}</main>
       </div>
-    </div>
     </ToastProvider>
   );
 }

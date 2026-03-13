@@ -2,6 +2,7 @@ import Link from "next/link";
 import ClientNavbar from "@/components/landing/ClientNavbar";
 import ScrollReveal from "@/components/landing/ScrollReveal";
 import LandingScoreRing from "@/components/landing/LandingScoreRing";
+import PricingButton from "@/components/PricingButton";
 
 /* ─────────── JSON-LD ─────────── */
 const jsonLd = {
@@ -1707,7 +1708,7 @@ export default function LandingPage() {
               <Overline>Pricing</Overline>
               <SectionHeading>Start Free. Scale When Ready.</SectionHeading>
               <p className="mt-5 text-slate-500 dark:text-zinc-400 text-[16px] max-w-md mx-auto leading-[1.75]">
-                No contracts. 7-day free trial on all paid plans. Cancel anytime.
+                No contracts. 3-day free trial on all paid plans. Cancel anytime.
               </p>
             </div>
           </ScrollReveal>
@@ -1782,18 +1783,10 @@ export default function LandingPage() {
                       ))}
                     </ul>
 
-                    <Link
-                      href={p.href}
-                      className={`block w-full text-center py-2.5 rounded-lg text-[13px] font-semibold transition-colors ${
-                        p.highlight
-                          ? "bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white shadow-lg shadow-purple-900/30"
-                          : p.name === "Free"
-                          ? "border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-white/[0.04]"
-                          : "bg-slate-900 dark:bg-white/[0.06] text-white hover:bg-slate-800 dark:hover:bg-white/[0.10] border border-slate-800 dark:border-white/[0.08]"
-                      }`}
-                    >
-                      {p.cta}
-                    </Link>
+                    <PricingButton
+                      tier={p.name.toLowerCase() as "free" | "starter" | "pro" | "agency"}
+                      highlight={p.highlight}
+                    />
                   </div>
                 </div>
               </ScrollReveal>
@@ -1801,7 +1794,7 @@ export default function LandingPage() {
           </div>
 
           <p className="text-center mt-8 text-[13px] text-slate-400 dark:text-zinc-600">
-            All paid plans include a 7-day free trial. Cancel anytime. · Trusted by 500+ e-commerce sellers.
+            All paid plans include a 3-day free trial. Cancel anytime. · Trusted by 500+ e-commerce sellers.
           </p>
         </div>
       </section>

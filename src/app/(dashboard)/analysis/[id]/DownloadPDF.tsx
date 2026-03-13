@@ -8,16 +8,8 @@ interface AnalysisData {
   niche: string;
   overall_score: number;
   created_at: string;
-  result: {
-    overall_score: number;
-    summary: string;
-    scores: Record<string, { score: number; feedback: string }>;
-    strengths: string[];
-    weaknesses: string[];
-    recommendations: { priority: string; action: string }[];
-    competitor_insight: string;
-    predicted_ctr_range: string;
-  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  result: Record<string, any>;
 }
 
 const SCORE_LABELS: Record<string, string> = {

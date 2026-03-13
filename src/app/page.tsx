@@ -369,19 +369,27 @@ export default function LandingPage() {
               </ScrollReveal>
             </div>
 
-            {/* ── RIGHT: Product Mock (always dark — intentional product screenshot) ── */}
+            {/* ── RIGHT: Product Mock — Analysis Results (always dark) ── */}
             <ScrollReveal delay={0.18} className="w-full">
-              <div className="relative">
-                {/* Subtle glow behind card */}
+              <div className="relative" style={{ transform: "rotate(2deg)" }}>
+                {/* Multi-layer glow */}
                 <div
                   aria-hidden
-                  className="absolute -inset-6 rounded-3xl opacity-10 dark:opacity-20 blur-2xl pointer-events-none"
-                  style={{ background: "radial-gradient(ellipse, #22C55E 0%, transparent 70%)" }}
+                  className="absolute -inset-8 rounded-3xl blur-3xl pointer-events-none"
+                  style={{ background: "radial-gradient(ellipse at 60% 40%, rgba(34,197,94,0.18) 0%, rgba(6,182,212,0.08) 50%, transparent 70%)" }}
                 />
-
-                <div className="relative bg-zinc-900 border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl shadow-black/20 dark:shadow-black/60">
+                <div
+                  className="relative bg-[#0d1117] rounded-2xl overflow-hidden"
+                  style={{ border: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 30px 90px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05)" }}
+                >
+                  {/* Shine overlay */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 rounded-2xl z-10"
+                    style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%)" }}
+                  />
                   {/* Window chrome */}
-                  <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/[0.06]">
+                  <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.06] bg-white/[0.015]">
                     <div className="flex items-center gap-2.5">
                       <div className="flex gap-1.5">
                         <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
@@ -391,54 +399,74 @@ export default function LandingPage() {
                       <span className="text-[11px] text-zinc-500 font-mono ml-1">Summer_Campaign_V4.jpg</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse-dot" />
-                      <span className="text-[10px] text-zinc-500">Analysis complete</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400" style={{ boxShadow: "0 0 6px #22c55e" }} />
+                      <span className="text-[10px] text-green-400/80">Analysis complete</span>
                     </div>
                   </div>
 
-                  <div className="p-5 space-y-5">
+                  <div className="p-5 space-y-4">
+                    {/* Score + CTR */}
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-[9px] font-semibold tracking-[0.15em] uppercase text-zinc-500 mb-2">Performance Score</p>
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-[52px] font-black text-white leading-none">84</span>
-                          <span className="text-zinc-500 text-sm">/100</span>
+                        <p className="text-[9px] font-semibold tracking-[0.16em] uppercase text-zinc-600 mb-1.5">Performance Score</p>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-[58px] font-black leading-none" style={{ color: "#22c55e" }}>84</span>
+                          <span className="text-zinc-600 text-sm">/100</span>
                         </div>
-                        <div className="flex items-center gap-1.5 mt-2">
+                        <div className="flex items-center gap-1.5 mt-1.5">
                           <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                          <span className="text-[11px] text-zinc-400">Top 28% for Meta E-commerce</span>
+                          <span className="text-[10px] text-zinc-400">Top 28% for Meta E-commerce</span>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className="px-3 py-2 bg-green-500/[0.08] border border-green-500/[0.15] rounded-xl">
-                          <p className="text-[9px] font-semibold tracking-[0.12em] uppercase text-zinc-500">Est. CTR</p>
-                          <p className="text-xl font-black text-green-400 leading-tight">2.8–4.1%</p>
+                      <div className="px-3 py-2.5 bg-green-500/[0.08] border border-green-500/[0.2] rounded-xl" style={{ boxShadow: "0 0 24px rgba(34,197,94,0.08)" }}>
+                        <p className="text-[8px] font-semibold tracking-[0.14em] uppercase text-zinc-600 mb-0.5">Est. CTR</p>
+                        <p className="text-[22px] font-black text-green-400 leading-tight">2.8–4.1%</p>
+                        <p className="text-[9px] text-cyan-400/70 mt-0.5">Above avg for niche</p>
+                      </div>
+                    </div>
+
+                    {/* Mock ad preview */}
+                    <div className="bg-[#161b22] border border-white/[0.05] rounded-xl h-[82px] flex items-start pt-2.5 px-3 relative overflow-hidden">
+                      <span className="text-[8px] font-semibold text-zinc-600 uppercase tracking-[0.12em]">Sponsored</span>
+                      <div className="absolute inset-0 flex items-center justify-center px-8 pt-4">
+                        <div className="w-full">
+                          <div className="h-[6px] bg-white/[0.14] rounded-full w-full mb-2" />
+                          <div className="h-[5px] bg-white/[0.08] rounded-full w-4/5 mb-1.5" />
+                          <div className="h-[5px] bg-white/[0.06] rounded-full w-3/5 mb-3" />
+                          <div className="h-5 bg-green-500/[0.15] border border-green-500/[0.2] rounded w-20 flex items-center justify-center">
+                            <div className="h-[3px] bg-green-400/40 rounded w-14" />
+                          </div>
                         </div>
-                        <p className="text-[9px] text-zinc-600 mt-1.5">Above avg for niche</p>
                       </div>
                     </div>
 
-                    <div className="bg-zinc-800/60 border border-white/[0.05] rounded-xl h-[88px] flex items-center justify-center relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-zinc-700/20 to-transparent" />
-                      <div className="absolute bottom-2 left-2.5">
-                        <span className="text-[9px] font-semibold text-zinc-600 bg-zinc-800/80 px-1.5 py-0.5 rounded uppercase tracking-wider">Sponsored</span>
-                      </div>
-                      <div className="text-center px-8 relative">
-                        <div className="h-2 bg-white/[0.12] rounded-full w-36 mb-2 mx-auto" />
-                        <div className="h-1.5 bg-white/[0.07] rounded-full w-28 mb-1.5 mx-auto" />
-                        <div className="h-1.5 bg-white/[0.07] rounded-full w-20 mx-auto" />
-                      </div>
+                    {/* Score breakdown — color coded by value */}
+                    <div className="space-y-3">
+                      {[
+                        { label: "Hook Strength", score: 91 },
+                        { label: "CTA Clarity",   score: 78 },
+                        { label: "Visual Impact", score: 88 },
+                        { label: "Platform Fit",  score: 95 },
+                      ].map((m) => {
+                        const c = m.score > 75 ? "#22c55e" : m.score >= 60 ? "#eab308" : m.score >= 40 ? "#f97316" : "#ef4444";
+                        return (
+                          <div key={m.label}>
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className="text-[10px] text-zinc-500">{m.label}</span>
+                              <span className="text-[10px] font-bold" style={{ color: c }}>{m.score}</span>
+                            </div>
+                            <div className="h-[4px] bg-white/[0.06] rounded-full overflow-hidden">
+                              <div className="h-full rounded-full" style={{ width: `${m.score}%`, background: c }} />
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
 
-                    <div className="space-y-3.5">
-                      {HERO_METRICS.map((m) => (
-                        <MetricBar key={m.label} {...m} />
-                      ))}
-                    </div>
-
-                    <div className="bg-zinc-800/50 border border-white/[0.05] rounded-xl p-3.5">
-                      <p className="text-[9px] font-semibold tracking-[0.15em] uppercase text-zinc-500 mb-1">Top Recommendation</p>
-                      <p className="text-[12px] text-zinc-300 leading-relaxed">
+                    {/* Top recommendation */}
+                    <div className="bg-[#161b22] border border-white/[0.05] rounded-xl p-3.5">
+                      <p className="text-[8px] font-semibold tracking-[0.16em] uppercase text-zinc-600 mb-1.5">Top Recommendation</p>
+                      <p className="text-[11px] text-zinc-300 leading-relaxed">
                         Headline is strong. Tighten the CTA from &ldquo;Learn More&rdquo; to a specific outcome — could push CTR above 4%.
                       </p>
                     </div>
@@ -616,62 +644,104 @@ export default function LandingPage() {
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_64px_1fr] gap-4 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_56px_1fr] gap-6 items-stretch">
 
-            {/* Ad A — LOSER (always dark — product screenshot) */}
+            {/* ── Ad A — LOSER ── */}
             <ScrollReveal delay={0.05}>
-              <div className="bg-zinc-900 border border-white/[0.07] rounded-xl overflow-hidden h-full shadow-lg shadow-black/10 dark:shadow-none">
-                <div className="px-5 py-3.5 border-b border-white/[0.06] flex items-center justify-between">
-                  <span className="text-[11px] text-zinc-500 font-mono">Creative_A.jpg</span>
-                  <LandingScoreRing score={38} size={44} />
-                </div>
-                <div className="p-5 space-y-5">
-                  <div className="bg-zinc-800/50 border border-white/[0.04] rounded-lg h-24 flex items-center justify-center relative overflow-hidden">
-                    <div className="text-center px-6">
-                      <div className="h-2 bg-white/[0.08] rounded w-28 mb-2 mx-auto" />
-                      <div className="h-1.5 bg-white/[0.05] rounded w-20 mb-1 mx-auto" />
-                      <div className="h-5 bg-white/[0.06] rounded w-16 mx-auto mt-2" />
-                    </div>
-                    <div className="absolute bottom-1.5 left-2.5">
-                      <span className="text-[8px] text-zinc-600 uppercase tracking-wider">Sponsored</span>
+              <div
+                className="group relative bg-[#0d1117] rounded-2xl overflow-hidden h-full transition-all duration-500"
+                style={{ border: "1px solid rgba(239,68,68,0.18)", boxShadow: "0 0 0 1px rgba(239,68,68,0.08), 0 24px 64px rgba(0,0,0,0.45)" }}
+              >
+                {/* Red top glow line */}
+                <div className="h-[2px] w-full" style={{ background: "linear-gradient(90deg, transparent 0%, #ef4444 50%, transparent 100%)", boxShadow: "0 0 14px rgba(239,68,68,0.7)" }} />
+                {/* Hover inner glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" style={{ boxShadow: "inset 0 0 50px rgba(239,68,68,0.05)" }} />
+
+                <div className="px-6 py-5">
+                  {/* Header: filename + score */}
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="text-[11px] text-zinc-600 font-mono">Summer_Campaign_V2.jpg</span>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <div className="flex items-baseline gap-1 justify-end">
+                          <span className="text-[38px] font-black leading-none" style={{ color: "#ef4444" }}>38</span>
+                          <span className="text-zinc-600 text-xs">/100</span>
+                        </div>
+                      </div>
+                      <svg width="52" height="52" viewBox="0 0 52 52" className="shrink-0">
+                        <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
+                        <circle cx="26" cy="26" r="20" fill="none" stroke="#ef4444" strokeWidth="3"
+                          strokeDasharray={`${2 * Math.PI * 20}`}
+                          strokeDashoffset={`${2 * Math.PI * 20 * (1 - 0.38)}`}
+                          strokeLinecap="round" transform="rotate(-90 26 26)"
+                          style={{ filter: "drop-shadow(0 0 4px rgba(239,68,68,0.5))" }} />
+                      </svg>
                     </div>
                   </div>
-                  <div className="space-y-3">
+
+                  {/* Mock ad preview */}
+                  <div className="bg-[#161b22] border border-white/[0.05] rounded-xl h-[96px] flex items-start pt-2.5 px-3 relative overflow-hidden mb-5">
+                    <span className="text-[8px] font-semibold text-zinc-600 uppercase tracking-[0.12em]">Sponsored</span>
+                    <div className="absolute inset-0 flex items-center justify-center px-6 pt-5">
+                      <div className="w-full">
+                        <div className="h-[6px] bg-white/[0.09] rounded-full w-full mb-2" />
+                        <div className="h-[5px] bg-white/[0.06] rounded-full w-4/5 mb-1.5" />
+                        <div className="h-[5px] bg-white/[0.05] rounded-full w-3/5 mb-3" />
+                        <div className="h-6 bg-zinc-700/50 border border-white/[0.06] rounded w-24" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Score breakdown */}
+                  <div className="space-y-3 mb-5">
                     {[
                       { label: "Hook Strength", score: 29 },
                       { label: "CTA Clarity",   score: 41 },
                       { label: "Visual Impact", score: 38 },
-                    ].map((m) => (
-                      <div key={m.label}>
-                        <div className="flex justify-between mb-1">
-                          <span className="text-[11px] text-zinc-500">{m.label}</span>
-                          <span className="text-[11px] font-bold text-red-400">{m.score}</span>
+                    ].map((m) => {
+                      const c = m.score < 40 ? "#ef4444" : m.score < 60 ? "#f97316" : m.score < 75 ? "#eab308" : "#22c55e";
+                      return (
+                        <div key={m.label}>
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-[11px] text-zinc-500">{m.label}</span>
+                            <span className="text-[11px] font-bold" style={{ color: c }}>{m.score}</span>
+                          </div>
+                          <div className="h-[4px] bg-white/[0.06] rounded-full overflow-hidden">
+                            <div className="h-full rounded-full" style={{ width: `${m.score}%`, background: c }} />
+                          </div>
                         </div>
-                        <div className="h-[3px] bg-white/[0.06] rounded-full overflow-hidden">
-                          <div className="h-full rounded-full bg-red-500/60" style={{ width: `${m.score}%` }} />
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
-                  <div className="space-y-2">
+
+                  {/* Issues list */}
+                  <div className="space-y-2 mb-5">
                     {[
                       "Generic headline — no specific benefit",
                       "No social proof or credibility",
                       "CTA too vague to drive action",
                     ].map((issue) => (
                       <div key={issue} className="flex items-start gap-2">
-                        <svg className="w-3.5 h-3.5 text-red-400/60 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        <span className="text-[12px] text-zinc-600">{issue}</span>
+                        <span className="w-4 h-4 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                          <svg className="w-2.5 h-2.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </span>
+                        <span className="text-[11px] text-zinc-500 leading-relaxed">{issue}</span>
                       </div>
                     ))}
                   </div>
-                  <div className="pt-4 border-t border-white/[0.05] grid grid-cols-3 text-center gap-2">
-                    {[{ label: "Est. CTR", val: "0.7%" }, { label: "Hook", val: "Weak" }, { label: "Confidence", val: "Low" }].map((s) => (
+
+                  {/* Stats bar */}
+                  <div className="pt-4 border-t border-white/[0.05] grid grid-cols-3 text-center">
+                    {[
+                      { label: "EST. CTR",    val: "0.7%" },
+                      { label: "HOOK",        val: "Weak" },
+                      { label: "CONFIDENCE",  val: "Low"  },
+                    ].map((s) => (
                       <div key={s.label}>
-                        <p className="text-[9px] uppercase tracking-wider text-zinc-600 mb-0.5">{s.label}</p>
-                        <p className="text-sm font-bold text-red-400">{s.val}</p>
+                        <p className="text-[8px] font-semibold uppercase tracking-widest text-zinc-600 mb-1">{s.label}</p>
+                        <p className="text-[13px] font-bold" style={{ color: "#ef4444" }}>{s.val}</p>
                       </div>
                     ))}
                   </div>
@@ -681,72 +751,118 @@ export default function LandingPage() {
 
             {/* VS divider */}
             <div className="hidden lg:flex flex-col items-center justify-center gap-3 py-8">
-              <div className="flex-1 w-px bg-slate-200 dark:bg-white/[0.05]" />
-              <span className="text-[11px] font-black text-slate-300 dark:text-zinc-600 tracking-widest">VS</span>
-              <div className="flex-1 w-px bg-slate-200 dark:bg-white/[0.05]" />
+              <div className="flex-1 w-px bg-white/[0.05]" />
+              <div className="w-10 h-10 rounded-full bg-zinc-800/80 border border-white/[0.08] flex items-center justify-center shadow-lg backdrop-blur-sm">
+                <span className="text-[9px] font-black text-zinc-500 tracking-widest">VS</span>
+              </div>
+              <div className="flex-1 w-px bg-white/[0.05]" />
             </div>
             <div className="lg:hidden flex items-center justify-center py-2">
-              <span className="text-[11px] font-black text-slate-300 dark:text-zinc-600 tracking-widest px-4">VS</span>
+              <div className="w-10 h-10 rounded-full bg-zinc-800/80 border border-white/[0.08] flex items-center justify-center">
+                <span className="text-[9px] font-black text-zinc-500 tracking-widest">VS</span>
+              </div>
             </div>
 
-            {/* Ad B — WINNER (always dark — product screenshot) */}
+            {/* ── Ad B — WINNER ── */}
             <ScrollReveal delay={0.12}>
-              <div className="bg-zinc-900 border border-green-500/[0.18] rounded-xl overflow-hidden h-full relative shadow-lg shadow-black/10 dark:shadow-none">
-                <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-green-500/40 via-green-400/60 to-green-500/40" />
-                <div className="px-5 py-3.5 border-b border-green-500/[0.08] flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-[11px] text-zinc-500 font-mono">Creative_B.jpg</span>
-                    <span className="px-1.5 py-0.5 text-[9px] font-black text-green-400 bg-green-500/10 border border-green-500/20 rounded uppercase tracking-widest">Winner</span>
-                  </div>
-                  <LandingScoreRing score={91} size={44} />
-                </div>
-                <div className="p-5 space-y-5">
-                  <div className="bg-green-500/[0.04] border border-green-500/[0.08] rounded-lg h-24 flex items-center justify-center relative overflow-hidden">
-                    <div className="text-center px-6">
-                      <div className="h-2 bg-white/[0.18] rounded w-36 mb-2 mx-auto" />
-                      <div className="h-1.5 bg-white/[0.10] rounded w-28 mb-1 mx-auto" />
-                      <div className="h-5 bg-green-500/30 rounded w-20 mx-auto mt-2" />
+              <div
+                className="group relative bg-[#0d1117] rounded-2xl overflow-hidden h-full transition-all duration-500"
+                style={{ border: "1px solid rgba(34,197,94,0.2)", boxShadow: "0 0 0 1px rgba(34,197,94,0.08), 0 24px 64px rgba(0,0,0,0.45)" }}
+              >
+                {/* Green top glow line */}
+                <div className="h-[2px] w-full" style={{ background: "linear-gradient(90deg, transparent 0%, #22c55e 50%, transparent 100%)", boxShadow: "0 0 14px rgba(34,197,94,0.7)" }} />
+                {/* Hover inner glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" style={{ boxShadow: "inset 0 0 50px rgba(34,197,94,0.05)" }} />
+
+                <div className="px-6 py-5">
+                  {/* Header: filename + winner badge + score */}
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-[11px] text-zinc-600 font-mono">Summer_Campaign_V4.jpg</span>
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[9px] font-black text-green-400 bg-green-500/10 border border-green-500/20 rounded-full uppercase tracking-widest w-fit">
+                        <span>✦</span> WINNER
+                      </span>
                     </div>
-                    <div className="absolute bottom-1.5 left-2.5">
-                      <span className="text-[8px] text-zinc-600 uppercase tracking-wider">Sponsored</span>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <div className="flex items-baseline gap-1 justify-end">
+                          <span className="text-[38px] font-black leading-none" style={{ color: "#22c55e" }}>91</span>
+                          <span className="text-zinc-600 text-xs">/100</span>
+                        </div>
+                      </div>
+                      <svg width="52" height="52" viewBox="0 0 52 52" className="shrink-0">
+                        <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
+                        <circle cx="26" cy="26" r="20" fill="none" stroke="#22c55e" strokeWidth="3"
+                          strokeDasharray={`${2 * Math.PI * 20}`}
+                          strokeDashoffset={`${2 * Math.PI * 20 * (1 - 0.91)}`}
+                          strokeLinecap="round" transform="rotate(-90 26 26)"
+                          style={{ filter: "drop-shadow(0 0 5px rgba(34,197,94,0.7))" }} />
+                      </svg>
                     </div>
                   </div>
-                  <div className="space-y-3">
+
+                  {/* Mock ad preview */}
+                  <div className="bg-[#161b22] border border-green-500/[0.08] rounded-xl h-[96px] flex items-start pt-2.5 px-3 relative overflow-hidden mb-5">
+                    <span className="text-[8px] font-semibold text-zinc-600 uppercase tracking-[0.12em]">Sponsored</span>
+                    <div className="absolute inset-0 flex items-center justify-center px-6 pt-5">
+                      <div className="w-full">
+                        <div className="h-[6px] bg-white/[0.16] rounded-full w-full mb-2" />
+                        <div className="h-[5px] bg-white/[0.10] rounded-full w-5/6 mb-1.5" />
+                        <div className="h-[5px] bg-white/[0.07] rounded-full w-2/3 mb-3" />
+                        <div className="h-6 bg-green-500/20 border border-green-500/30 rounded w-28 flex items-center justify-center">
+                          <div className="h-[3px] bg-green-400/50 rounded w-20" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Score breakdown */}
+                  <div className="space-y-3 mb-5">
                     {[
                       { label: "Hook Strength", score: 94 },
                       { label: "CTA Clarity",   score: 88 },
                       { label: "Visual Impact", score: 91 },
                     ].map((m) => (
                       <div key={m.label}>
-                        <div className="flex justify-between mb-1">
+                        <div className="flex items-center justify-between mb-1.5">
                           <span className="text-[11px] text-zinc-400">{m.label}</span>
                           <span className="text-[11px] font-bold text-green-400">{m.score}</span>
                         </div>
-                        <div className="h-[3px] bg-white/[0.06] rounded-full overflow-hidden">
-                          <div className="h-full rounded-full bg-green-500" style={{ width: `${m.score}%` }} />
+                        <div className="h-[4px] bg-white/[0.06] rounded-full overflow-hidden">
+                          <div className="h-full rounded-full" style={{ width: `${m.score}%`, background: "#22c55e", boxShadow: "0 0 6px rgba(34,197,94,0.4)" }} />
                         </div>
                       </div>
                     ))}
                   </div>
-                  <div className="space-y-2">
+
+                  {/* Improvements list */}
+                  <div className="space-y-2 mb-5">
                     {[
                       "Specific headline with clear outcome",
                       "12,000+ customers social proof",
                       "Urgency-driven CTA with value",
-                    ].map((s) => (
-                      <div key={s} className="flex items-start gap-2">
-                        <svg className="w-3.5 h-3.5 text-green-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span className="text-[12px] text-zinc-400">{s}</span>
+                    ].map((item) => (
+                      <div key={item} className="flex items-start gap-2">
+                        <span className="w-4 h-4 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                          <svg className="w-2.5 h-2.5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
+                        <span className="text-[11px] text-zinc-400 leading-relaxed">{item}</span>
                       </div>
                     ))}
                   </div>
-                  <div className="pt-4 border-t border-white/[0.05] grid grid-cols-3 text-center gap-2">
-                    {[{ label: "Est. CTR", val: "3.6%" }, { label: "Hook", val: "Strong" }, { label: "Confidence", val: "High" }].map((s) => (
+
+                  {/* Stats bar */}
+                  <div className="pt-4 border-t border-green-500/[0.08] grid grid-cols-3 text-center">
+                    {[
+                      { label: "EST. CTR",    val: "3.6%" },
+                      { label: "HOOK",        val: "Strong" },
+                      { label: "CONFIDENCE",  val: "High"  },
+                    ].map((s) => (
                       <div key={s.label}>
-                        <p className="text-[9px] uppercase tracking-wider text-zinc-600 mb-0.5">{s.label}</p>
-                        <p className="text-sm font-bold text-green-400">{s.val}</p>
+                        <p className="text-[8px] font-semibold uppercase tracking-widest text-zinc-600 mb-1">{s.label}</p>
+                        <p className="text-[13px] font-bold text-green-400">{s.val}</p>
                       </div>
                     ))}
                   </div>

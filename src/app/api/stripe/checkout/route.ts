@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export async function POST(req: Request) {
-  const origin = process.env.NEXT_PUBLIC_APP_URL || new URL(req.url).origin;
+  const origin = new URL(req.url).origin;
 
   console.log("=== CHECKOUT API HIT ===");
   console.log("Stripe key exists:", !!process.env.STRIPE_SECRET_KEY);

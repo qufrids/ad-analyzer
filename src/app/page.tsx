@@ -2,2061 +2,533 @@ import Link from "next/link";
 import ClientNavbar from "@/components/landing/ClientNavbar";
 import ScrollReveal from "@/components/landing/ScrollReveal";
 import PricingButton from "@/components/PricingButton";
+import ProductShowcase from "@/components/landing/ProductShowcase";
+import BeforeAfter from "@/components/landing/BeforeAfter";
+import LandingFAQ from "@/components/landing/LandingFAQ";
 
-/* ─────────── JSON-LD ─────────── */
+/* ─── JSON-LD ─── */
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   name: "AdScore",
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web",
-  description:
-    "Ad Performance Intelligence Platform. Predict which ads will win before you spend money.",
+  description: "Ad Performance Intelligence Platform. Predict which ads will win before you spend money.",
   offers: [
-    { "@type": "Offer", price: "0", priceCurrency: "USD", name: "Free" },
-    {
-      "@type": "Offer",
-      price: "29",
-      priceCurrency: "USD",
-      name: "Pro",
-      priceSpecification: {
-        "@type": "UnitPriceSpecification",
-        price: "29",
-        priceCurrency: "USD",
-        billingDuration: "P1M",
-      },
-    },
+    { "@type": "Offer", price: "0",  priceCurrency: "USD", name: "Free"    },
+    { "@type": "Offer", price: "19", priceCurrency: "USD", name: "Starter",
+      priceSpecification: { "@type": "UnitPriceSpecification", price: "19", priceCurrency: "USD", billingDuration: "P1M" } },
+    { "@type": "Offer", price: "39", priceCurrency: "USD", name: "Pro",
+      priceSpecification: { "@type": "UnitPriceSpecification", price: "39", priceCurrency: "USD", billingDuration: "P1M" } },
+    { "@type": "Offer", price: "79", priceCurrency: "USD", name: "Agency",
+      priceSpecification: { "@type": "UnitPriceSpecification", price: "79", priceCurrency: "USD", billingDuration: "P1M" } },
   ],
 };
 
-/* ─────────── DATA ─────────── */
-
-const TRUST_ITEMS = [
-  "6-dimension scoring framework",
-  "Meta & TikTok optimized",
-  "Analysis in < 30 seconds",
-  "Built for performance teams",
-  "Data-driven, not opinionated",
-];
-
-const CAPABILITIES = [
-  {
-    label: "01",
-    title: "Performance Prediction Score",
-    body:
-      "A single 0–100 score that communicates how likely your ad is to perform above average — before you spend a dollar testing it.",
-    detail: "CTR · ROAS · Confidence",
-    color: "green",
-  },
-  {
-    label: "02",
-    title: "Hook Intelligence",
-    body:
-      "Evaluate the first 1–3 seconds that determine whether someone stops scrolling. Strong hooks drive 60–80% of ad performance.",
-    detail: "Scroll-stop · Attention · Pattern interrupt",
-    color: "blue",
-  },
-  {
-    label: "03",
-    title: "Creative Weakness Detection",
-    body:
-      "Identify exactly where your creative loses viewers — weak value props, confusing CTAs, poor visual hierarchy — before launch.",
-    detail: "Copy · Structure · Clarity",
-    color: "orange",
-  },
-  {
-    label: "04",
-    title: "Confidence Indicator",
-    body:
-      "Know how confident the analysis is and where variance exists. Scale decisions backed by probability, not gut feel.",
-    detail: "Certainty · Range · Platform variance",
-    color: "violet",
-  },
-];
-
-const WORKFLOW = [
-  {
-    step: "01",
-    title: "Upload your creative",
-    body: "Drop in any static image ad. JPG, PNG, or WebP. No account needed for your first three.",
-  },
-  {
-    step: "02",
-    title: "AI predicts performance",
-    body: "Our engine evaluates 6 dimensions in seconds — hook strength, copy, CTA, visual impact, brand fit, platform alignment.",
-  },
-  {
-    step: "03",
-    title: "Fix weak spots",
-    body: "Receive prioritized, specific recommendations ranked by impact. Know exactly what to improve before you spend.",
-  },
-  {
-    step: "04",
-    title: "Scale winners confidently",
-    body: "Launch with a data-backed confidence score. Stop guessing which creative deserves more budget.",
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    quote:
-      "We were launching 8 creatives a week blindly. AdScore cut our dud rate from 62% to under 20% in the first month. It\u2019s now required before any creative goes live.",
-    name: "Sarah K.",
-    role: "Media Buyer, DTC Fashion Brand",
-  },
-  {
-    quote:
-      "The hook strength analysis alone paid for itself. I can predict scroll-stop potential before we spend on testing. Our agency\u2019s creative QA time dropped by half.",
-    name: "Marcus R.",
-    role: "Performance Marketing Lead",
-  },
-  {
-    quote:
-      "Clients ask how we consistently launch strong creatives. AdScore is our pre-launch quality gate. It\u2019s the difference between confident scaling and expensive guessing.",
-    name: "David L.",
-    role: "Founder, Paid Media Agency",
-  },
-];
-
+/* ─── DATA ─── */
 const PRICING = [
   {
-    name: "Free",
-    price: "$0",
-    cadence: "forever",
-    desc: "Try AdScore AI — no card needed.",
-    highlight: false,
-    cta: "Get Started Free",
-    href: "/signup",
+    name: "Free", price: "$0", cadence: "forever",
+    desc: "Try AdScore — no card needed.",
+    highlight: false, tier: "free" as const,
     features: [
-      { text: "3 ad analyses", included: true },
-      { text: "1 AI ad improvement", included: true },
-      { text: "Browse swipe file templates", included: true },
-      { text: "A/B Compare", included: false },
-      { text: "Competitor Spy", included: false },
-      { text: "URL to Ads generator", included: false },
-      { text: "Performance Tracker", included: false },
+      { text: "3 ad analyses",               included: true  },
+      { text: "1 AI ad improvement",          included: true  },
+      { text: "Browse swipe file templates",  included: true  },
+      { text: "A/B Compare",                  included: false },
+      { text: "Competitor Spy",               included: false },
+      { text: "URL to Ads generator",         included: false },
+      { text: "Performance Tracker",          included: false },
     ],
   },
   {
-    name: "Starter",
-    price: "$19",
-    cadence: "/month",
+    name: "Starter", price: "$19", cadence: "/month",
     desc: "For sellers testing and iterating creatives.",
-    highlight: false,
-    cta: "Start Free Trial",
-    href: "/signup?tier=starter",
+    highlight: false, tier: "starter" as const,
     features: [
-      { text: "50 analyses/month", included: true },
-      { text: "10 AI improvements/month", included: true },
-      { text: "5 A/B comparisons/month", included: true },
-      { text: "Full swipe file + copy gen", included: true },
-      { text: "Basic performance tracker", included: true },
-      { text: "Competitor Spy", included: false },
-      { text: "URL to Ads generator", included: false },
-      { text: "Email support", included: true },
+      { text: "50 analyses/month",           included: true  },
+      { text: "10 AI improvements/month",    included: true  },
+      { text: "5 A/B comparisons/month",     included: true  },
+      { text: "Full swipe file + copy gen",  included: true  },
+      { text: "Basic performance tracker",   included: true  },
+      { text: "Competitor Spy",              included: false },
+      { text: "URL to Ads generator",        included: false },
     ],
   },
   {
-    name: "Pro",
-    price: "$39",
-    cadence: "/month",
+    name: "Pro", price: "$39", cadence: "/month",
     desc: "For marketers who ship consistently.",
-    highlight: true,
-    cta: "Start Free Trial",
-    href: "/signup?tier=pro",
+    highlight: true, tier: "pro" as const,
     features: [
-      { text: "200 analyses/month", included: true },
-      { text: "40 AI improvements/month", included: true },
-      { text: "20 A/B comparisons/month", included: true },
-      { text: "10 Competitor Spy/month", included: true },
-      { text: "5 URL to Ads/month", included: true },
+      { text: "200 analyses/month",         included: true },
+      { text: "40 AI improvements/month",   included: true },
+      { text: "20 A/B comparisons/month",   included: true },
+      { text: "10 Competitor Spy/month",    included: true },
+      { text: "5 URL to Ads/month",         included: true },
       { text: "Full swipe file + copy gen", included: true },
-      { text: "Full tracker + export", included: true },
-      { text: "Priority analysis speed", included: true },
+      { text: "Full tracker + export",      included: true },
     ],
   },
   {
-    name: "Agency",
-    price: "$79",
-    cadence: "/month",
+    name: "Agency", price: "$79", cadence: "/month",
     desc: "For teams managing multiple brands.",
-    highlight: false,
-    cta: "Start Free Trial",
-    href: "/signup?tier=agency",
+    highlight: false, tier: "agency" as const,
     features: [
-      { text: "Unlimited analyses", included: true },
-      { text: "Unlimited improvements", included: true },
-      { text: "Unlimited A/B compare", included: true },
-      { text: "Unlimited Competitor Spy", included: true },
-      { text: "Unlimited URL to Ads", included: true },
-      { text: "Weekly email reports", included: true },
-      { text: "Priority support", included: true },
-      { text: "API access (coming soon)", included: true },
+      { text: "Unlimited analyses",         included: true },
+      { text: "Unlimited improvements",     included: true },
+      { text: "Unlimited A/B compare",      included: true },
+      { text: "Unlimited Competitor Spy",   included: true },
+      { text: "Unlimited URL to Ads",       included: true },
+      { text: "Weekly email reports",       included: true },
+      { text: "API access (coming soon)",   included: true },
     ],
   },
 ];
 
-const FAQS = [
-  {
-    q: "What types of ads can I analyze?",
-    a: "Any static image ad — JPG, PNG, or WebP. We support Meta (Facebook/Instagram), TikTok, and Google Ads. Video analysis is on our roadmap.",
-  },
-  {
-    q: "How is the score calculated?",
-    a: "We evaluate 6 proven dimensions that correlate with ad performance: hook strength, copy effectiveness, CTA clarity, visual impact, brand consistency, and platform fit. Each dimension is scored 0–100.",
-  },
-  {
-    q: "Who is this built for?",
-    a: "Media buyers, performance marketers, DTC brands, and agencies running paid social. Anyone spending on ads who wants to reduce wasted creative budget.",
-  },
-  {
-    q: "What do I get with 3 free analyses?",
-    a: "Everything — full scoring, strengths, weaknesses, prioritized recommendations, competitor insights, CTR predictions, and a PDF export. No features held back.",
-  },
-  {
-    q: "How does this differ from just asking ChatGPT?",
-    a: "AdScore uses a structured, purpose-built scoring framework with platform-specific benchmarks, niche-aware context, and 6 validated performance dimensions — not free-form opinion.",
-  },
-  {
-    q: "Is my creative data secure?",
-    a: "Yes. Images are stored in your private, encrypted storage. Only you can access them. Delete your account anytime to remove all data.",
-  },
-];
-
-/* ─────────── HELPERS ─────────── */
-
-function Overline({ children }: { children: React.ReactNode }) {
+/* ─── HELPERS ─── */
+function FeatureCard({
+  label, title, description, icon,
+}: {
+  label: string; title: string; description: string; icon: React.ReactNode;
+}) {
   return (
-    <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-slate-400 dark:text-zinc-500 mb-4">
-      {children}
-    </p>
+    <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-8 shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 transition-all duration-200">
+      <div className="w-12 h-12 bg-[#EEF2FF] rounded-[12px] flex items-center justify-center text-[#4F46E5] mb-5">
+        {icon}
+      </div>
+      <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[#4F46E5] mb-2">{label}</p>
+      <h3 className="text-[20px] font-bold text-[#0F172A] mb-3 leading-snug">{title}</h3>
+      <p className="text-[15px] text-[#64748B] leading-[1.7]">{description}</p>
+    </div>
   );
 }
 
-function SectionHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-[1.06]">
-      {children}
-    </h2>
+function Check({ ok }: { ok: boolean }) {
+  return ok ? (
+    <svg className="w-4 h-4 text-[#16A34A] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+    </svg>
+  ) : (
+    <svg className="w-4 h-4 text-[#CBD5E1] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+    </svg>
   );
 }
 
-const capColor: Record<string, string> = {
-  green:  "text-green-600  dark:text-green-400  bg-green-50  dark:bg-green-500/10  border-green-200  dark:border-green-500/20",
-  blue:   "text-blue-600   dark:text-blue-400   bg-blue-50   dark:bg-blue-500/10   border-blue-200   dark:border-blue-500/20",
-  orange: "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 border-orange-200 dark:border-orange-500/20",
-  violet: "text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-500/10 border-violet-200 dark:border-violet-500/20",
-};
+function Arrow() {
+  return (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+    </svg>
+  );
+}
 
-/* ─────────── PAGE ─────────── */
-
+/* ─── PAGE ─── */
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-slate-900 dark:text-white overflow-x-hidden">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+    <div style={{ fontFamily: "var(--font-inter, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif)" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
+      {/* ════ NAV ════ */}
       <ClientNavbar />
 
-      {/* ══════════════════════════════════════
-          § 1  HERO
-      ══════════════════════════════════════ */}
-      <section className="relative pt-16 overflow-hidden">
-        {/* Very subtle green radial — barely visible in light mode */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] opacity-[0.025] dark:opacity-[0.04]"
-          style={{ background: "radial-gradient(ellipse at 50% 0%, #22C55E 0%, transparent 70%)" }}
-        />
+      {/* ════ HERO ════ */}
+      <section className="bg-white pt-36 pb-28 px-4" id="hero">
+        <div className="max-w-4xl mx-auto text-center">
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-28 pb-16 sm:pb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_480px] gap-12 lg:gap-16 items-center">
-
-            {/* ── LEFT: Copy ── */}
-            <div>
-              <ScrollReveal>
-                {/* Premium trust badge — editorial quality */}
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full border border-emerald-100 dark:border-white/[0.08] bg-emerald-50 dark:bg-white/[0.03]">
-                  <svg className="w-3 h-3 text-emerald-500 dark:text-green-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-[12px] font-medium text-emerald-700 dark:text-zinc-400">
-                    Trusted by 500+ performance teams
-                  </span>
-                </div>
-              </ScrollReveal>
-
-              <ScrollReveal delay={0.08}>
-                <h1 className="text-5xl sm:text-6xl lg:text-[72px] font-black tracking-[-0.02em] leading-[1.02] text-slate-900 dark:text-white">
-                  Know Which Ads
-                  <br />
-                  Will Win —{" "}
-                  <span className="text-green-600 dark:text-green-400">Before</span>
-                  <br />
-                  You Spend.
-                </h1>
-              </ScrollReveal>
-
-              <ScrollReveal delay={0.15}>
-                <p className="mt-7 text-[17px] text-slate-500 dark:text-zinc-400 leading-[1.75] max-w-lg">
-                  Upload your creative. Our AI predicts performance, surfaces weak
-                  spots, and tells you exactly what to improve — in under 30
-                  seconds.
-                </p>
-              </ScrollReveal>
-
-              <ScrollReveal delay={0.22}>
-                <div className="mt-9 flex flex-col sm:flex-row gap-3">
-                  <Link
-                    href="/signup"
-                    className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-slate-900 dark:bg-white text-white dark:text-zinc-900 font-semibold text-[15px] rounded-xl hover:bg-slate-800 dark:hover:bg-zinc-100 transition-colors shadow-sm"
-                  >
-                    Analyze My Ad
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </Link>
-                  <Link
-                    href="#features"
-                    className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-slate-200 dark:border-white/[0.1] text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.03] hover:border-slate-300 dark:hover:border-white/[0.2] font-medium text-[15px] rounded-xl transition-colors"
-                  >
-                    See Example Analysis
-                  </Link>
-                </div>
-              </ScrollReveal>
-
-              <ScrollReveal delay={0.28}>
-                <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
-                  {["No credit card required", "3 free analyses", "Results in 30 seconds"].map((t) => (
-                    <span key={t} className="flex items-center gap-1.5 text-[12px] text-slate-400 dark:text-zinc-500">
-                      <svg className="w-3.5 h-3.5 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                      </svg>
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </ScrollReveal>
-            </div>
-
-            {/* ── RIGHT: Product Mock — Analysis Results (always dark) ── */}
-            <ScrollReveal delay={0.18} className="w-full">
-              <div className="relative" style={{ transform: "rotate(1.5deg)" }}>
-                {/* Ambient glow */}
-                <div
-                  aria-hidden
-                  className="absolute -inset-8 rounded-3xl blur-3xl pointer-events-none"
-                  style={{ background: "radial-gradient(ellipse at 60% 40%, rgba(34,197,94,0.14) 0%, rgba(6,182,212,0.06) 55%, transparent 75%)" }}
-                />
-                <div
-                  className="relative bg-[#0d1117] rounded-2xl overflow-hidden"
-                  style={{
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    boxShadow: "0 4px 6px rgba(0,0,0,0.3), 0 12px 24px rgba(0,0,0,0.4), 0 24px 48px rgba(0,0,0,0.25)",
-                  }}
-                >
-                  {/* Glass sheen diagonal */}
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 rounded-2xl z-10"
-                    style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 30%, transparent 55%)" }}
-                  />
-                  {/* Window chrome */}
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-white/[0.01]">
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex gap-[6px]">
-                        <span className="w-[10px] h-[10px] rounded-full bg-[#ff5f57]" />
-                        <span className="w-[10px] h-[10px] rounded-full bg-[#febc2e]" />
-                        <span className="w-[10px] h-[10px] rounded-full bg-[#28c840]" />
-                      </div>
-                      <span className="text-[11px] text-zinc-500 font-mono ml-1">Summer_Campaign_V4.jpg</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" style={{ boxShadow: "0 0 5px #22c55e" }} />
-                      <span className="text-[10px] text-green-400">Analysis complete</span>
-                    </div>
-                  </div>
-
-                  <div className="p-5 space-y-4">
-                    {/* Score + CTR row */}
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-[9px] font-semibold tracking-[0.16em] uppercase text-zinc-600 mb-1.5">Performance Score</p>
-                        <div className="flex items-baseline gap-1.5">
-                          <span className="text-[64px] font-black leading-none text-white" style={{ textShadow: "0 0 28px rgba(34,197,94,0.25)" }}>84</span>
-                          <span className="text-zinc-600 font-light" style={{ fontSize: "20px" }}>/100</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 mt-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                          <span className="text-[10px] text-green-400">Top 28% for Meta E-commerce</span>
-                        </div>
-                      </div>
-                      <div className="shrink-0 px-3 py-2.5 rounded-xl" style={{ background: "#0a1f12", border: "1px solid rgba(34,197,94,0.22)", boxShadow: "0 0 18px rgba(34,197,94,0.07)" }}>
-                        <p className="text-[8px] font-semibold tracking-[0.14em] uppercase text-zinc-600 mb-0.5">Est. CTR</p>
-                        <p className="text-[22px] font-black text-green-400 leading-tight">2.8–4.1%</p>
-                        <p className="text-[9px] text-cyan-400/70 mt-0.5">Above avg for niche</p>
-                      </div>
-                    </div>
-
-                    {/* Mock ad preview */}
-                    <div className="rounded-xl h-[80px] relative overflow-hidden" style={{ background: "#161b22", border: "1px solid rgba(255,255,255,0.05)" }}>
-                      <span className="absolute top-2.5 left-3 text-[8px] font-semibold text-zinc-600 uppercase tracking-[0.12em] z-10">Sponsored</span>
-                      <div className="absolute inset-0 flex items-center justify-center px-5">
-                        <div className="w-full pt-2">
-                          <div className="h-[6px] rounded-full mb-2.5" style={{ background: "rgba(255,255,255,0.15)", width: "100%" }} />
-                          <div className="h-[5px] rounded-full mb-2" style={{ background: "rgba(255,255,255,0.10)", width: "82%" }} />
-                          <div className="h-[5px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.07)", width: "63%" }} />
-                          <div className="h-[22px] rounded-md flex items-center justify-center" style={{ width: "88px", background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.22)" }}>
-                            <div className="h-[4px] rounded-full" style={{ background: "rgba(34,197,94,0.4)", width: "60px" }} />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Score breakdown — 6px bars, dark track, gradient fill */}
-                    <div className="space-y-3">
-                      {[
-                        { label: "Hook Strength", score: 91 },
-                        { label: "CTA Clarity",   score: 78 },
-                        { label: "Visual Impact", score: 88 },
-                        { label: "Platform Fit",  score: 95 },
-                      ].map((m) => {
-                        const base  = m.score > 75 ? "#22c55e" : m.score >= 60 ? "#eab308" : m.score >= 40 ? "#f97316" : "#ef4444";
-                        const light = m.score > 75 ? "#4ade80" : m.score >= 60 ? "#facc15" : m.score >= 40 ? "#fb923c" : "#f87171";
-                        return (
-                          <div key={m.label}>
-                            <div className="flex items-center justify-between mb-1.5">
-                              <span className="text-[10px] text-zinc-500">{m.label}</span>
-                              <span className="text-[11px] font-bold" style={{ color: base }}>{m.score}</span>
-                            </div>
-                            <div className="h-[6px] rounded-full overflow-hidden" style={{ background: "#1a1f2e" }}>
-                              <div className="h-full rounded-full" style={{ width: `${m.score}%`, background: `linear-gradient(90deg, ${base} 0%, ${light} 100%)` }} />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Top recommendation */}
-                    <div className="rounded-xl p-3.5" style={{ background: "#161b22", borderLeft: "2px solid rgba(6,182,212,0.35)" }}>
-                      <p className="text-[8px] font-semibold tracking-[0.16em] uppercase text-zinc-600 mb-1.5">Top Recommendation</p>
-                      <p className="text-[11px] text-zinc-200 leading-relaxed">
-                        Headline is strong. Tighten the CTA from &ldquo;Learn More&rdquo; to a specific outcome — could push CTR above 4%.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════
-          § 2  TRUST BAR
-      ══════════════════════════════════════ */}
-      <div className="border-y border-slate-100 dark:border-white/[0.05] bg-white dark:bg-zinc-950/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
-            {TRUST_ITEMS.map((t) => (
-              <span key={t} className="flex items-center gap-2 text-[12px] text-slate-500 dark:text-zinc-500">
-                <svg className="w-3.5 h-3.5 text-slate-300 dark:text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ══════════════════════════════════════
-          § 3  PROBLEM
-      ══════════════════════════════════════ */}
-      <section className="py-24 sm:py-36">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-16 lg:gap-24 items-start">
-
-            <ScrollReveal>
-              <Overline>The Problem</Overline>
-              <SectionHeading>
-                Most Ads Fail
-                <br />
-                Before They
-                <br />
-                Even Launch.
-              </SectionHeading>
-              <p className="mt-6 text-slate-500 dark:text-zinc-400 text-[17px] leading-[1.75] max-w-md">
-                The creative testing cycle is broken. Teams spend money to find out
-                what doesn&rsquo;t work. By then, budget is gone and confidence is low.
-              </p>
-              <div className="mt-10 grid grid-cols-3 gap-4">
-                {[
-                  { stat: "$37B", label: "Wasted on underperforming ads yearly" },
-                  { stat: "67%",  label: "Ads fail in the first 3 seconds" },
-                  { stat: "3.2×", label: "Higher ROAS with pre-launch validation" },
-                ].map((s) => (
-                  <div key={s.stat}>
-                    <p className="text-3xl font-black text-slate-900 dark:text-white mb-1 tracking-tight">{s.stat}</p>
-                    <p className="text-[11px] text-slate-400 dark:text-zinc-500 leading-tight">{s.label}</p>
-                  </div>
-                ))}
-              </div>
-            </ScrollReveal>
-
-            <div className="space-y-0">
-              {[
-                {
-                  num: "01",
-                  title: "Guessing which creative will win",
-                  body: "Creative decisions rely on intuition. There is no data. The team debates, picks one, launches — and prays.",
-                },
-                {
-                  num: "02",
-                  title: "Discovering failure after you've spent",
-                  body: "Most performance marketers find out a creative is weak after $2,000–$10,000 in test spend. Too late.",
-                },
-                {
-                  num: "03",
-                  title: "Slow testing cycles killing momentum",
-                  body: "Each failed creative costs 5–14 days. At agency scale, that compounds into months of wasted velocity.",
-                },
-                {
-                  num: "04",
-                  title: "Scaling without confidence",
-                  body: "Scaling an unvalidated creative is a gamble. The budget multiplies, and so does the risk of a dud.",
-                },
-              ].map((p, i) => (
-                <ScrollReveal key={p.num} delay={i * 0.07}>
-                  <div className="flex gap-5 py-6 border-b border-slate-100 dark:border-white/[0.05] group">
-                    <span className="text-[11px] font-mono text-slate-300 dark:text-zinc-600 pt-0.5 shrink-0 w-6">
-                      {p.num}
-                    </span>
-                    <div>
-                      <p className="text-[15px] font-semibold text-slate-900 dark:text-white mb-1.5 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
-                        {p.title}
-                      </p>
-                      <p className="text-[13px] text-slate-500 dark:text-zinc-500 leading-relaxed">{p.body}</p>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════
-          § 4  PRODUCT INTELLIGENCE
-      ══════════════════════════════════════ */}
-      <section id="features" className="py-24 sm:py-36 border-t border-slate-100 dark:border-white/[0.05]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
-            <div className="max-w-2xl mb-16 sm:mb-20">
-              <Overline>Product Intelligence</Overline>
-              <SectionHeading>
-                What You Get From
-                <br />
-                Every Analysis
-              </SectionHeading>
-              <p className="mt-5 text-slate-500 dark:text-zinc-400 text-[17px] leading-[1.75]">
-                Not vague AI feedback. Structured, prioritized intelligence built
-                around what actually drives ad performance.
-              </p>
+            <div className="inline-flex items-center gap-2 bg-[#EEF2FF] border border-[#E0E7FF] rounded-full px-4 py-1.5 mb-8">
+              <span>✨</span>
+              <span className="text-[14px] font-medium text-[#4F46E5]">Introducing AI-Powered Ad Analysis</span>
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {CAPABILITIES.map((c, i) => (
-              <ScrollReveal key={c.label} delay={i * 0.07}>
-                <div className="bg-white dark:bg-zinc-900 border border-slate-100 dark:border-white/[0.07] rounded-xl p-6 h-full shadow-sm dark:shadow-none hover:shadow-md dark:hover:shadow-none hover:border-slate-200 dark:hover:border-white/[0.13] transition-all duration-200 group">
-                  <div className="flex items-center justify-between mb-5">
-                    <span className="text-[11px] font-mono text-slate-300 dark:text-zinc-600">{c.label}</span>
-                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border uppercase tracking-wider ${capColor[c.color]}`}>
-                      {c.color === "green"  ? "Core"         :
-                       c.color === "blue"   ? "Intelligence" :
-                       c.color === "orange" ? "Detection"    : "Confidence"}
-                    </span>
-                  </div>
-                  <h3 className="text-[15px] font-bold text-slate-900 dark:text-white mb-3 leading-snug group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
-                    {c.title}
-                  </h3>
-                  <p className="text-[13px] text-slate-500 dark:text-zinc-500 leading-relaxed mb-5">{c.body}</p>
-                  <p className="text-[10px] font-semibold tracking-widest uppercase text-slate-300 dark:text-zinc-600">
-                    {c.detail}
-                  </p>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════
-          § 5  AD COMPARISON
-      ══════════════════════════════════════ */}
-      <section className="py-24 sm:py-36 border-t border-slate-100 dark:border-white/[0.05]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollReveal>
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-16">
-              <div>
-                <Overline>Creative Comparison</Overline>
-                <SectionHeading>
-                  Find the Winner
-                  <br />
-                  Before You Spend.
-                </SectionHeading>
-              </div>
-              <div className="shrink-0">
-                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-white/[0.03] text-[11px] text-slate-500 dark:text-zinc-500">
-                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
-                  Coming to Pro
-                </span>
-              </div>
-            </div>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_56px_1fr] gap-6 items-stretch">
-
-            {/* ── Ad A — LOSER ── */}
-            <ScrollReveal delay={0.05}>
-              <div
-                className="group relative bg-[#0d1117] rounded-2xl overflow-hidden h-full transition-all duration-300 hover:-translate-y-0.5"
-                style={{
-                  border: "1px solid rgba(239,68,68,0.2)",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)",
-                }}
-              >
-                {/* Red top glow line */}
-                <div className="h-[2px] w-full" style={{ background: "linear-gradient(90deg, transparent 5%, #ef4444 50%, transparent 95%)", boxShadow: "0 0 16px rgba(239,68,68,0.6)" }} />
-                {/* Hover border glow */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl" style={{ boxShadow: "0 0 0 1px rgba(239,68,68,0.35), inset 0 0 40px rgba(239,68,68,0.04)" }} />
-
-                <div className="px-6 py-6">
-                  {/* Header: filename + score gauge */}
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="text-[11px] text-zinc-600 font-mono">Summer_Campaign_V2.jpg</span>
-                    <div className="flex items-center gap-3">
-                      <div className="text-right leading-none">
-                        <span className="text-[40px] font-black leading-none" style={{ color: "#ef4444" }}>38</span>
-                        <span className="text-zinc-600 text-[11px] ml-0.5">/100</span>
-                      </div>
-                      <svg width="64" height="64" viewBox="0 0 64 64" className="shrink-0">
-                        <circle cx="32" cy="32" r="26" fill="none" stroke="#1a1f2e" strokeWidth="4" />
-                        <circle cx="32" cy="32" r="26" fill="none" stroke="#ef4444" strokeWidth="4"
-                          strokeDasharray={`${2 * Math.PI * 26}`}
-                          strokeDashoffset={`${2 * Math.PI * 26 * (1 - 0.38)}`}
-                          strokeLinecap="round" transform="rotate(-90 32 32)"
-                          style={{ filter: "drop-shadow(0 0 4px rgba(239,68,68,0.5))" }} />
-                      </svg>
-                    </div>
-                  </div>
-
-                  {/* Mock ad preview */}
-                  <div className="rounded-xl h-[100px] relative overflow-hidden mb-6" style={{ background: "#161b22", border: "1px solid rgba(255,255,255,0.05)" }}>
-                    <span className="absolute top-2.5 left-3 text-[8px] font-semibold text-zinc-600 uppercase tracking-[0.12em] z-10">Sponsored</span>
-                    <div className="absolute inset-0 flex items-center justify-center px-5 pt-3">
-                      <div className="w-full">
-                        <div className="h-[6px] rounded-full mb-2.5" style={{ background: "rgba(255,255,255,0.09)", width: "100%" }} />
-                        <div className="h-[5px] rounded-full mb-2" style={{ background: "rgba(255,255,255,0.06)", width: "78%" }} />
-                        <div className="h-[5px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.05)", width: "58%" }} />
-                        <div className="h-[22px] rounded-md" style={{ width: "80px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }} />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Score breakdown — 6px bars, dark track */}
-                  <div className="space-y-3 mb-6">
-                    {[
-                      { label: "Hook Strength", score: 29 },
-                      { label: "CTA Clarity",   score: 41 },
-                      { label: "Visual Impact", score: 38 },
-                    ].map((m) => {
-                      const base  = m.score < 50 ? "#ef4444" : m.score < 70 ? "#f97316" : "#22c55e";
-                      const light = m.score < 50 ? "#f87171" : m.score < 70 ? "#fb923c" : "#4ade80";
-                      return (
-                        <div key={m.label}>
-                          <div className="flex items-center justify-between mb-1.5">
-                            <span className="text-[11px] text-zinc-500">{m.label}</span>
-                            <span className="text-[12px] font-bold" style={{ color: base }}>{m.score}</span>
-                          </div>
-                          <div className="h-[6px] rounded-full overflow-hidden" style={{ background: "#1a1f2e" }}>
-                            <div className="h-full rounded-full" style={{ width: `${m.score}%`, background: `linear-gradient(90deg, ${base} 0%, ${light} 100%)` }} />
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* Issues list */}
-                  <div className="space-y-2.5 mb-6">
-                    {[
-                      "Generic headline — no specific benefit",
-                      "No social proof or credibility",
-                      "CTA too vague to drive action",
-                    ].map((issue) => (
-                      <div key={issue} className="flex items-start gap-2.5">
-                        <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.25)" }}>
-                          <svg className="w-2.5 h-2.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </span>
-                        <span className="text-[11px] text-zinc-500 leading-relaxed">{issue}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Stats bar */}
-                  <div className="grid grid-cols-3 text-center pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                    {[
-                      { label: "EST. CTR",   val: "0.7%" },
-                      { label: "HOOK",       val: "Weak" },
-                      { label: "CONFIDENCE", val: "Low"  },
-                    ].map((s) => (
-                      <div key={s.label}>
-                        <p className="text-[9px] font-semibold uppercase tracking-widest text-zinc-600 mb-1.5">{s.label}</p>
-                        <p className="text-[16px] font-bold" style={{ color: "#ef4444" }}>{s.val}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* VS divider */}
-            <div className="hidden lg:flex flex-col items-center justify-center gap-3 py-8">
-              <div className="flex-1 w-px" style={{ background: "rgba(255,255,255,0.05)" }} />
-              <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg" style={{ background: "#1a1f2e", border: "1px solid rgba(255,255,255,0.10)" }}>
-                <span className="text-[13px] font-bold text-zinc-500">VS</span>
-              </div>
-              <div className="flex-1 w-px" style={{ background: "rgba(255,255,255,0.05)" }} />
-            </div>
-            <div className="lg:hidden flex items-center justify-center py-4">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "#1a1f2e", border: "1px solid rgba(255,255,255,0.10)" }}>
-                <span className="text-[13px] font-bold text-zinc-500">VS</span>
-              </div>
-            </div>
-
-            {/* ── Ad B — WINNER ── */}
-            <ScrollReveal delay={0.12}>
-              <div
-                className="group relative bg-[#0d1117] rounded-2xl overflow-hidden h-full transition-all duration-300 hover:-translate-y-0.5"
-                style={{
-                  border: "1px solid rgba(34,197,94,0.22)",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)",
-                }}
-              >
-                {/* Green top glow line */}
-                <div className="h-[2px] w-full" style={{ background: "linear-gradient(90deg, transparent 5%, #22c55e 50%, transparent 95%)", boxShadow: "0 0 16px rgba(34,197,94,0.65)" }} />
-                {/* Hover border glow */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl" style={{ boxShadow: "0 0 0 1px rgba(34,197,94,0.4), inset 0 0 40px rgba(34,197,94,0.04)" }} />
-
-                <div className="px-6 py-6">
-                  {/* Header: filename + winner badge + score gauge */}
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex flex-col gap-1.5">
-                      <span className="text-[11px] text-zinc-600 font-mono">Summer_Campaign_V4.jpg</span>
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[9px] font-black text-white rounded-full uppercase tracking-widest w-fit" style={{ background: "#22c55e", boxShadow: "0 2px 8px rgba(34,197,94,0.4)" }}>
-                        ✦ WINNER
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="text-right leading-none">
-                        <span className="text-[40px] font-black leading-none" style={{ color: "#22c55e" }}>91</span>
-                        <span className="text-zinc-600 text-[11px] ml-0.5">/100</span>
-                      </div>
-                      <svg width="64" height="64" viewBox="0 0 64 64" className="shrink-0">
-                        <circle cx="32" cy="32" r="26" fill="none" stroke="#1a1f2e" strokeWidth="4" />
-                        <circle cx="32" cy="32" r="26" fill="none" stroke="#22c55e" strokeWidth="4"
-                          strokeDasharray={`${2 * Math.PI * 26}`}
-                          strokeDashoffset={`${2 * Math.PI * 26 * (1 - 0.91)}`}
-                          strokeLinecap="round" transform="rotate(-90 32 32)"
-                          style={{ filter: "drop-shadow(0 0 5px rgba(34,197,94,0.7))" }} />
-                      </svg>
-                    </div>
-                  </div>
-
-                  {/* Mock ad preview */}
-                  <div className="rounded-xl h-[100px] relative overflow-hidden mb-6" style={{ background: "#161b22", border: "1px solid rgba(34,197,94,0.08)" }}>
-                    <span className="absolute top-2.5 left-3 text-[8px] font-semibold text-zinc-600 uppercase tracking-[0.12em] z-10">Sponsored</span>
-                    <div className="absolute inset-0 flex items-center justify-center px-5 pt-3">
-                      <div className="w-full">
-                        <div className="h-[6px] rounded-full mb-2.5" style={{ background: "rgba(255,255,255,0.16)", width: "100%" }} />
-                        <div className="h-[5px] rounded-full mb-2" style={{ background: "rgba(255,255,255,0.11)", width: "85%" }} />
-                        <div className="h-[5px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.08)", width: "67%" }} />
-                        <div className="h-[22px] rounded-md flex items-center justify-center" style={{ width: "96px", background: "rgba(34,197,94,0.14)", border: "1px solid rgba(34,197,94,0.25)" }}>
-                          <div className="h-[4px] rounded-full" style={{ background: "rgba(34,197,94,0.45)", width: "72px" }} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Score breakdown — 6px bars, dark track, gradient */}
-                  <div className="space-y-3 mb-6">
-                    {[
-                      { label: "Hook Strength", score: 94 },
-                      { label: "CTA Clarity",   score: 88 },
-                      { label: "Visual Impact", score: 91 },
-                    ].map((m) => (
-                      <div key={m.label}>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[11px] text-zinc-400">{m.label}</span>
-                          <span className="text-[12px] font-bold text-green-400">{m.score}</span>
-                        </div>
-                        <div className="h-[6px] rounded-full overflow-hidden" style={{ background: "#1a1f2e" }}>
-                          <div className="h-full rounded-full" style={{ width: `${m.score}%`, background: "linear-gradient(90deg, #22c55e 0%, #4ade80 100%)", boxShadow: "0 0 6px rgba(34,197,94,0.35)" }} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Improvements list */}
-                  <div className="space-y-2.5 mb-6">
-                    {[
-                      "Specific headline with clear outcome",
-                      "12,000+ customers social proof",
-                      "Urgency-driven CTA with value",
-                    ].map((item) => (
-                      <div key={item} className="flex items-start gap-2.5">
-                        <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.28)" }}>
-                          <svg className="w-2.5 h-2.5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </span>
-                        <span className="text-[11px] text-zinc-400 leading-relaxed">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Stats bar */}
-                  <div className="grid grid-cols-3 text-center pt-4" style={{ borderTop: "1px solid rgba(34,197,94,0.08)" }}>
-                    {[
-                      { label: "EST. CTR",   val: "3.6%" },
-                      { label: "HOOK",       val: "Strong" },
-                      { label: "CONFIDENCE", val: "High"  },
-                    ].map((s) => (
-                      <div key={s.label}>
-                        <p className="text-[9px] font-semibold uppercase tracking-widest text-zinc-600 mb-1.5">{s.label}</p>
-                        <p className="text-[16px] font-bold text-green-400">{s.val}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
-
-          {/* Insight strip */}
-          <ScrollReveal delay={0.15}>
-            <div className="mt-5 p-5 bg-white dark:bg-zinc-900 border border-slate-100 dark:border-white/[0.07] rounded-xl shadow-sm dark:shadow-none flex flex-col sm:flex-row sm:items-center gap-4">
-              <div className="shrink-0">
-                <p className="text-[9px] font-semibold tracking-[0.15em] uppercase text-slate-400 dark:text-zinc-500 mb-1">
-                  Why Creative B Wins
-                </p>
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">+53</span>
-                  <span className="text-xs text-slate-400 dark:text-zinc-500">points on Hook Strength</span>
-                  <span className="text-slate-200 dark:text-zinc-700 mx-1">·</span>
-                  <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">+47</span>
-                  <span className="text-xs text-slate-400 dark:text-zinc-500">points on CTA Clarity</span>
-                </div>
-              </div>
-              <div className="hidden sm:block h-10 w-px bg-slate-100 dark:bg-white/[0.06]" />
-              <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed">
-                Creative B leads with a specific, outcome-driven hook and substantive social proof.
-                These two factors account for the majority of the 53-point gap in performance prediction.
-              </p>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════
-          § 5.5  AI IMPROVER FEATURE
-      ══════════════════════════════════════ */}
-      <section id="ai-improver" className="py-24 sm:py-36 bg-[#F8FAFC] dark:bg-zinc-950 border-y border-slate-100 dark:border-white/[0.05] overflow-hidden relative">
-        {/* Ambient cyan glow */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] opacity-[0.025] dark:opacity-[0.045]"
-          style={{ background: "radial-gradient(ellipse at 50% 0%, #06B6D4 0%, transparent 70%)" }}
-        />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-
-          {/* ── Section Header ── */}
-          <ScrollReveal>
-            <div className="text-center mb-14 sm:mb-18">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-cyan-600/20 dark:border-cyan-500/20 bg-cyan-50 dark:bg-cyan-500/[0.06]">
-                <svg className="w-3 h-3 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <span className="text-[12px] font-semibold text-cyan-600 dark:text-cyan-400 tracking-wide">AI Ad Improver</span>
-              </div>
-
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.06] text-slate-900 dark:text-white mb-5">
-                Don&rsquo;t Just Score Your Ads.
-                <br />
-                <span className="text-cyan-500 dark:text-cyan-400">Fix Them in One Click.</span>
-              </h2>
-              <p className="text-slate-500 dark:text-zinc-400 text-[17px] leading-[1.75] max-w-2xl mx-auto">
-                Other tools tell you what&rsquo;s wrong. We rewrite your entire ad — headlines, copy, CTAs, and hooks — ready to paste into your ad manager.
-              </p>
-            </div>
-          </ScrollReveal>
-
-          {/* ── Before / After Mockup Card ── */}
-          <ScrollReveal>
-            <div className="relative max-w-4xl mx-auto mb-12">
-              {/* Soft cyan glow behind the card */}
-              <div
-                aria-hidden
-                className="absolute -inset-6 sm:-inset-10 rounded-3xl blur-3xl opacity-[0.12] pointer-events-none"
-                style={{ background: "radial-gradient(ellipse, #06B6D4 0%, transparent 70%)" }}
-              />
-
-              <div className="relative bg-zinc-900 border border-cyan-500/[0.18] rounded-2xl overflow-hidden shadow-2xl shadow-black/40">
-                {/* Top accent line */}
-                <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-cyan-500/30 via-cyan-400/70 to-cyan-500/30" />
-
-                {/* Card header */}
-                <div className="flex items-center justify-between px-5 sm:px-7 py-4 border-b border-white/[0.06]">
-                  <div className="flex items-center gap-2">
-                    <div className="flex gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#28CA41]" />
-                    </div>
-                    <span className="text-[11px] text-zinc-500 font-mono ml-1">AI Improver — Summer_Campaign.jpg</span>
-                  </div>
-                  <span className="flex items-center gap-1.5 text-[10px] text-cyan-400 font-semibold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse-dot" />
-                    Improvement ready
-                  </span>
-                </div>
-
-                <div className="p-5 sm:p-7">
-                  <div className="grid grid-cols-1 sm:grid-cols-[1fr_52px_1fr] gap-5 items-stretch">
-
-                    {/* LEFT — Original weak ad */}
-                    <div className="bg-zinc-800/60 border border-red-500/[0.18] rounded-xl p-4 sm:p-5">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-[10px] font-bold text-red-400 uppercase tracking-[0.14em]">Original Ad</span>
-                        <span className="text-[11px] font-black text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full">45</span>
-                      </div>
-                      <div className="bg-zinc-700/40 border border-white/[0.05] rounded-xl p-3.5 mb-4">
-                        <p className="text-[13px] font-bold text-white/50 mb-2">Buy Our Product Now</p>
-                        <p className="text-[11px] text-zinc-600 leading-relaxed mb-3">
-                          We sell great products that you will love. Check out our store and buy today for amazing deals.
-                        </p>
-                        <div className="inline-flex items-center px-3 py-1.5 bg-zinc-600/40 border border-white/[0.05] rounded-md">
-                          <span className="text-[11px] text-zinc-500">Click Here</span>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        {[
-                          "Generic, benefit-free headline",
-                          "Zero social proof or trust",
-                          "Vague CTA drives no action",
-                        ].map((issue) => (
-                          <div key={issue} className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
-                              <svg className="w-1.5 h-1.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-                              </svg>
-                            </div>
-                            <span className="text-[11px] text-zinc-600">{issue}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Middle arrow divider */}
-                    <div className="hidden sm:flex flex-col items-center justify-center gap-2">
-                      <div className="flex-1 w-px bg-gradient-to-b from-transparent via-cyan-500/25 to-transparent" />
-                      <div className="w-9 h-9 rounded-full bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center shrink-0">
-                        <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                        </svg>
-                      </div>
-                      <div className="flex-1 w-px bg-gradient-to-b from-transparent via-cyan-500/25 to-transparent" />
-                    </div>
-                    <div className="sm:hidden flex items-center justify-center py-1">
-                      <div className="w-9 h-9 rounded-full bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center">
-                        <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                    </div>
-
-                    {/* RIGHT — AI improved version */}
-                    <div className="bg-cyan-500/[0.04] border border-cyan-500/[0.20] rounded-xl p-4 sm:p-5 relative">
-                      <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-cyan-500/20 via-cyan-400/50 to-cyan-500/20 rounded-t-xl" />
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="flex items-center gap-1.5 text-[10px] font-bold text-cyan-400 uppercase tracking-[0.14em]">
-                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                          AI Improved
-                        </span>
-                        <span className="text-[11px] font-black text-green-400 bg-green-500/10 border border-green-500/20 px-2 py-0.5 rounded-full">92</span>
-                      </div>
-                      <div className="bg-cyan-500/[0.05] border border-cyan-500/[0.10] rounded-xl p-3.5 mb-4">
-                        <p className="text-[13px] font-bold text-white mb-2">Transform Your Workflow in 5 Minutes</p>
-                        <p className="text-[11px] text-zinc-300 leading-relaxed mb-3">
-                          Join 12,000+ teams who cut their workload in half. No setup, no learning curve — results from day one.
-                        </p>
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-cyan-500/20 border border-cyan-500/30 rounded-md">
-                          <span className="text-[11px] font-bold text-cyan-300">Start Free Trial →</span>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        {[
-                          "Outcome-driven, specific headline",
-                          "12,000+ social proof embedded",
-                          "Direction + urgency in CTA",
-                        ].map((s) => (
-                          <div key={s} className="flex items-center gap-2">
-                            <div className="w-3 h-3 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center shrink-0">
-                              <svg className="w-1.5 h-1.5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                              </svg>
-                            </div>
-                            <span className="text-[11px] text-zinc-400">{s}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ScrollReveal>
-
-          {/* ── Feature Pills ── */}
           <ScrollReveal delay={0.05}>
-            <div className="flex flex-wrap items-center justify-center gap-3 mb-14">
-              {[
-                { icon: "✍️", label: "3 Headline Options" },
-                { icon: "📝", label: "Ready-to-Paste Copy" },
-                { icon: "🎣", label: "5 Hook Variations" },
-                { icon: "📋", label: "3 Ad Frameworks (PAS, AIDA, BAB)" },
-              ].map((p) => (
-                <span
-                  key={p.label}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.08] rounded-full text-[13px] text-slate-500 dark:text-zinc-400 shadow-sm dark:shadow-none"
-                >
-                  <span>{p.icon}</span>
-                  {p.label}
-                </span>
-              ))}
-            </div>
+            <h1 className="text-[40px] sm:text-[56px] lg:text-[64px] font-bold text-[#0F172A] leading-[1.08] tracking-tight mb-6">
+              Stop Wasting Budget on<br />
+              Ads That Don&apos;t Convert.
+            </h1>
           </ScrollReveal>
 
-          {/* ── 3 Preview Cards ── */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
+          <ScrollReveal delay={0.1}>
+            <p className="text-[18px] sm:text-[20px] text-[#64748B] max-w-[600px] mx-auto leading-[1.6] mb-10">
+              Get a 0–100 performance score and actionable improvements for any ad creative in under
+              30 seconds. Know exactly what to fix before you spend a dollar.
+            </p>
+          </ScrollReveal>
 
-            {/* Card 1 — Headlines */}
-            <ScrollReveal delay={0.04}>
-              <div className="bg-white dark:bg-zinc-900 border border-slate-100 dark:border-white/[0.07] rounded-xl p-5 h-full shadow-sm dark:shadow-none hover:border-cyan-400/30 dark:hover:border-cyan-500/[0.18] hover:shadow-md dark:hover:shadow-none transition-all duration-200">
-                <div className="flex items-center gap-2 mb-5">
-                  <div className="w-6 h-6 rounded-md bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/20 flex items-center justify-center">
-                    <svg className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-[13px] font-semibold text-slate-900 dark:text-white">Headlines That Convert</h3>
-                </div>
-                <div className="space-y-3">
-                  {[
-                    "Stop Scrolling. Your Skin Deserves This.",
-                    "10,000 Women Switched. Here\u2019s Why.",
-                    "Still Using Products That Don\u2019t Work?",
-                  ].map((h, i) => (
-                    <div key={i} className="flex items-start justify-between gap-3 group py-2.5 border-b border-slate-100 dark:border-white/[0.05] last:border-0">
-                      <p className="text-[12px] text-slate-600 dark:text-zinc-300 leading-snug">{h}</p>
-                      <div className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="w-6 h-6 rounded-md bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center justify-center">
-                          <svg className="w-3 h-3 text-slate-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* Card 2 — Hooks */}
-            <ScrollReveal delay={0.08}>
-              <div className="bg-white dark:bg-zinc-900 border border-slate-100 dark:border-white/[0.07] rounded-xl p-5 h-full shadow-sm dark:shadow-none hover:border-cyan-400/30 dark:hover:border-cyan-500/[0.18] hover:shadow-md dark:hover:shadow-none transition-all duration-200">
-                <div className="flex items-center gap-2 mb-5">
-                  <div className="w-6 h-6 rounded-md bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 flex items-center justify-center">
-                    <svg className="w-3.5 h-3.5 text-orange-500 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-[13px] font-semibold text-slate-900 dark:text-white">Hooks That Stop The Scroll</h3>
-                </div>
-                <div className="space-y-3">
-                  {[
-                    { text: "Did you know 67% of ads fail in the first 3 seconds?", type: "Statistic", color: "bg-green-500/10 text-green-400 border-green-500/20" },
-                    { text: "What if your next ad could 3\u00d7 your ROAS overnight?", type: "Curiosity", color: "bg-purple-500/10 text-purple-400 border-purple-500/20" },
-                    { text: "You\u2019re wasting £50/day on ads that don\u2019t convert.", type: "Pain Point", color: "bg-red-500/10 text-red-400 border-red-500/20" },
-                  ].map((hook, i) => (
-                    <div key={i} className="py-2.5 border-b border-slate-100 dark:border-white/[0.05] last:border-0">
-                      <span className={`inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border mb-2 ${hook.color}`}>
-                        {hook.type}
-                      </span>
-                      <p className="text-[12px] text-slate-600 dark:text-zinc-300 leading-snug">{hook.text}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* Card 3 — Frameworks */}
-            <ScrollReveal delay={0.12}>
-              <div className="bg-white dark:bg-zinc-900 border border-slate-100 dark:border-white/[0.07] rounded-xl p-5 h-full shadow-sm dark:shadow-none hover:border-cyan-400/30 dark:hover:border-cyan-500/[0.18] hover:shadow-md dark:hover:shadow-none transition-all duration-200">
-                <div className="flex items-center gap-2 mb-5">
-                  <div className="w-6 h-6 rounded-md bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 flex items-center justify-center">
-                    <svg className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-[13px] font-semibold text-slate-900 dark:text-white">Complete Ad Frameworks</h3>
-                </div>
-                <div className="space-y-2">
-                  {[
-                    { label: "PAS Framework", preview: "You\u2019re losing customers every day your ad copy stays weak..." },
-                    { label: "AIDA Framework", preview: "What if one sentence could triple your click-through rate?" },
-                    { label: "BAB Framework", preview: "Before AdScore, our creative dud rate was 62%..." },
-                  ].map((fw, i) => (
-                    <div key={i} className="bg-slate-50 dark:bg-white/[0.02] border border-slate-100 dark:border-white/[0.06] rounded-lg p-3">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400">{fw.label}</span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 dark:text-zinc-600 leading-snug line-clamp-1">{fw.preview}</p>
-                    </div>
-                  ))}
-                  <p className="text-[11px] text-slate-400 dark:text-zinc-600 text-center pt-1">Copy Full Ad →</p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-          </div>
-
-          {/* ── Final CTA ── */}
-          <ScrollReveal delay={0.08}>
-            <div className="text-center">
+          <ScrollReveal delay={0.15}>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
               <Link
-                href="/signup?redirect=/analyze"
-                className="inline-flex items-center gap-2.5 px-8 py-4 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-bold text-[15px] rounded-xl shadow-lg shadow-blue-900/40 transition-all duration-200"
+                href="/signup"
+                className="inline-flex items-center justify-center gap-2 bg-[#4F46E5] hover:bg-[#4338CA] text-white font-semibold text-[16px] px-7 py-3.5 rounded-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_12px_rgba(79,70,229,0.25)] transition-all duration-150 w-full sm:w-auto"
               >
-                Try the AI Ad Improver Free
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
+                Start for Free <Arrow />
               </Link>
-              <p className="mt-3 text-[12px] text-zinc-600">Get 1 free improvement with every account</p>
+              <a
+                href="#showcase"
+                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-[#F8FAFC] text-[#0F172A] font-semibold text-[16px] px-7 py-3.5 rounded-[10px] border border-[#E2E8F0] transition-all duration-150 w-full sm:w-auto"
+              >
+                See how it works <Arrow />
+              </a>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.2}>
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[14px] text-[#64748B]">
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-[#16A34A]" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                No credit card required
+              </span>
+              <span className="hidden sm:block w-px h-4 bg-[#E2E8F0]" aria-hidden="true" />
+              <span>⚡ 7 free analyses</span>
+              <span className="hidden sm:block w-px h-4 bg-[#E2E8F0]" aria-hidden="true" />
+              <span>⏱ Results in 30 seconds</span>
             </div>
           </ScrollReveal>
 
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          § 5a  A/B COMPARATOR
-      ══════════════════════════════════════ */}
-      <section id="ab-compare" className="py-24 sm:py-36 border-t border-slate-100 dark:border-white/[0.05] overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      {/* ════ PRODUCT SHOWCASE ════ */}
+      <section className="bg-[#F8FAFC] py-24" id="showcase">
+        <ScrollReveal>
+          <ProductShowcase />
+        </ScrollReveal>
+      </section>
 
-            {/* LEFT — Copy */}
-            <ScrollReveal>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-cyan-600/20 dark:border-cyan-500/20 bg-cyan-50 dark:bg-cyan-500/[0.06]">
-                <span className="text-[12px] font-semibold text-cyan-600 dark:text-cyan-400 tracking-wide">⚔️ A/B Compare</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.06] text-slate-900 dark:text-white mb-5">
-                Stop Guessing.{" "}
-                <span className="text-cyan-500 dark:text-cyan-400">Test Before You Spend.</span>
+      {/* ════ FEATURE GRID ════ */}
+      <section className="bg-white py-24 px-4" id="features">
+        <div className="max-w-7xl mx-auto">
+          <ScrollReveal>
+            <div className="text-center mb-16">
+              <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[#4F46E5] mb-3">FEATURES</p>
+              <h2 className="text-[36px] sm:text-[42px] font-bold text-[#0F172A] leading-tight tracking-tight">
+                Everything you need to run winning ads.
               </h2>
-              <p className="text-slate-500 dark:text-zinc-400 text-[17px] leading-[1.75] mb-8 max-w-lg">
-                Upload two ads side by side. Our AI instantly picks the winner and explains exactly why — across 6 dimensions. Stop wasting budget on the wrong creative.
-              </p>
-              <div className="space-y-3 mb-10">
-                {[
-                  "Head-to-head scoring across 6 dimensions",
-                  "Clear winner verdict with confidence percentage",
-                  "Combine the best elements of both into one perfect ad",
-                ].map((b) => (
-                  <div key={b} className="flex items-start gap-2.5">
-                    <svg className="w-4 h-4 text-cyan-500 dark:text-cyan-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-[14px] text-slate-600 dark:text-zinc-400">{b}</span>
-                  </div>
-                ))}
-              </div>
-              <Link href="/signup?redirect=/compare" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-semibold text-[14px] rounded-xl shadow-lg shadow-blue-900/30 transition-all duration-200">
-                Compare Your Ads Free →
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <ScrollReveal delay={0}>
+              <FeatureCard
+                label="DEEP ANALYSIS"
+                title="6-Dimension Ad Scoring"
+                description="Every ad is analyzed across hook strength, visual impact, copy effectiveness, CTA clarity, platform fit, and audience alignment. Get a forensic breakdown of what works and what doesn't."
+                icon={
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                }
+              />
             </ScrollReveal>
 
-            {/* RIGHT — Mockup */}
-            <ScrollReveal delay={0.1} className="w-full">
-              <div className="relative">
-                <div aria-hidden className="absolute -inset-6 rounded-3xl opacity-[0.08] dark:opacity-[0.18] blur-2xl pointer-events-none" style={{ background: "radial-gradient(ellipse, #06B6D4 0%, transparent 70%)" }} />
-                <div className="relative bg-zinc-900 border border-white/[0.08] rounded-2xl p-5 shadow-2xl shadow-black/30">
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500 mb-4">A/B Comparison Result</p>
-                  {/* Two mini ad cards */}
-                  <div className="grid grid-cols-2 gap-3 mb-4">
-                    {/* Ad A — Loser */}
-                    <div className="bg-zinc-800/70 border border-white/[0.07] rounded-xl p-3">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Ad A</span>
-                        <svg width="40" height="40" viewBox="0 0 40 40">
-                          <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
-                          <circle cx="20" cy="20" r="16" fill="none" stroke="#F97316" strokeWidth="3"
-                            strokeDasharray={`${2 * Math.PI * 16}`}
-                            strokeDashoffset={`${2 * Math.PI * 16 * (1 - 0.58)}`}
-                            strokeLinecap="round" transform="rotate(-90 20 20)" />
-                          <text x="20" y="25" textAnchor="middle" fill="white" fontSize="11" fontWeight="800">58</text>
-                        </svg>
-                      </div>
-                      <div className="h-10 bg-zinc-700/50 rounded-lg mb-2" />
-                      <div className="space-y-1.5">
-                        {[{ label: "Hook", score: 42 }, { label: "Copy", score: 55 }, { label: "CTA", score: 49 }].map((m) => (
-                          <div key={m.label}>
-                            <div className="flex justify-between mb-0.5">
-                              <span className="text-[9px] text-zinc-600">{m.label}</span>
-                              <span className="text-[9px] font-bold text-orange-400">{m.score}</span>
-                            </div>
-                            <div className="h-[2px] bg-white/[0.06] rounded-full overflow-hidden">
-                              <div className="h-full bg-orange-500/60 rounded-full" style={{ width: `${m.score}%` }} />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    {/* Ad B — Winner */}
-                    <div className="bg-zinc-800/70 border border-green-500/30 rounded-xl p-3 relative">
-                      <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-green-500/30 via-green-400/60 to-green-500/30 rounded-t-xl" />
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">Ad B</span>
-                          <span className="text-[8px] font-black text-green-400 bg-green-500/10 border border-green-500/20 px-1.5 py-0.5 rounded-full uppercase tracking-wide">WINNER 🏆</span>
-                        </div>
-                        <svg width="40" height="40" viewBox="0 0 40 40">
-                          <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
-                          <circle cx="20" cy="20" r="16" fill="none" stroke="#22C55E" strokeWidth="3"
-                            strokeDasharray={`${2 * Math.PI * 16}`}
-                            strokeDashoffset={`${2 * Math.PI * 16 * (1 - 0.84)}`}
-                            strokeLinecap="round" transform="rotate(-90 20 20)" />
-                          <text x="20" y="25" textAnchor="middle" fill="white" fontSize="11" fontWeight="800">84</text>
-                        </svg>
-                      </div>
-                      <div className="h-10 bg-green-500/10 border border-green-500/10 rounded-lg mb-2" />
-                      <div className="space-y-1.5">
-                        {[{ label: "Hook", score: 88 }, { label: "Copy", score: 79 }, { label: "CTA", score: 91 }].map((m) => (
-                          <div key={m.label}>
-                            <div className="flex justify-between mb-0.5">
-                              <span className="text-[9px] text-zinc-500">{m.label}</span>
-                              <span className="text-[9px] font-bold text-green-400">{m.score}</span>
-                            </div>
-                            <div className="h-[2px] bg-white/[0.06] rounded-full overflow-hidden">
-                              <div className="h-full bg-green-500 rounded-full" style={{ width: `${m.score}%` }} />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  {/* Tug-of-war bar */}
-                  <div className="bg-zinc-800/50 border border-white/[0.06] rounded-xl p-3">
-                    <p className="text-[9px] text-zinc-500 uppercase tracking-widest mb-2">Overall Result</p>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[10px] font-bold text-orange-400 w-8 text-right">58</span>
-                      <div className="flex-1 h-2 bg-zinc-700 rounded-full overflow-hidden flex">
-                        <div className="h-full bg-orange-500/60 rounded-l-full" style={{ width: "40.8%" }} />
-                        <div className="h-full bg-green-500 flex-1" />
-                      </div>
-                      <span className="text-[10px] font-bold text-green-400 w-8">84</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-[9px] text-zinc-600">Ad A</span>
-                      <span className="text-[9px] text-green-400 font-semibold">Ad B wins by 26 pts →</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <ScrollReveal delay={0.05}>
+              <FeatureCard
+                label="AI IMPROVER"
+                title="One-Click Ad Improvements"
+                description="Don't just score your ads — fix them. Our AI rewrites your headlines, copy, and CTAs using proven frameworks. Get 3 complete ad variations ready to paste into your ad manager."
+                icon={
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                  </svg>
+                }
+              />
             </ScrollReveal>
 
+            <ScrollReveal delay={0.1}>
+              <FeatureCard
+                label="PERFORMANCE TRACKING"
+                title="Track Your Ad Score Over Time"
+                description="Monitor how your creative quality improves. See score trends, track your best performers, and prove your strategy is working with data your whole team can understand."
+                icon={
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                }
+              />
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.05}>
+              <FeatureCard
+                label="A/B TESTING"
+                title="Compare Creatives Head-to-Head"
+                description="Upload two ads side by side. Our AI picks the winner across 6 dimensions and tells you exactly how to combine the best elements of both into a single dominant creative."
+                icon={
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  </svg>
+                }
+              />
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.1}>
+              <FeatureCard
+                label="COMPETITOR INTELLIGENCE"
+                title="Reverse-Engineer Any Competitor"
+                description="Upload a competitor's ad. Our AI decodes their strategy, finds their weaknesses, and writes you a counter-ad designed to beat them — using their own playbook against them."
+                icon={
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                }
+              />
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.15}>
+              <FeatureCard
+                label="INSTANT GENERATION"
+                title="Ads from Any Product URL"
+                description="Paste your Shopify, Amazon, or any product URL. Get complete ad copy for Facebook, TikTok, Instagram, and Google — with multiple hook variations ready to launch."
+                icon={
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  </svg>
+                }
+              />
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          § 5b  COMPETITOR SPY
-      ══════════════════════════════════════ */}
-      <section id="competitor-spy" className="py-24 sm:py-36 bg-[#F8FAFC] dark:bg-zinc-950 border-t border-slate-100 dark:border-white/[0.05] overflow-hidden relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-
-            {/* LEFT — Mockup */}
-            <ScrollReveal className="w-full order-2 lg:order-1">
-              <div className="relative">
-                <div aria-hidden className="absolute -inset-6 rounded-3xl opacity-[0.06] dark:opacity-[0.14] blur-2xl pointer-events-none" style={{ background: "radial-gradient(ellipse, #EF4444 0%, transparent 70%)" }} />
-                <div className="relative bg-zinc-950 border border-red-500/[0.18] rounded-2xl overflow-hidden shadow-2xl shadow-black/40">
-                  <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-red-500/30 via-red-400/60 to-red-500/30" />
-                  {/* Scanline effect */}
-                  <div className="absolute inset-0 pointer-events-none opacity-[0.02]" style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.8) 2px, rgba(255,255,255,0.8) 3px)" }} />
-                  <div className="p-5 relative">
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-[10px] font-mono font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-2.5 py-1 rounded uppercase tracking-widest">🔍 Intelligence Report</span>
-                    </div>
-                    {/* Competitor ad thumbnail */}
-                    <div className="bg-zinc-800/60 border border-white/[0.06] rounded-xl h-20 flex items-center justify-center mb-4 relative overflow-hidden">
-                      <div className="text-center">
-                        <p className="text-[10px] text-zinc-600 uppercase tracking-wider">Competitor Ad</p>
-                        <div className="h-1.5 bg-white/[0.07] rounded w-24 mx-auto mt-2" />
-                        <div className="h-1.5 bg-white/[0.05] rounded w-16 mx-auto mt-1" />
-                      </div>
-                      <div className="absolute top-2 right-2">
-                        <span className="text-[9px] font-bold text-orange-400 bg-orange-500/10 border border-orange-500/20 px-1.5 py-0.5 rounded-full">Score: 71</span>
-                      </div>
-                    </div>
-                    {/* Insights */}
-                    <div className="space-y-2 mb-4">
-                      {[
-                        { text: "Strong emotional hook", color: "text-green-400", icon: "✅" },
-                        { text: "Clear social proof", color: "text-green-400", icon: "✅" },
-                        { text: "Weak CTA — opportunity to beat them", color: "text-amber-400", icon: "⚠️" },
-                      ].map((ins) => (
-                        <div key={ins.text} className="flex items-center gap-2">
-                          <span className="text-[11px]">{ins.icon}</span>
-                          <span className={`text-[11px] ${ins.color}`}>{ins.text}</span>
-                        </div>
-                      ))}
-                    </div>
-                    {/* Counter-ad preview */}
-                    <div className="bg-cyan-500/[0.06] border border-cyan-500/20 rounded-xl p-3.5">
-                      <p className="text-[9px] font-semibold uppercase tracking-widest text-cyan-400 mb-2">Your Counter-Ad</p>
-                      <p className="text-[12px] text-zinc-300 leading-relaxed font-medium">
-                        &ldquo;While they&rsquo;re still guessing, you&rsquo;ll already know. Try free for 30 days →&rdquo;
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* RIGHT — Copy */}
-            <ScrollReveal delay={0.1} className="order-1 lg:order-2">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-cyan-600/20 dark:border-cyan-500/20 bg-cyan-50 dark:bg-cyan-500/[0.06]">
-                <span className="text-[12px] font-semibold text-cyan-600 dark:text-cyan-400 tracking-wide">🕵️ Competitor Spy</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.06] text-slate-900 dark:text-white mb-5">
-                Reverse-Engineer{" "}
-                <span className="text-cyan-500 dark:text-cyan-400">Any Competitor&rsquo;s Ad.</span>
-              </h2>
-              <p className="text-slate-500 dark:text-zinc-400 text-[17px] leading-[1.75] mb-8 max-w-lg">
-                Upload any competitor&rsquo;s ad. Our AI decodes their strategy, finds their weaknesses, and writes you a better ad that beats them.
-              </p>
-              <div className="space-y-3 mb-10">
-                {[
-                  "Decode their hook, emotional triggers, and targeting",
-                  "Find exactly where they're vulnerable",
-                  "Get a complete counter-ad ready to launch",
-                ].map((b) => (
-                  <div key={b} className="flex items-start gap-2.5">
-                    <svg className="w-4 h-4 text-cyan-500 dark:text-cyan-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-[14px] text-slate-600 dark:text-zinc-400">{b}</span>
-                  </div>
-                ))}
-              </div>
-              <Link href="/signup?redirect=/spy" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-semibold text-[14px] rounded-xl shadow-lg shadow-blue-900/30 transition-all duration-200">
-                Spy on a Competitor →
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-            </ScrollReveal>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════
-          § 5c  SWIPE FILE
-      ══════════════════════════════════════ */}
-      <section id="swipe-file" className="py-24 sm:py-36 border-t border-slate-100 dark:border-white/[0.05] overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-
-            {/* LEFT — Copy */}
-            <ScrollReveal>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-cyan-600/20 dark:border-cyan-500/20 bg-cyan-50 dark:bg-cyan-500/[0.06]">
-                <span className="text-[12px] font-semibold text-cyan-600 dark:text-cyan-400 tracking-wide">📂 Swipe File</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.06] text-slate-900 dark:text-white mb-5">
-                Proven Ad Templates.{" "}
-                <span className="text-cyan-500 dark:text-cyan-400">Ready in Seconds.</span>
-              </h2>
-              <p className="text-slate-500 dark:text-zinc-400 text-[17px] leading-[1.75] mb-8 max-w-lg">
-                Browse 20+ battle-tested ad frameworks organized by platform and niche. Pick a template, tell us your product, and get ready-to-paste ad copy instantly.
-              </p>
-              <div className="space-y-3 mb-10">
-                {[
-                  "Templates for Facebook, TikTok, Instagram, and Google",
-                  "PAS, AIDA, BAB and 15+ more proven frameworks",
-                  "AI fills in the template with your specific product",
-                ].map((b) => (
-                  <div key={b} className="flex items-start gap-2.5">
-                    <svg className="w-4 h-4 text-cyan-500 dark:text-cyan-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-[14px] text-slate-600 dark:text-zinc-400">{b}</span>
-                  </div>
-                ))}
-              </div>
-              <Link href="/signup?redirect=/analyze" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-semibold text-[14px] rounded-xl shadow-lg shadow-blue-900/30 transition-all duration-200">
-                Browse Templates →
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-            </ScrollReveal>
-
-            {/* RIGHT — Mockup */}
-            <ScrollReveal delay={0.1} className="w-full">
-              <div className="relative">
-                <div aria-hidden className="absolute -inset-6 rounded-3xl opacity-[0.07] dark:opacity-[0.13] blur-2xl pointer-events-none" style={{ background: "radial-gradient(ellipse, #8B5CF6 0%, transparent 70%)" }} />
-                <div className="relative bg-zinc-900 border border-white/[0.08] rounded-2xl p-5 shadow-2xl shadow-black/30">
-                  <div className="flex items-center justify-between mb-4">
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">Template Library</p>
-                    <span className="text-[9px] text-zinc-600 font-mono">20+ frameworks</span>
-                  </div>
-                  {/* 2x2 template grid */}
-                  <div className="grid grid-cols-2 gap-2.5 mb-4">
-                    {[
-                      { name: "The Social Proof Stack", platform: "Facebook", platformColor: "text-blue-400 bg-blue-500/10 border-blue-500/20", tag: "High Performer 🔥" },
-                      { name: "The POV Format", platform: "TikTok", platformColor: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20", tag: null },
-                      { name: "Pain-Solution Reveal", platform: "Instagram", platformColor: "text-pink-400 bg-pink-500/10 border-pink-500/20", tag: null },
-                      { name: "The Question Hook", platform: "Google", platformColor: "text-amber-400 bg-amber-500/10 border-amber-500/20", tag: null },
-                    ].map((tmpl) => (
-                      <div key={tmpl.name} className="bg-zinc-800/60 border border-white/[0.07] rounded-xl p-3 hover:border-violet-500/20 transition-colors">
-                        <div className="flex items-start justify-between gap-1 mb-2">
-                          <p className="text-[11px] font-semibold text-zinc-300 leading-tight">{tmpl.name}</p>
-                          {tmpl.tag && (
-                            <span className="text-[8px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded-full shrink-0 whitespace-nowrap">{tmpl.tag}</span>
-                          )}
-                        </div>
-                        <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full border ${tmpl.platformColor}`}>{tmpl.platform}</span>
-                      </div>
-                    ))}
-                  </div>
-                  {/* Generate CTA mockup */}
-                  <div className="bg-zinc-800/50 border border-white/[0.06] rounded-xl p-3 flex items-center justify-between">
-                    <span className="text-[11px] text-zinc-500">Select template → add your product</span>
-                    <div className="px-3 py-1.5 bg-violet-500/10 border border-violet-500/20 rounded-lg">
-                      <span className="text-[10px] font-semibold text-violet-400">Generate →</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════
-          § 5d  GENERATE FROM URL
-      ══════════════════════════════════════ */}
-      <section id="generate-from-url" className="py-24 sm:py-36 bg-[#F8FAFC] dark:bg-zinc-950 border-t border-slate-100 dark:border-white/[0.05] overflow-hidden relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-
-            {/* LEFT — Mockup */}
-            <ScrollReveal className="w-full order-2 lg:order-1">
-              <div className="relative">
-                <div aria-hidden className="absolute -inset-6 rounded-3xl opacity-[0.08] dark:opacity-[0.16] blur-2xl pointer-events-none" style={{ background: "radial-gradient(ellipse, #6366F1 0%, transparent 70%)" }} />
-                <div className="relative bg-zinc-900 border border-indigo-500/[0.20] rounded-2xl p-5 shadow-2xl shadow-black/30">
-                  <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-indigo-500/30 via-indigo-400/60 to-indigo-500/30 rounded-t-2xl" />
-                  {/* URL input mockup */}
-                  <div className="flex items-center gap-2 bg-zinc-800/70 border border-white/[0.08] rounded-xl px-3 py-2.5 mb-4">
-                    <svg className="w-3.5 h-3.5 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                    </svg>
-                    <span className="text-[11px] text-zinc-400 font-mono">https://mystore.com/products/serum</span>
-                  </div>
-                  {/* Platform badges */}
-                  <div className="flex gap-1.5 mb-4">
-                    {[
-                      { label: "Facebook ✓", color: "text-blue-400 bg-blue-500/10 border-blue-500/25" },
-                      { label: "TikTok ✓", color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/25" },
-                      { label: "Instagram ✓", color: "text-pink-400 bg-pink-500/10 border-pink-500/25" },
-                    ].map((p) => (
-                      <span key={p.label} className={`text-[9px] font-semibold px-2 py-1 rounded-full border ${p.color}`}>{p.label}</span>
-                    ))}
-                  </div>
-                  {/* Generated output preview */}
-                  <div className="bg-indigo-500/[0.04] border border-indigo-500/[0.12] rounded-xl p-4 mb-3">
-                    <div className="space-y-2.5">
-                      <div>
-                        <span className="text-[8px] font-bold uppercase tracking-widest text-indigo-400 mb-0.5 block">Hook</span>
-                        <p className="text-[12px] text-zinc-300 leading-snug">Did you know 90% of serums don&rsquo;t actually absorb?</p>
-                      </div>
-                      <div>
-                        <span className="text-[8px] font-bold uppercase tracking-widest text-indigo-400 mb-0.5 block">Headline</span>
-                        <p className="text-[12px] font-semibold text-white leading-snug">The 30-Second Serum That Actually Works</p>
-                      </div>
-                      <div>
-                        <span className="text-[8px] font-bold uppercase tracking-widest text-indigo-400 mb-0.5 block">CTA</span>
-                        <p className="text-[12px] text-indigo-300 font-bold">Try It Risk-Free →</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex justify-end">
-                    <div className="px-3 py-1.5 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
-                      <span className="text-[10px] font-semibold text-indigo-400">Copy Full Ad</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* RIGHT — Copy */}
-            <ScrollReveal delay={0.1} className="order-1 lg:order-2">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-cyan-600/20 dark:border-cyan-500/20 bg-cyan-50 dark:bg-cyan-500/[0.06]">
-                <span className="text-[12px] font-semibold text-cyan-600 dark:text-cyan-400 tracking-wide">🔗 URL to Ads</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.06] text-slate-900 dark:text-white mb-5">
-                Paste Your URL.{" "}
-                <span className="text-cyan-500 dark:text-cyan-400">Get Ads Instantly.</span>
-              </h2>
-              <p className="text-slate-500 dark:text-zinc-400 text-[17px] leading-[1.75] mb-8 max-w-lg">
-                Drop your Shopify, Amazon, or any product URL. Our AI reads your product page and generates complete ad copy for every platform — with multiple hook variations.
-              </p>
-              <div className="space-y-3 mb-10">
-                {[
-                  "Works with Shopify, Amazon, WooCommerce, any URL",
-                  "3 variations per platform (Pain Point, Social Proof, Curiosity)",
-                  "Hashtags and targeting suggestions included",
-                ].map((b) => (
-                  <div key={b} className="flex items-start gap-2.5">
-                    <svg className="w-4 h-4 text-cyan-500 dark:text-cyan-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-[14px] text-slate-600 dark:text-zinc-400">{b}</span>
-                  </div>
-                ))}
-              </div>
-              <Link href="/signup?redirect=/generate" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-semibold text-[14px] rounded-xl shadow-lg shadow-blue-900/30 transition-all duration-200">
-                Generate Ads from URL →
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-            </ScrollReveal>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════
-          § 5e  PERFORMANCE TRACKER
-      ══════════════════════════════════════ */}
-      <section id="tracker" className="py-24 sm:py-36 border-t border-slate-100 dark:border-white/[0.05] overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ════ BEFORE / AFTER ════ */}
+      <section className="bg-[#F8FAFC] py-24 px-4" id="before-after">
+        <div className="max-w-5xl mx-auto">
           <ScrollReveal>
             <div className="text-center mb-14">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full border border-cyan-600/20 dark:border-cyan-500/20 bg-cyan-50 dark:bg-cyan-500/[0.06]">
-                <span className="text-[12px] font-semibold text-cyan-600 dark:text-cyan-400 tracking-wide">📈 Performance Tracker</span>
-              </div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.06] text-slate-900 dark:text-white mb-5">
-                Watch Your Ads{" "}
-                <span className="text-cyan-500 dark:text-cyan-400">Get Better Over Time.</span>
+              <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[#4F46E5] mb-3">SEE THE DIFFERENCE</p>
+              <h2 className="text-[36px] sm:text-[40px] font-bold text-[#0F172A] tracking-tight leading-tight">
+                What AI optimization looks like.
               </h2>
-              <p className="text-slate-500 dark:text-zinc-400 text-[17px] leading-[1.75] max-w-xl mx-auto">
-                Track every ad score, see your improvement trends, and prove your creative strategy is working.
-              </p>
             </div>
           </ScrollReveal>
-
-          {/* Chart card */}
-          <ScrollReveal delay={0.06}>
-            <div className="relative mb-8">
-              <div aria-hidden className="absolute -inset-4 rounded-3xl opacity-[0.06] dark:opacity-[0.10] blur-2xl pointer-events-none" style={{ background: "radial-gradient(ellipse, #06B6D4 0%, transparent 70%)" }} />
-              <div className="relative bg-zinc-900 border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl shadow-black/30 p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500 mb-1">Average Score Trend</p>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-black text-white">72</span>
-                      <span className="text-green-400 text-sm font-semibold">↑ +37 pts since Jan</span>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    {["1M", "3M", "6M"].map((t, i) => (
-                      <button key={t} className={`text-[10px] font-semibold px-2.5 py-1 rounded-md transition-colors ${i === 2 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20" : "text-zinc-600 hover:text-zinc-400"}`}>{t}</button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* SVG Line Chart */}
-                <svg viewBox="0 0 700 180" className="w-full h-auto">
-                  <defs>
-                    <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#06B6D4" stopOpacity="0.25" />
-                      <stop offset="100%" stopColor="#06B6D4" stopOpacity="0" />
-                    </linearGradient>
-                    <linearGradient id="chartLine" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#06B6D4" />
-                      <stop offset="100%" stopColor="#8B5CF6" />
-                    </linearGradient>
-                  </defs>
-                  {/* Grid lines */}
-                  {[0, 25, 50, 75, 100].map((v) => {
-                    const y = 160 - (v / 100) * 140;
-                    return <line key={v} x1="40" y1={y} x2="680" y2={y} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />;
-                  })}
-                  {/* Y axis labels */}
-                  {[0, 50, 100].map((v) => {
-                    const y = 160 - (v / 100) * 140;
-                    return <text key={v} x="32" y={y + 4} textAnchor="end" fill="rgba(255,255,255,0.2)" fontSize="9">{v}</text>;
-                  })}
-                  {/* Area fill */}
-                  <path d="M 80,111 L 196,93 L 312,73 L 428,61 L 544,52 L 660,45 L 660,160 L 80,160 Z" fill="url(#chartFill)" />
-                  {/* Line */}
-                  <path d="M 80,111 L 196,93 L 312,73 L 428,61 L 544,52 L 660,45" fill="none" stroke="url(#chartLine)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                  {/* Dots */}
-                  {[
-                    { x: 80,  y: 111 },
-                    { x: 196, y: 93  },
-                    { x: 312, y: 73  },
-                    { x: 428, y: 61  },
-                    { x: 544, y: 52  },
-                    { x: 660, y: 45  },
-                  ].map((pt, i) => (
-                    <g key={i}>
-                      <circle cx={pt.x} cy={pt.y} r="4" fill="#0e1117" stroke="#06B6D4" strokeWidth="2" />
-                      <circle cx={pt.x} cy={pt.y} r="2" fill="#06B6D4" />
-                    </g>
-                  ))}
-                  {/* X axis labels */}
-                  {["Jan", "Feb", "Mar", "Apr", "May", "Jun"].map((m, i) => (
-                    <text key={m} x={80 + i * 116} y="176" textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="9">{m}</text>
-                  ))}
-                </svg>
-
-                {/* Stat cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-                  {[
-                    { label: "Average Score", value: "72",    sub: "↑ vs last month",    color: "text-green-400" },
-                    { label: "Total Analyses", value: "47",   sub: "across all platforms", color: "text-zinc-400" },
-                    { label: "Best Score",     value: "94",   sub: "Facebook campaign",  color: "text-cyan-400"  },
-                    { label: "Improvement",    value: "+134%", sub: "since first analysis", color: "text-green-400" },
-                  ].map((s) => (
-                    <div key={s.label} className="bg-zinc-800/50 border border-white/[0.06] rounded-xl p-3.5">
-                      <p className="text-[9px] font-semibold uppercase tracking-widest text-zinc-500 mb-1">{s.label}</p>
-                      <p className={`text-xl font-black ${s.color} mb-0.5`}>{s.value}</p>
-                      <p className="text-[10px] text-zinc-600">{s.sub}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </ScrollReveal>
-
-          {/* Feature pills + CTA */}
           <ScrollReveal delay={0.08}>
-            <div className="text-center">
-              <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
-                {[
-                  { icon: "📊", label: "Score Trends" },
-                  { icon: "🎯", label: "Platform Breakdown" },
-                  { icon: "📧", label: "Weekly Reports" },
-                ].map((p) => (
-                  <span key={p.label} className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.08] rounded-full text-[13px] text-slate-500 dark:text-zinc-400 shadow-sm dark:shadow-none">
-                    <span>{p.icon}</span>
-                    {p.label}
-                  </span>
-                ))}
-              </div>
-              <Link href="/signup?redirect=/dashboard" className="inline-flex items-center gap-2.5 px-8 py-4 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-400 hover:via-blue-500 hover:to-purple-500 text-white font-bold text-[15px] rounded-xl shadow-lg shadow-blue-900/40 transition-all duration-200">
-                Start Tracking Your Ads →
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-            </div>
+            <BeforeAfter />
           </ScrollReveal>
-
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          § 6  WORKFLOW
-      ══════════════════════════════════════ */}
-      <section id="workflow" className="py-24 sm:py-36 border-t border-slate-100 dark:border-white/[0.05]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ════ SOCIAL PROOF STATS ════ */}
+      <section className="bg-white py-24 px-4">
+        <div className="max-w-4xl mx-auto">
           <ScrollReveal>
-            <div className="max-w-xl mb-16">
-              <Overline>Workflow</Overline>
-              <SectionHeading>
-                From Upload to
-                <br />
-                Confident Launch
-              </SectionHeading>
-            </div>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 relative">
-            <div
-              aria-hidden
-              className="hidden lg:block absolute top-9 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-white/[0.08] to-transparent"
-            />
-
-            {WORKFLOW.map((w, i) => (
-              <ScrollReveal key={w.step} delay={i * 0.08}>
-                <div className="relative p-6 lg:p-8 group">
-                  <div className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-white/[0.08] shadow-sm dark:shadow-none flex items-center justify-center mb-5 relative z-10 group-hover:border-green-200 dark:group-hover:border-green-500/30 group-hover:bg-green-50 dark:group-hover:bg-green-500/[0.06] transition-all">
-                    <span className="text-[11px] font-black text-slate-400 dark:text-zinc-500 font-mono group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
-                      {w.step}
-                    </span>
-                  </div>
-                  <h3 className="text-[15px] font-bold text-slate-900 dark:text-white mb-2.5 leading-snug">
-                    {w.title}
-                  </h3>
-                  <p className="text-[13px] text-slate-500 dark:text-zinc-500 leading-relaxed">{w.body}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#E2E8F0]">
+              {[
+                { stat: "10,000+", label: "Ads Analyzed"              },
+                { stat: "87%",     label: "Average Score Improvement" },
+                { stat: "<30 sec", label: "Average Analysis Time"     },
+              ].map((s) => (
+                <div key={s.label} className="text-center px-8 py-10 sm:py-4">
+                  <p className="text-[48px] sm:text-[52px] font-bold text-[#0F172A] leading-none mb-2 tracking-tight">
+                    {s.stat}
+                  </p>
+                  <p className="text-[16px] text-[#64748B]">{s.label}</p>
                 </div>
-              </ScrollReveal>
-            ))}
-          </div>
+              ))}
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          § 7  TESTIMONIALS
-      ══════════════════════════════════════ */}
-      <section className="py-24 sm:py-36 border-t border-slate-100 dark:border-white/[0.05]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ════ PRICING ════ */}
+      <section className="bg-[#F8FAFC] py-24 px-4" id="pricing">
+        <div className="max-w-7xl mx-auto">
           <ScrollReveal>
-            <div className="text-center mb-16">
-              <Overline>Testimonials</Overline>
-              <SectionHeading>What Performance Teams Say</SectionHeading>
+            <div className="text-center mb-14">
+              <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[#4F46E5] mb-3">PRICING</p>
+              <h2 className="text-[36px] sm:text-[40px] font-bold text-[#0F172A] tracking-tight mb-3 leading-tight">
+                Simple, transparent pricing.
+              </h2>
+              <p className="text-[18px] text-[#64748B]">Start free. Upgrade when you&apos;re ready.</p>
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {TESTIMONIALS.map((t, i) => (
-              <ScrollReveal key={t.name} delay={i * 0.08}>
-                <div className="bg-white dark:bg-zinc-900 border border-slate-100 dark:border-white/[0.07] rounded-xl p-7 h-full shadow-sm dark:shadow-none hover:shadow-md dark:hover:shadow-none hover:border-slate-200 dark:hover:border-white/[0.12] transition-all duration-200 flex flex-col">
-                  <div className="flex gap-1 mb-5">
-                    {Array.from({ length: 5 }).map((_, s) => (
-                      <svg key={s} className="w-3.5 h-3.5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
-                  <blockquote className="text-[14px] text-slate-600 dark:text-zinc-300 leading-[1.75] flex-1 mb-6">
-                    &ldquo;{t.quote}&rdquo;
-                  </blockquote>
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-white/[0.08] flex items-center justify-center shrink-0">
-                      <span className="text-[11px] font-bold text-slate-500 dark:text-zinc-400">
-                        {t.name[0]}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-[13px] font-semibold text-slate-900 dark:text-white">{t.name}</p>
-                      <p className="text-[11px] text-slate-400 dark:text-zinc-500">{t.role}</p>
-                    </div>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════
-          § 8  PRICING
-      ══════════════════════════════════════ */}
-      <section id="pricing" className="py-24 sm:py-36 border-t border-slate-100 dark:border-white/[0.05]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollReveal>
-            <div className="text-center mb-16">
-              <Overline>Pricing</Overline>
-              <SectionHeading>Start Free. Scale When Ready.</SectionHeading>
-              <p className="mt-5 text-slate-500 dark:text-zinc-400 text-[16px] max-w-md mx-auto leading-[1.75]">
-                No contracts. 3-day free trial on all paid plans. Cancel anytime.
-              </p>
-            </div>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {PRICING.map((p, i) => (
-              <ScrollReveal key={p.name} delay={i * 0.07}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+            {PRICING.map((plan, i) => (
+              <ScrollReveal key={plan.name} delay={i * 0.06}>
                 <div
-                  className={`relative rounded-xl overflow-hidden h-full flex flex-col ${
-                    p.highlight
-                      ? "bg-slate-900 dark:bg-zinc-900 border-2 border-cyan-500/60 shadow-xl shadow-cyan-900/20"
-                      : "bg-white dark:bg-zinc-900 border border-slate-100 dark:border-white/[0.07] shadow-sm dark:shadow-none"
+                  className={`relative bg-white rounded-[16px] p-8 flex flex-col h-full transition-all duration-200 ${
+                    plan.highlight
+                      ? "border-2 border-[#4F46E5] shadow-[0_4px_24px_rgba(79,70,229,0.15)]"
+                      : "border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
                   }`}
                 >
-                  {p.highlight && (
-                    <>
-                      <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-cyan-400/60 via-cyan-300 to-purple-400/60" />
-                      <div className="absolute top-4 right-4">
-                        <span className="text-[9px] font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/30 uppercase tracking-widest px-2.5 py-1 rounded-full">
-                          Most Popular
-                        </span>
-                      </div>
-                    </>
+                  {plan.highlight && (
+                    <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-bold uppercase tracking-wider text-white bg-[#4F46E5] px-4 py-1 rounded-full">
+                      MOST POPULAR
+                    </span>
                   )}
 
-                  <div className="p-6 flex-1 flex flex-col">
-                    <h3 className={`text-[13px] font-semibold mb-4 ${
-                      p.highlight ? "text-cyan-400" : "text-slate-500 dark:text-zinc-400"
-                    }`}>
-                      {p.name}
-                    </h3>
-
-                    <div className="flex items-baseline gap-1 mb-2">
-                      <span className={`text-4xl font-black tracking-tight ${
-                        p.highlight ? "text-white" : "text-slate-900 dark:text-white"
-                      }`}>
-                        {p.price}
-                      </span>
-                      <span className={`text-sm ${
-                        p.highlight ? "text-slate-400" : "text-slate-400 dark:text-zinc-600"
-                      }`}>
-                        {p.cadence}
-                      </span>
+                  <div className="mb-6">
+                    <p className="text-[18px] font-bold text-[#0F172A] mb-1">{plan.name}</p>
+                    <p className="text-[14px] text-[#64748B] mb-4">{plan.desc}</p>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-[42px] font-bold text-[#0F172A] leading-none">{plan.price}</span>
+                      <span className="text-[16px] text-[#64748B]">{plan.cadence}</span>
                     </div>
-
-                    <p className={`text-[12px] mb-6 ${
-                      p.highlight ? "text-slate-400" : "text-slate-400 dark:text-zinc-600"
-                    }`}>
-                      {p.desc}
-                    </p>
-
-                    <ul className="space-y-2 flex-1 mb-7">
-                      {p.features.map((f) => (
-                        <li key={f.text} className="flex items-center gap-2.5">
-                          {f.included ? (
-                            <svg className={`w-4 h-4 shrink-0 ${p.highlight ? "text-cyan-400" : "text-green-500 dark:text-green-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                            </svg>
-                          ) : (
-                            <svg className="w-4 h-4 shrink-0 text-slate-300 dark:text-zinc-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                          )}
-                          <span className={`text-[13px] ${
-                            f.included
-                              ? p.highlight ? "text-slate-300" : "text-slate-600 dark:text-zinc-300"
-                              : "text-slate-300 dark:text-zinc-600 line-through"
-                          }`}>
-                            {f.text}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <PricingButton
-                      tier={p.name.toLowerCase() as "free" | "starter" | "pro" | "agency"}
-                      highlight={p.highlight}
-                    />
                   </div>
+
+                  <ul className="space-y-3 mb-8 flex-1">
+                    {plan.features.map((f) => (
+                      <li key={f.text} className="flex items-start gap-2.5">
+                        <Check ok={f.included} />
+                        <span className={`text-[14px] leading-snug ${f.included ? "text-[#334155]" : "text-[#94A3B8]"}`}>
+                          {f.text}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <PricingButton tier={plan.tier} highlight={plan.highlight} />
                 </div>
               </ScrollReveal>
             ))}
           </div>
 
-          <p className="text-center mt-8 text-[13px] text-slate-400 dark:text-zinc-600">
-            All paid plans include a 3-day free trial. Cancel anytime. · Trusted by 500+ e-commerce sellers.
+          <p className="text-center text-[14px] text-[#64748B] mt-8">
+            All paid plans include a 3-day free trial. Cancel anytime.
           </p>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          § 9  FAQ
-      ══════════════════════════════════════ */}
-      <section className="py-24 sm:py-36 border-t border-slate-100 dark:border-white/[0.05]">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ════ FAQ ════ */}
+      <section className="bg-white py-24 px-4" id="faq">
+        <div className="max-w-3xl mx-auto">
           <ScrollReveal>
-            <div className="text-center mb-16">
-              <Overline>FAQ</Overline>
-              <SectionHeading>Common Questions</SectionHeading>
+            <div className="text-center mb-12">
+              <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[#4F46E5] mb-3">FAQ</p>
+              <h2 className="text-[36px] sm:text-[40px] font-bold text-[#0F172A] tracking-tight leading-tight">
+                Frequently asked questions.
+              </h2>
             </div>
           </ScrollReveal>
-
-          <div className="divide-y divide-slate-100 dark:divide-white/[0.05]">
-            {FAQS.map((faq, i) => (
-              <ScrollReveal key={faq.q} delay={i * 0.04}>
-                <details className="group py-5">
-                  <summary className="flex items-center justify-between gap-4 cursor-pointer list-none">
-                    <span className="text-[15px] font-semibold text-slate-900 dark:text-white group-open:text-green-600 dark:group-open:text-green-400 transition-colors">
-                      {faq.q}
-                    </span>
-                    <svg
-                      className="w-4 h-4 text-slate-400 dark:text-zinc-600 shrink-0 group-open:rotate-180 transition-transform duration-200"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </summary>
-                  <p className="mt-3 text-[14px] text-slate-500 dark:text-zinc-400 leading-[1.75] pr-8">
-                    {faq.a}
-                  </p>
-                </details>
-              </ScrollReveal>
-            ))}
-          </div>
+          <ScrollReveal delay={0.05}>
+            <LandingFAQ />
+          </ScrollReveal>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          § 10  FINAL CTA
-      ══════════════════════════════════════ */}
-      <section className="py-24 sm:py-36 border-t border-slate-100 dark:border-white/[0.05]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 h-64 opacity-[0.02] dark:opacity-[0.035]"
-            style={{ background: "radial-gradient(ellipse at 50% 50%, #22C55E, transparent 70%)" }}
-          />
+      {/* ════ CTA BANNER ════ */}
+      <section className="bg-[#4F46E5] py-20 px-4 relative overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 opacity-[0.15]"
+          style={{
+            backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
+            backgroundSize: "24px 24px",
+          }}
+        />
+        <div className="relative max-w-3xl mx-auto text-center">
           <ScrollReveal>
-            <h2 className="text-4xl sm:text-5xl lg:text-[60px] font-black tracking-[-0.02em] leading-[1.04] text-slate-900 dark:text-white relative">
-              Stop Guessing.
-              <br />
-              Start Launching Winners.
+            <h2 className="text-[36px] sm:text-[40px] font-bold text-white leading-tight tracking-tight mb-4">
+              Ready to stop guessing?
             </h2>
-            <p className="mt-6 text-slate-500 dark:text-zinc-400 text-[17px] max-w-lg mx-auto leading-[1.75]">
-              Join performance marketers who validate creatives before spending budget.
-              Your first 3 analyses are completely free.
+            <p className="text-[18px] text-white/80 mb-10 leading-relaxed">
+              Join thousands of advertisers making data-driven creative decisions.
             </p>
-            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                href="/signup?redirect=/analyze"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-zinc-900 font-bold text-[15px] rounded-xl hover:bg-slate-800 dark:hover:bg-zinc-100 transition-colors shadow-sm"
+                href="/signup"
+                className="inline-flex items-center justify-center gap-2 bg-white text-[#4F46E5] font-semibold text-[16px] px-7 py-3.5 rounded-[10px] hover:bg-[#F8FAFC] transition-all duration-150 shadow-sm w-full sm:w-auto"
               >
-                Analyze Your First Ad
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
+                Start for Free <Arrow />
               </Link>
+              <a
+                href="#"
+                className="inline-flex items-center justify-center gap-2 bg-transparent text-white font-semibold text-[16px] px-7 py-3.5 rounded-[10px] border border-white/30 hover:bg-white/10 transition-all duration-150 w-full sm:w-auto"
+              >
+                Book a demo <Arrow />
+              </a>
             </div>
-            <p className="mt-5 text-[12px] text-slate-400 dark:text-zinc-600">
-              No credit card · 3 free analyses · Results in 30 seconds
-            </p>
           </ScrollReveal>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          § 11  FOOTER
-      ══════════════════════════════════════ */}
-      <footer className="border-t border-slate-100 dark:border-white/[0.05] bg-white dark:bg-zinc-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+      {/* ════ FOOTER ════ */}
+      <footer className="bg-[#F8FAFC] border-t border-[#E2E8F0] px-4 pt-16 pb-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
 
-            <div className="col-span-2 md:col-span-2">
-              <Link href="/" className="inline-flex items-center gap-2 mb-4">
-                <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
-                  <rect width="22" height="22" rx="5" fill="#22C55E" />
-                  <path d="M11.5 4L5 12h6.5L10 18l7-10H10.5L11.5 4z" fill="white" strokeLinejoin="round" />
-                </svg>
-                <span className="text-[14px] font-bold text-slate-900 dark:text-white">AdScore</span>
+            {/* Brand */}
+            <div>
+              <Link href="/" className="flex items-center gap-2.5 mb-4">
+                <span className="w-8 h-8 bg-[#4F46E5] rounded-[8px] flex items-center justify-center shadow-sm">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M8.5 2L3.5 9H8L7 14L12.5 7H8.5L8.5 2Z" fill="white" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <span className="text-[16px] font-bold text-[#0F172A] tracking-tight">AdScore</span>
               </Link>
-              <p className="text-[13px] text-slate-400 dark:text-zinc-600 leading-relaxed max-w-[200px]">
-                Ad Performance Intelligence Platform for serious marketers.
+              <p className="text-[14px] text-[#64748B] leading-relaxed mb-5">
+                AI-powered ad creative analysis for performance teams who refuse to guess.
               </p>
+              <div className="flex items-center gap-3">
+                <a href="#" aria-label="X / Twitter" className="w-8 h-8 flex items-center justify-center text-[#94A3B8] hover:text-[#4F46E5] transition-colors duration-150">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </a>
+                <a href="#" aria-label="LinkedIn" className="w-8 h-8 flex items-center justify-center text-[#94A3B8] hover:text-[#4F46E5] transition-colors duration-150">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
+                </a>
+                <a href="#" aria-label="YouTube" className="w-8 h-8 flex items-center justify-center text-[#94A3B8] hover:text-[#4F46E5] transition-colors duration-150">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                  </svg>
+                </a>
+              </div>
             </div>
 
+            {/* Product */}
             <div>
-              <h4 className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400 uppercase tracking-widest mb-5">
-                Product
-              </h4>
+              <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F172A] mb-4">Product</p>
               <ul className="space-y-3">
-                {[
-                  { label: "Analyze", href: "/analyze" },
-                  { label: "Dashboard", href: "/dashboard" },
-                  { label: "Pricing", href: "#pricing" },
-                  { label: "How It Works", href: "#workflow" },
-                ].map((l) => (
-                  <li key={l.label}>
-                    <Link href={l.href} className="text-[13px] text-slate-400 dark:text-zinc-600 hover:text-slate-900 dark:hover:text-zinc-300 transition-colors">
-                      {l.label}
-                    </Link>
+                <li><a href="#features" className="text-[14px] text-[#64748B] hover:text-[#4F46E5] transition-colors duration-150">Features</a></li>
+                <li><a href="#pricing"  className="text-[14px] text-[#64748B] hover:text-[#4F46E5] transition-colors duration-150">Pricing</a></li>
+                <li><a href="#"         className="text-[14px] text-[#64748B] hover:text-[#4F46E5] transition-colors duration-150">Changelog</a></li>
+                <li>
+                  <span className="text-[14px] text-[#94A3B8] inline-flex items-center gap-2">
+                    API
+                    <span className="text-[11px] font-semibold text-[#4F46E5] bg-[#EEF2FF] px-2 py-0.5 rounded-full">Soon</span>
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Resources */}
+            <div>
+              <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F172A] mb-4">Resources</p>
+              <ul className="space-y-3">
+                {["Blog", "Help Center", "Documentation"].map((r) => (
+                  <li key={r}>
+                    <span className="text-[14px] text-[#94A3B8] inline-flex items-center gap-2">
+                      {r}
+                      <span className="text-[11px] font-semibold text-[#4F46E5] bg-[#EEF2FF] px-2 py-0.5 rounded-full">Soon</span>
+                    </span>
                   </li>
                 ))}
               </ul>
             </div>
 
+            {/* Company */}
             <div>
-              <h4 className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400 uppercase tracking-widest mb-5">
-                Resources
-              </h4>
+              <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F172A] mb-4">Company</p>
               <ul className="space-y-3">
-                {[
-                  { label: "Blog", href: "#" },
-                  { label: "Help Center", href: "#" },
-                  { label: "FAQ", href: "#faq" },
-                ].map((l) => (
-                  <li key={l.label}>
-                    <Link href={l.href} className="text-[13px] text-slate-400 dark:text-zinc-600 hover:text-slate-900 dark:hover:text-zinc-300 transition-colors">
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-[11px] font-semibold text-slate-600 dark:text-zinc-400 uppercase tracking-widest mb-5">
-                Legal
-              </h4>
-              <ul className="space-y-3">
-                {[
-                  { label: "Privacy", href: "#" },
-                  { label: "Terms", href: "#" },
-                  { label: "Contact", href: "#" },
-                ].map((l) => (
-                  <li key={l.label}>
-                    <Link href={l.href} className="text-[13px] text-slate-400 dark:text-zinc-600 hover:text-slate-900 dark:hover:text-zinc-300 transition-colors">
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
+                <li><a href="#"           className="text-[14px] text-[#64748B] hover:text-[#4F46E5] transition-colors duration-150">About</a></li>
+                <li><a href="#"           className="text-[14px] text-[#64748B] hover:text-[#4F46E5] transition-colors duration-150">Contact</a></li>
+                <li><Link href="/privacy" className="text-[14px] text-[#64748B] hover:text-[#4F46E5] transition-colors duration-150">Privacy Policy</Link></li>
+                <li><Link href="/terms"   className="text-[14px] text-[#64748B] hover:text-[#4F46E5] transition-colors duration-150">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
 
-          <div className="mt-16 pt-6 border-t border-slate-100 dark:border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-[12px] text-slate-400 dark:text-zinc-700">
-              &copy; {new Date().getFullYear()} AdScore. All rights reserved.
-            </p>
-            <p className="text-[12px] text-slate-400 dark:text-zinc-700">
-              Built for performance marketers.
-            </p>
+          <div className="border-t border-[#E2E8F0] pt-8 text-center">
+            <p className="text-[14px] text-[#94A3B8]">© 2026 AdScore. All rights reserved.</p>
           </div>
         </div>
       </footer>

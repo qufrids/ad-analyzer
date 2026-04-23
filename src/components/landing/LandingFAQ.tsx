@@ -36,11 +36,12 @@ export default function LandingFAQ() {
     <div className="divide-y divide-[#E2E8F0]">
       {FAQS.map((faq, i) => (
         <div key={i}>
+          {/* Tap target: min 48px height */}
           <button
             onClick={() => setOpen(open === i ? null : i)}
-            className="w-full flex items-center justify-between py-5 text-left gap-6 group"
+            className="w-full flex items-center justify-between py-4 sm:py-5 text-left gap-4 group min-h-[56px]"
           >
-            <span className="text-[18px] font-semibold text-[#0F172A] group-hover:text-[#4F46E5] transition-colors duration-150">
+            <span className="text-[16px] sm:text-[18px] font-semibold text-[#0F172A] group-hover:text-[#4F46E5] transition-colors duration-150 leading-snug">
               {faq.q}
             </span>
             <span
@@ -59,7 +60,7 @@ export default function LandingFAQ() {
             className="overflow-hidden transition-[max-height] duration-300 ease-out"
             style={{ maxHeight: open === i ? "240px" : "0px" }}
           >
-            <p className="pb-5 text-[16px] text-[#334155] leading-[1.7]">{faq.a}</p>
+            <p className="pb-4 sm:pb-5 text-[15px] sm:text-[16px] text-[#334155] leading-[1.7]">{faq.a}</p>
           </div>
         </div>
       ))}

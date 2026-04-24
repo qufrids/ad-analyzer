@@ -101,6 +101,16 @@ const STATS = [
   { stat: "<30 sec", label: "Average Analysis Time"     },
 ];
 
+/* Maps each feature card label → its scroll-to anchor ID */
+const FEATURE_IDS: Record<string, string> = {
+  "DEEP ANALYSIS":           "feature-analysis",
+  "AI IMPROVER":             "feature-improver",
+  "PERFORMANCE TRACKING":    "feature-tracker",
+  "A/B TESTING":             "feature-ab",
+  "COMPETITOR INTELLIGENCE": "feature-competitor",
+  "INSTANT GENERATION":      "feature-url",
+};
+
 /* ─── HELPERS ─── */
 function FeatureCard({ label, title, description, icon }: {
   label: string; title: string; description: string; icon: React.ReactNode;
@@ -273,9 +283,11 @@ export default function LandingPage() {
                   icon: <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>,
                 },
               ].map((f, i) => (
-                <ScrollReveal key={f.label} delay={i * 0.04}>
-                  <FeatureCard {...f} />
-                </ScrollReveal>
+                <div key={f.label} id={FEATURE_IDS[f.label]}>
+                  <ScrollReveal delay={i * 0.04}>
+                    <FeatureCard {...f} />
+                  </ScrollReveal>
+                </div>
               ))}
             </div>
           </div>
@@ -322,6 +334,117 @@ export default function LandingPage() {
                 ))}
               </div>
             </ScrollReveal>
+          </div>
+        </section>
+
+        {/* ══════════ FOR TEAMS ══════════ */}
+        <section className="bg-white py-16 md:py-24 px-6 md:px-4" id="for-teams">
+          <div className="max-w-7xl mx-auto">
+            <ScrollReveal>
+              <div className="text-center mb-10 md:mb-16">
+                <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[#4F46E5] mb-3">WHO IT&apos;S FOR</p>
+                <h2 className="text-[26px] md:text-[36px] lg:text-[40px] font-bold text-[#0F172A] leading-tight tracking-tight">
+                  Built for every performance team.
+                </h2>
+                <p className="text-[16px] md:text-[18px] text-[#64748B] mt-4 max-w-2xl mx-auto leading-relaxed">
+                  Whether you&apos;re a media buyer, marketer, DTC brand, or agency — AdScore fits directly into how you work.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                {
+                  id: "for-media-buyers",
+                  badge: "MEDIA BUYERS",
+                  headline: "Cut your dud creative rate before you spend",
+                  description: "Pre-qualify every creative with a data-backed score before it touches your ad account. Know what will underperform — before it costs you.",
+                  benefits: [
+                    "Score creatives 0–100 before any media spend",
+                    "Identify weak hooks that kill CTR at a glance",
+                    "Reduce dud creative rate by 60%+ in month one",
+                    "Prioritize budget behind proven creative winners",
+                  ],
+                },
+                {
+                  id: "for-marketers",
+                  badge: "PERFORMANCE MARKETERS",
+                  headline: "Replace gut-feel with data-backed creative decisions",
+                  description: "Get platform-specific scoring, AI improvements, and trend tracking that turns creative quality from art into a repeatable system your team can scale.",
+                  benefits: [
+                    "Platform-specific scoring for Meta, TikTok & Google",
+                    "AI rewrites weak copy and CTAs in one click",
+                    "Track creative quality scores week-over-week",
+                    "A/B testing with clear, data-driven winner logic",
+                  ],
+                },
+                {
+                  id: "for-dtc",
+                  badge: "DTC BRANDS",
+                  headline: "Spend less on testing. Scale winning creatives faster.",
+                  description: "Built for Shopify, Amazon, and e-commerce. Generate ad copy from any product URL, decode competitor strategies, and build a library of proven templates.",
+                  benefits: [
+                    "Generate complete ad copy from any product URL",
+                    "Decode competitor creatives and out-position them",
+                    "Works with Shopify, Amazon, and any product store",
+                    "Build a reusable library of high-scoring templates",
+                  ],
+                },
+                {
+                  id: "for-agencies",
+                  badge: "AGENCIES",
+                  headline: "A creative QA layer across every client you manage",
+                  description: "Set a quality standard across every account. Analyze at scale, generate client-ready reports, and prove your creative strategy is working with real data.",
+                  benefits: [
+                    "Analyze unlimited creatives across all client accounts",
+                    "Generate weekly automated creative performance reports",
+                    "Prioritized improvement recommendations per brand",
+                    "API access for custom workflows (coming soon)",
+                  ],
+                },
+              ].map((p, i) => (
+                <ScrollReveal key={p.id} delay={i * 0.06}>
+                  <div
+                    id={p.id}
+                    className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 md:p-8 shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 transition-all duration-200 flex flex-col h-full"
+                  >
+                    {/* Audience badge */}
+                    <span className="inline-flex self-start text-[11px] font-bold uppercase tracking-widest text-[#4F46E5] bg-[#EEF2FF] border border-[#E0E7FF] px-3 py-1 rounded-full mb-5">
+                      {p.badge}
+                    </span>
+
+                    <h3 className="text-[20px] md:text-[22px] font-bold text-[#0F172A] leading-snug mb-3">
+                      {p.headline}
+                    </h3>
+
+                    <p className="text-[15px] text-[#64748B] leading-[1.6] mb-6">
+                      {p.description}
+                    </p>
+
+                    <ul className="space-y-2.5 mb-7 flex-1">
+                      {p.benefits.map((b) => (
+                        <li key={b} className="flex items-start gap-2.5">
+                          <svg className="w-4 h-4 text-[#16A34A] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span className="text-[15px] text-[#334155] leading-snug">{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <Link
+                      href="/signup"
+                      className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-[#4F46E5] hover:text-[#4338CA] transition-colors group w-fit"
+                    >
+                      Start free today
+                      <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </Link>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
         </section>
 

@@ -24,11 +24,8 @@ const RESOURCES_LINKS = [
   { label: "Documentation", href: "#", badge: "Soon" },
 ];
 
-/* ── Desktop dropdown (unchanged) ── */
-function Dropdown({
-  label,
-  items,
-}: {
+/* ── Desktop dropdown ── */
+function Dropdown({ label, items }: {
   label: string;
   items: { label: string; href: string; badge?: string; icon?: string }[];
 }) {
@@ -61,10 +58,10 @@ function Dropdown({
               key={item.label}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="flex items-center justify-between gap-2 px-4 py-2.5 text-[14px] text-[#334155] hover:text-[#4F46E5] hover:bg-[#F8FAFC] transition-colors duration-100"
+              className="flex items-center justify-between gap-2 px-4 py-2.5 text-[14px] text-[#334155] hover:text-[#4F46E5] hover:bg-[#F8FAFC] transition-colors"
             >
               <span className="flex items-center gap-2.5">
-                {item.icon && <span className="text-[15px]">{item.icon}</span>}
+                {item.icon && <span>{item.icon}</span>}
                 {item.label}
               </span>
               {item.badge && (
@@ -84,51 +81,49 @@ export default function ClientNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const fn = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  /* Prevent body scroll when mobile menu is open */
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
-  const Logo = ({ onClick }: { onClick?: () => void }) => (
-    <Link href="/" onClick={onClick} className="flex items-center gap-2.5 shrink-0">
-      <span className="w-8 h-8 bg-[#4F46E5] rounded-[8px] flex items-center justify-center shadow-sm">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M8.5 2L3.5 9H8L7 14L12.5 7H8.5L8.5 2Z" fill="white" />
-        </svg>
-      </span>
-      <span className="text-[18px] md:text-[16px] font-bold text-[#0F172A] tracking-tight">AdScore</span>
-    </Link>
-  );
+  const close = () => setMobileOpen(false);
 
   return (
     <>
-      {/* ── Main header ── */}
+      {/* ── Header bar ── */}
       <header
-        style={{ fontFamily: "var(--font-inter, 'Inter', system-ui, sans-serif)" }}
+        style={{ fontFamily: "var(--font-inter,'Inter',system-ui,sans-serif)" }}
         className={`fixed inset-x-0 top-0 z-50 bg-white transition-all duration-300 ${scrolled ? "border-b border-[#E2E8F0]" : ""}`}
       >
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[60px] md:h-[72px] flex items-center justify-between">
-          <Logo />
+        {/* 56px on mobile, 72px on desktop */}
+        <nav className="max-w-7xl mx-auto px-6 md:px-6 lg:px-8 h-14 md:h-[72px] flex items-center justify-between">
+
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2.5 shrink-0">
+            <span className="w-8 h-8 bg-[#4F46E5] rounded-[8px] flex items-center justify-center shadow-sm">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8.5 2L3.5 9H8L7 14L12.5 7H8.5Z" fill="white" />
+              </svg>
+            </span>
+            <span className="text-[18px] md:text-[16px] font-bold text-[#0F172A] tracking-tight">AdScore</span>
+          </Link>
 
           {/* Desktop center nav */}
           <div className="hidden md:flex items-center gap-7">
             <Dropdown label="For Advertisers" items={FOR_ADVERTISERS} />
             <Dropdown label="Features"        items={FEATURE_LINKS}   />
-            <a href="#pricing" className="text-[15px] font-medium text-[#334155] hover:text-[#4F46E5] transition-colors duration-150">Pricing</a>
+            <a href="#pricing" className="text-[15px] font-medium text-[#334155] hover:text-[#4F46E5] transition-colors">Pricing</a>
             <Dropdown label="Resources"       items={RESOURCES_LINKS} />
           </div>
 
-          {/* Desktop right actions */}
+          {/* Desktop right */}
           <div className="hidden md:flex items-center gap-4">
-            <Link href="/login" className="text-[15px] font-medium text-[#334155] hover:text-[#4F46E5] transition-colors duration-150">
-              Sign In
-            </Link>
+            <Link href="/login" className="text-[15px] font-medium text-[#334155] hover:text-[#4F46E5] transition-colors">Sign In</Link>
             <Link href="/signup" className="inline-flex items-center gap-1.5 bg-[#4F46E5] hover:bg-[#4338CA] text-white font-semibold text-[14px] px-5 py-2.5 rounded-[8px] shadow-[0_1px_3px_rgba(0,0,0,0.1)] transition-all duration-150">
               Get Started
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,78 +135,96 @@ export default function ClientNavbar() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(true)}
-            className="md:hidden p-2 text-[#334155] hover:text-[#0F172A] transition-colors"
+            className="md:hidden p-2 -mr-1 text-[#334155]"
             aria-label="Open menu"
+            style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
         </nav>
       </header>
 
-      {/* ── Mobile full-screen overlay menu ── */}
+      {/* ── Mobile full-screen overlay ──
+           Slides in from right, 0.3s ease */}
       <div
-        style={{ fontFamily: "var(--font-inter, 'Inter', system-ui, sans-serif)" }}
-        className={`fixed inset-0 z-[60] bg-white flex flex-col md:hidden transition-opacity duration-250 ${
-          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        style={{ fontFamily: "var(--font-inter,'Inter',system-ui,sans-serif)" }}
+        className={`fixed inset-0 z-[60] bg-white flex flex-col md:hidden transition-all duration-300 ease-in-out ${
+          mobileOpen ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"
         }`}
+        aria-modal="true"
         aria-hidden={!mobileOpen}
       >
-        {/* Menu header */}
-        <div className="h-[60px] flex items-center justify-between px-5 border-b border-[#E2E8F0] shrink-0">
-          <Logo onClick={() => setMobileOpen(false)} />
+        {/* Top bar */}
+        <div className="h-14 flex items-center justify-between px-6 border-b border-[#F1F5F9] shrink-0">
+          <Link href="/" onClick={close} className="flex items-center gap-2.5">
+            <span className="w-8 h-8 bg-[#4F46E5] rounded-[8px] flex items-center justify-center">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8.5 2L3.5 9H8L7 14L12.5 7H8.5Z" fill="white" />
+              </svg>
+            </span>
+            <span className="text-[18px] font-bold text-[#0F172A]">AdScore</span>
+          </Link>
           <button
-            onClick={() => setMobileOpen(false)}
-            className="p-2 text-[#64748B] hover:text-[#0F172A] transition-colors"
+            onClick={close}
+            className="p-2 -mr-1 text-[#64748B]"
             aria-label="Close menu"
+            style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        {/* Scrollable link list */}
-        <div className="flex-1 overflow-y-auto px-5 py-2">
-          {/* Features group */}
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-[#94A3B8] mt-4 mb-1">Features</p>
-          {FEATURE_LINKS.map((f) => (
+        {/* Nav links — centered, stacked */}
+        <nav className="flex-1 overflow-y-auto px-6 py-4">
+          {/* Features */}
+          {FEATURE_LINKS.map((f, i) => (
             <a
               key={f.label}
               href={f.href}
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 h-[48px] text-[18px] font-medium text-[#334155] border-b border-[#F1F5F9] last:border-0"
+              onClick={close}
+              style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
+              className={`flex items-center gap-4 text-[18px] font-medium text-[#334155] py-4 text-center justify-center ${
+                i < FEATURE_LINKS.length - 1 ? "border-b border-[#F1F5F9]" : ""
+              }`}
             >
-              <span className="text-[16px] w-5 text-center">{f.icon}</span>
+              <span className="w-5 text-center text-[16px]">{f.icon}</span>
               {f.label}
             </a>
           ))}
 
-          {/* Nav links */}
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-[#94A3B8] mt-5 mb-1">Navigation</p>
+          {/* Divider */}
+          <div className="h-px bg-[#E2E8F0] my-3" />
+
+          {/* Pricing + Sign In */}
           <a
             href="#pricing"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center h-[48px] text-[18px] font-medium text-[#334155] border-b border-[#F1F5F9]"
+            onClick={close}
+            style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
+            className="flex items-center justify-center text-[18px] font-medium text-[#334155] py-4 border-b border-[#F1F5F9]"
           >
             Pricing
           </a>
           <Link
             href="/login"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center h-[48px] text-[18px] font-medium text-[#334155]"
+            onClick={close}
+            style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
+            className="flex items-center justify-center text-[18px] font-medium text-[#334155] py-4"
           >
             Sign In
           </Link>
-        </div>
+        </nav>
 
-        {/* CTA at bottom */}
-        <div className="px-5 pt-4 pb-8 border-t border-[#E2E8F0] shrink-0">
+        {/* Get Started CTA — pinned bottom */}
+        <div className="px-6 pt-4 pb-10 border-t border-[#F1F5F9] shrink-0">
           <Link
             href="/signup"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center justify-center gap-2 h-[52px] w-full text-[16px] font-semibold bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-[8px] transition-colors"
+            onClick={close}
+            style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
+            className="flex items-center justify-center gap-2 w-full h-12 text-[16px] font-semibold bg-[#4F46E5] text-white rounded-[10px] transition-colors active:bg-[#4338CA]"
           >
             Get Started →
           </Link>

@@ -30,7 +30,7 @@ function ScoreCircle({ score, color }: { score: number; color: string }) {
   const circumference = 2 * Math.PI * 15.9;
   const offset = circumference * (1 - score / 100);
   return (
-    <svg className="w-11 h-11 sm:w-[52px] sm:h-[52px]" viewBox="0 0 36 36">
+    <svg className="w-14 h-14 md:w-[52px] md:h-[52px]" viewBox="0 0 36 36">
       <circle cx="18" cy="18" r="15.9" fill="none" stroke="#E2E8F0" strokeWidth="3.2" />
       <circle
         cx="18" cy="18" r="15.9" fill="none"
@@ -47,47 +47,52 @@ function ScoreCircle({ score, color }: { score: number; color: string }) {
 
 export default function BeforeAfter() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
-      {/* Before card */}
-      <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 sm:p-8 relative" style={{ borderTop: "2px solid #EF4444" }}>
-        <div className="flex items-center justify-between mb-4 sm:mb-5">
+    /* On mobile: flex-col with VS divider between. On md+: 2-column grid */
+    <div className="flex flex-col md:grid md:grid-cols-2 gap-0 md:gap-6 max-w-4xl mx-auto">
+
+      {/* ── Before card ── */}
+      <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 md:p-8" style={{ borderTop: "2px solid #EF4444" }}>
+        <div className="flex items-center justify-between mb-5">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-[#EF4444] bg-[#FEF2F2] border border-[#FECACA] px-3 py-1 rounded-full">
             Before Analysis
           </span>
           <ScoreCircle score={32} color="#EF4444" />
         </div>
 
-        {/* Mock ad */}
-        <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 sm:p-4 mb-4 sm:mb-5">
-          <div className="w-full h-20 sm:h-24 bg-[#E2E8F0] rounded-lg flex items-center justify-center mb-3">
-            <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#94A3B8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-4 mb-5">
+          <div className="w-full h-20 bg-[#E2E8F0] rounded-lg flex items-center justify-center mb-3">
+            <svg className="w-8 h-8 text-[#94A3B8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01" />
             </svg>
           </div>
-          <h4 className="text-[12px] sm:text-[13px] font-bold text-[#0F172A] uppercase mb-1.5">{BEFORE.headline}</h4>
+          <h4 className="text-[13px] font-bold text-[#0F172A] uppercase mb-1.5">{BEFORE.headline}</h4>
           <p className="text-[12px] text-[#64748B] leading-relaxed mb-3">{BEFORE.body}</p>
-          <div className="py-2 bg-[#94A3B8] text-white text-center rounded-lg text-[12px] font-semibold cursor-default">
-            {BEFORE.cta}
-          </div>
+          <div className="py-2 bg-[#94A3B8] text-white text-center rounded-lg text-[12px] font-semibold cursor-default">{BEFORE.cta}</div>
         </div>
 
-        {/* Issues */}
-        <div className="space-y-2 sm:space-y-2.5">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#EF4444]">Issues Found</p>
+        <div className="space-y-2">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#EF4444] mb-3">Issues Found</p>
           {BEFORE.issues.map((item) => (
-            <div key={item} className="flex items-start gap-2.5">
+            <div key={item} className="flex items-start gap-2">
               <svg className="w-4 h-4 text-[#EF4444] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-              <span className="text-[13px] sm:text-[14px] text-[#334155]">{item}</span>
+              <span className="text-[14px] text-[#334155] leading-snug">{item}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* After card */}
-      <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 sm:p-8 relative" style={{ borderTop: "2px solid #16A34A" }}>
-        <div className="flex items-center justify-between mb-4 sm:mb-5">
+      {/* ── VS divider — mobile only ── */}
+      <div className="flex items-center gap-4 my-4 md:hidden">
+        <div className="flex-1 h-px bg-[#E2E8F0]" />
+        <span className="text-[13px] font-bold text-[#94A3B8] tracking-widest">VS</span>
+        <div className="flex-1 h-px bg-[#E2E8F0]" />
+      </div>
+
+      {/* ── After card ── */}
+      <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 md:p-8" style={{ borderTop: "2px solid #16A34A" }}>
+        <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2 flex-wrap gap-y-1">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-[#16A34A] bg-[#F0FDF4] border border-[#BBF7D0] px-3 py-1 rounded-full">
               After AdScore AI
@@ -97,33 +102,30 @@ export default function BeforeAfter() {
           <ScoreCircle score={91} color="#16A34A" />
         </div>
 
-        {/* Mock ad */}
-        <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3 sm:p-4 mb-4 sm:mb-5">
-          <div className="w-full h-20 sm:h-24 bg-gradient-to-br from-[#EEF2FF] to-[#F0FDF4] rounded-lg flex items-center justify-center mb-3">
-            <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#6366F1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-4 mb-5">
+          <div className="w-full h-20 bg-gradient-to-br from-[#EEF2FF] to-[#F0FDF4] rounded-lg flex items-center justify-center mb-3">
+            <svg className="w-8 h-8 text-[#6366F1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01" />
             </svg>
           </div>
-          <h4 className="text-[12px] sm:text-[13px] font-bold text-[#0F172A] mb-1.5">{AFTER.headline}</h4>
+          <h4 className="text-[13px] font-bold text-[#0F172A] mb-1.5">{AFTER.headline}</h4>
           <p className="text-[12px] text-[#64748B] leading-relaxed mb-3">{AFTER.body}</p>
-          <div className="py-2 bg-[#4F46E5] text-white text-center rounded-lg text-[12px] font-semibold cursor-default">
-            {AFTER.cta}
-          </div>
+          <div className="py-2 bg-[#4F46E5] text-white text-center rounded-lg text-[12px] font-semibold cursor-default">{AFTER.cta}</div>
         </div>
 
-        {/* Improvements */}
-        <div className="space-y-2 sm:space-y-2.5">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#16A34A]">Improvements Applied</p>
+        <div className="space-y-2">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#16A34A] mb-3">Improvements Applied</p>
           {AFTER.improvements.map((item) => (
-            <div key={item} className="flex items-start gap-2.5">
+            <div key={item} className="flex items-start gap-2">
               <svg className="w-4 h-4 text-[#16A34A] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span className="text-[13px] sm:text-[14px] text-[#334155]">{item}</span>
+              <span className="text-[14px] text-[#334155] leading-snug">{item}</span>
             </div>
           ))}
         </div>
       </div>
+
     </div>
   );
 }

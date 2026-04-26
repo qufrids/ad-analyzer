@@ -148,6 +148,27 @@ function Arrow() {
   );
 }
 
+function HeroScoreRow({ label, score, reason, color }: {
+  label:  string;
+  score:  number;
+  reason: string;
+  color:  "red" | "green";
+}) {
+  const red = color === "red";
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-[11.5px] text-slate-500">{label}</span>
+        <span className={`text-[11.5px] font-bold tabular-nums ${red ? "text-red-500" : "text-emerald-500"}`}>{score}</span>
+      </div>
+      <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden mb-1">
+        <div className={`h-full rounded-full ${red ? "bg-red-400" : "bg-emerald-400"}`} style={{ width: `${score}%` }} />
+      </div>
+      <p className="text-[10.5px] text-slate-400 leading-tight">{reason}</p>
+    </div>
+  );
+}
+
 /* ─── PAGE ─── */
 export default function LandingPage() {
   return (
@@ -167,67 +188,191 @@ export default function LandingPage() {
         <ClientNavbar />
 
         {/* ══════════════════════════════
-            HERO
-            Mobile: 96px top (56px nav + 40px space), 24px sides
-            Desktop: pt-36 (144px)
+            HERO — Before / After Ad Improver
         ══════════════════════════════ */}
-        <section className="bg-white pt-24 md:pt-36 pb-14 md:pb-28 px-6 md:px-4" id="hero">
-          <div className="max-w-4xl mx-auto text-center">
+        <section className="bg-white pt-20 md:pt-[116px] pb-16 md:pb-24 px-4 overflow-hidden" id="hero">
+          <div className="max-w-[1280px] mx-auto">
 
-            <ScrollReveal>
-              <div className="inline-flex items-center gap-2 bg-[#EEF2FF] border border-[#E0E7FF] rounded-full px-4 py-1.5 mb-5 md:mb-8">
-                <span>✨</span>
-                <span className="text-[13px] font-medium text-[#4F46E5]">Introducing AI-Powered Ad Analysis</span>
+            {/* ── Copy stack ── */}
+            <div className="text-center mb-12 md:mb-16">
+
+              {/* Eyebrow pill */}
+              <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-200 rounded-full px-4 py-1.5 mb-6">
+                <span className="text-[15px] leading-none">✨</span>
+                <span className="text-[13px] font-medium text-indigo-600 tracking-[0.01em]">
+                  Ad Improver · powered by Claude
+                </span>
               </div>
-            </ScrollReveal>
 
-            <ScrollReveal delay={0.05}>
-              <h1 className="text-[34px] md:text-[56px] lg:text-[64px] font-bold text-[#0F172A] leading-[1.15] md:leading-[1.08] tracking-tight mb-4 md:mb-6">
-                Stop Wasting Budget on<br />
-                Ads That Don&apos;t Convert.
+              {/* Headline */}
+              <h1 className="text-[44px] md:text-[68px] lg:text-[76px] font-extrabold text-slate-900 tracking-[-0.04em] leading-[1.05] mb-5 md:mb-6">
+                Drop in any ad.<br />
+                Get back a{" "}
+                <span className="text-[#5B4BFF]">better</span> one.
               </h1>
-            </ScrollReveal>
 
-            <ScrollReveal delay={0.1}>
-              <p className="text-[16px] md:text-[20px] text-[#64748B] leading-[1.6] mb-8 md:mb-10">
-                Get a 0–100 performance score and actionable improvements for any ad creative in under
-                30 seconds. Know exactly what to fix before you spend a dollar.
+              {/* Subhead */}
+              <p className="text-[17px] md:text-[19px] text-slate-600 max-w-[660px] mx-auto leading-[1.65] mb-8 md:mb-10">
+                AdScore tells you why an ad will flop, then rewrites the copy and
+                regenerates the creative — usually in the time it takes to refill your coffee.
               </p>
-            </ScrollReveal>
 
-            <ScrollReveal delay={0.15}>
-              {/* Stacked full-width on mobile, inline on md+ */}
-              <div className="flex flex-col md:flex-row items-stretch md:items-center justify-center gap-3 md:gap-4 mb-6 md:mb-8">
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mb-8">
                 <Link
-                  href="/signup"
+                  href="/analyze"
                   style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation", minHeight: "52px" }}
-                  className="inline-flex items-center justify-center gap-2 bg-[#4F46E5] active:bg-[#4338CA] md:hover:bg-[#4338CA] text-white font-semibold text-[16px] px-7 rounded-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.1)] transition-colors duration-150 md:w-auto"
+                  className="inline-flex items-center justify-center gap-2 bg-[#5B4BFF] hover:bg-[#4A3AEE] active:bg-[#4A3AEE] text-white font-semibold text-[15px] px-7 rounded-xl shadow-[0_0_0_4px_rgba(91,75,255,0.18),0_2px_12px_rgba(91,75,255,0.35)] transition-all duration-150"
                 >
-                  Start for Free <Arrow />
+                  Analyze your first ad — free →
                 </Link>
                 <a
-                  href="#showcase"
+                  href="#before-after"
                   style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation", minHeight: "52px" }}
-                  className="inline-flex items-center justify-center gap-2 bg-white active:bg-[#F8FAFC] md:hover:bg-[#F8FAFC] text-[#0F172A] font-semibold text-[16px] px-7 rounded-[10px] border border-[#E2E8F0] transition-colors duration-150 md:w-auto"
+                  className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 active:bg-slate-50 text-slate-700 font-semibold text-[15px] px-7 rounded-xl border border-slate-200 transition-colors duration-150"
                 >
-                  See how it works <Arrow />
+                  See real before/afters
                 </a>
               </div>
-            </ScrollReveal>
 
-            <ScrollReveal delay={0.2}>
-              {/* Stack vertically on mobile, row on desktop */}
-              <div className="flex flex-col items-center gap-1.5 md:flex-row md:flex-wrap md:justify-center md:gap-x-5 md:gap-y-2 text-[14px] text-[#94A3B8]">
+              {/* Trust strip */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-[13.5px] text-slate-500">
                 <span className="flex items-center gap-1.5">
-                  <svg className="w-4 h-4 text-[#16A34A] shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-4 h-4 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                   No credit card required
                 </span>
-                <span>⚡ 7 free analyses</span>
-                <span>⏱ Results in 30 seconds</span>
+                <span className="flex items-center gap-1.5">
+                  <span className="text-amber-500 text-[15px] leading-none">⚡</span>
+                  7 free analyses
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="text-[15px] leading-none">🕒</span>
+                  Results in 30 seconds
+                </span>
               </div>
-            </ScrollReveal>
+            </div>
+
+            {/* ── Before / After Card ── */}
+            <div className="bg-[#FAFAFB] border border-slate-200/70 rounded-3xl shadow-[0_24px_80px_-12px_rgba(0,0,0,0.10),0_8px_24px_rgba(0,0,0,0.04)] p-5 md:p-7 lg:p-9">
+              <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 md:gap-0">
+
+                {/* ── LEFT: BEFORE ── */}
+                <div className="flex flex-col sm:flex-row gap-4 md:pr-6">
+                  {/* Bad ad mock — busy, dark, neon gradient */}
+                  <div className="relative sm:w-[190px] h-[200px] sm:h-[240px] rounded-2xl overflow-hidden shrink-0">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#1a0040] via-[#0d2680] to-[#005f6b]" />
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,240,0,0.25),transparent_60%)]" />
+                    <div className="relative z-10 p-3.5 h-full flex flex-col">
+                      <p className="text-[8px] font-black text-yellow-300 tracking-[0.18em] uppercase">⭐ MEGA SALE ⭐</p>
+                      <p className="text-[17px] font-black text-white uppercase leading-tight mt-1.5">
+                        BUY NOW!!!<br />70% OFF
+                      </p>
+                      <p className="text-[7.5px] text-cyan-300 mt-1 uppercase font-bold leading-snug">
+                        USE CODE: SAVE70<br />TODAY ONLY!!!
+                      </p>
+                      <div className="flex-1 flex items-end pb-1">
+                        <p className="text-[7px] text-white/40 leading-tight">
+                          *Terms apply. Cannot combine.<br />Valid while supplies last.
+                        </p>
+                      </div>
+                      <div className="flex gap-1">
+                        {["BUY", "SHOP", "NOW!"].map((t, i) => (
+                          <div key={t} className={`flex-1 text-[7.5px] font-black text-center py-1.5 rounded uppercase ${
+                            i === 0 ? "bg-yellow-400 text-black"
+                            : i === 1 ? "bg-red-500 text-white"
+                            : "bg-cyan-400 text-black"
+                          }`}>{t}</div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* BEFORE score section */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-slate-400 mb-2.5">Before</p>
+                    <div className="flex items-baseline gap-1 mb-4">
+                      <span className="text-[48px] font-black text-red-500 tracking-[-0.04em] tabular-nums leading-none">34</span>
+                      <span className="text-[15px] text-slate-300 font-semibold">/100</span>
+                    </div>
+                    <div className="space-y-3.5">
+                      <HeroScoreRow label="Hook strength"      score={22} reason="Generic opener, no curiosity"  color="red" />
+                      <HeroScoreRow label="Copy effectiveness" score={41} reason="No specific benefit or proof"  color="red" />
+                      <HeroScoreRow label="CTA clarity"        score={48} reason="3 competing calls-to-action"   color="red" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── MIDDLE: Arrow divider ── */}
+                <div className="relative flex md:flex-col items-center justify-center gap-3 md:gap-3.5 md:px-5">
+                  {/* Vertical dashed rules on desktop */}
+                  <div className="hidden md:block absolute inset-y-0 left-0 border-l border-dashed border-slate-200" />
+                  <div className="hidden md:block absolute inset-y-0 right-0 border-r border-dashed border-slate-200" />
+                  {/* Horizontal dashed rules on mobile */}
+                  <div className="flex-1 md:hidden h-px border-t border-dashed border-slate-200" />
+                  {/* Arrow button */}
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#5B4BFF] to-[#8B5CF6] flex items-center justify-center shadow-[0_4px_20px_rgba(91,75,255,0.45)] shrink-0">
+                    {/* → on desktop */}
+                    <svg className="hidden md:block w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                    {/* ↓ on mobile */}
+                    <svg className="md:hidden w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 md:hidden h-px border-t border-dashed border-slate-200" />
+                  <p className="text-[11px] font-semibold text-[#5B4BFF] tracking-[0.04em]">AI · 24s</p>
+                </div>
+
+                {/* ── RIGHT: AFTER ── */}
+                <div className="flex flex-col sm:flex-row gap-4 md:pl-6">
+                  {/* Good ad mock — clean sneaker creative */}
+                  <div className="relative sm:w-[190px] h-[200px] sm:h-[240px] rounded-2xl overflow-hidden shrink-0">
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-500 via-red-500 to-rose-600" />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-[0.08] pointer-events-none select-none">
+                      <span className="text-[110px]">👟</span>
+                    </div>
+                    <div className="relative z-10 p-4 h-full flex flex-col text-white">
+                      <p className="text-[8.5px] font-bold tracking-[0.16em] uppercase text-orange-200">Performance Running</p>
+                      <p className="text-[19px] font-black leading-tight mt-2">
+                        Run further.<br />Pay less.
+                      </p>
+                      <p className="text-[9.5px] text-orange-100 mt-1.5 leading-snug">
+                        Pro-grade cushioning.<br />Half the price.
+                      </p>
+                      <div className="flex-1 flex items-center">
+                        <span className="text-[34px] font-black tracking-[-0.04em]">$79</span>
+                      </div>
+                      <div className="bg-white rounded-full py-2 text-center">
+                        <span className="text-orange-600 text-[10.5px] font-black uppercase tracking-[0.1em]">SHOP NOW →</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* AFTER score section */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-[#5B4BFF] mb-2.5">
+                      After · AdScore Rewrite
+                    </p>
+                    <div className="flex items-baseline gap-2 mb-4 flex-wrap">
+                      <span className="text-[48px] font-black text-emerald-500 tracking-[-0.04em] tabular-nums leading-none">89</span>
+                      <span className="text-[15px] text-slate-300 font-semibold">/100</span>
+                      <span className="inline-flex items-center text-[11px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full self-center whitespace-nowrap">
+                        +55 pts
+                      </span>
+                    </div>
+                    <div className="space-y-3.5">
+                      <HeroScoreRow label="Hook" score={92} reason="Specific outcome, clear benefit"  color="green" />
+                      <HeroScoreRow label="Copy" score={87} reason="Social proof + price anchor"      color="green" />
+                      <HeroScoreRow label="CTA"  score={90} reason="One clear, low-friction action"   color="green" />
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
 
           </div>
         </section>

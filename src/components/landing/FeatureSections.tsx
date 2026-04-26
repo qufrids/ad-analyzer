@@ -394,7 +394,11 @@ function FeatureSection({
   reverse?:    boolean;
 }) {
   return (
-    <section id={id} className="py-16 md:py-24 px-6 md:px-4" style={{ background: bg }}>
+    <section
+      id={id}
+      className="py-16 md:py-24 px-6 md:px-4 scroll-mt-16 md:scroll-mt-[72px]"
+      style={{ background: bg }}
+    >
       <div className="max-w-7xl mx-auto">
         <ScrollReveal>
           <div className={`flex flex-col lg:flex-row gap-10 lg:gap-16 items-center ${reverse ? "lg:flex-row-reverse" : ""}`}>

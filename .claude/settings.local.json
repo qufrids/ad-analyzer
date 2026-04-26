@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npx next build:*)",
-      "Bash(npm install cheerio)"
+      "Bash(npm install cheerio)",
+      "Bash(npx tsc *)",
+      "Bash(awk '{print $NF}')"
     ]
   }
 }

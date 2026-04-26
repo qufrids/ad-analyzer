@@ -124,10 +124,28 @@ const ADVERTISERS_NAV = [
 ];
 
 const RESOURCES_NAV = [
-  { label: "Blog",          href: "#", badge: "Soon" },
-  { label: "Help Center",   href: "#", badge: "Soon" },
-  { label: "Documentation", href: "#", badge: "Soon" },
+  { label: "Blog",          href: "/blog",      badge: "Soon" },
+  { label: "Help Center",   href: "/help",      badge: undefined },
+  { label: "Documentation", href: "/help",      badge: "Soon" },
+  { label: "Changelog",     href: "/changelog", badge: undefined },
 ];
+
+/* ─── Shared hover-with-delay hook ─── */
+function useHoverDelay(delayMs = 150) {
+  const [open, setOpen]   = useState(false);
+  const timer             = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function onEnter() {
+    if (timer.current) clearTimeout(timer.current);
+    setOpen(true);
+  }
+  function onLeave() {
+    timer.current = setTimeout(() => setOpen(false), delayMs);
+  }
+  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
+
+  return { open, setOpen, onEnter, onLeave };
+}
 
 /* ─── Rich dropdown (icon + title + description) ─── */
 interface RichItem {
@@ -137,12 +155,12 @@ interface RichItem {
   icon:  React.ReactNode;
 }
 
-function RichDropdown({ label, items, width = 300 }: {
+function RichDropdown({ label, items, width = 310 }: {
   label: string;
   items: RichItem[];
   width?: number;
 }) {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen, onEnter, onLeave } = useHoverDelay();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -151,10 +169,10 @@ function RichDropdown({ label, items, width = 300 }: {
     }
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, []);
+  }, [setOpen]);
 
   return (
-    <div ref={ref} className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <div ref={ref} className="relative" onMouseEnter={onEnter} onMouseLeave={onLeave}>
       <button
         aria-expanded={open}
         className={`flex items-center gap-1 text-[15px] font-medium transition-colors duration-150 ${
@@ -171,49 +189,43 @@ function RichDropdown({ label, items, width = 300 }: {
       </button>
 
       {open && (
-        <div
-          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 bg-white border border-[#E2E8F0] rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.10)] overflow-hidden z-50 py-2"
-          style={{ width: `${width}px` }}
-        >
-          {items.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              className="group flex items-start gap-3 px-4 py-3 hover:bg-[#F8FAFC] transition-colors duration-100"
-            >
-              {/* Icon box */}
-              <div className="w-9 h-9 rounded-[8px] bg-[#EEF2FF] flex items-center justify-center shrink-0 mt-0.5 text-[#4F46E5] group-hover:bg-[#E0E7FF] transition-colors">
-                {item.icon}
-              </div>
-              {/* Text */}
-              <div className="flex-1 min-w-0">
-                <p className="text-[14px] font-semibold text-[#0F172A] group-hover:text-[#4F46E5] transition-colors leading-tight mb-0.5">
-                  {item.label}
-                </p>
-                <p className="text-[12px] text-[#64748B] leading-relaxed">{item.desc}</p>
-              </div>
-              {/* Arrow */}
-              <svg
-                className="w-3.5 h-3.5 text-[#CBD5E1] group-hover:text-[#4F46E5] shrink-0 mt-1 transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        /* pt-2 creates an invisible bridge over the gap — mouse stays within parent div */
+        <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50" style={{ width: `${width}px` }}>
+          <div className="bg-white border border-[#E2E8F0] rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.12)] overflow-hidden py-2">
+            {items.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="group flex items-start gap-3 px-4 py-3 hover:bg-[#F8FAFC] transition-colors duration-100"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
-          ))}
+                <div className="w-9 h-9 rounded-[8px] bg-[#EEF2FF] flex items-center justify-center shrink-0 mt-0.5 text-[#4F46E5] group-hover:bg-[#E0E7FF] transition-colors">
+                  {item.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[14px] font-semibold text-[#0F172A] group-hover:text-[#4F46E5] transition-colors leading-tight mb-0.5">
+                    {item.label}
+                  </p>
+                  <p className="text-[12px] text-[#64748B] leading-relaxed">{item.desc}</p>
+                </div>
+                <svg className="w-3.5 h-3.5 text-[#CBD5E1] group-hover:text-[#4F46E5] shrink-0 mt-1 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            ))}
+          </div>
         </div>
       )}
     </div>
   );
 }
 
-/* ─── Simple dropdown (Resources — badge style) ─── */
+/* ─── Simple dropdown (Resources) ─── */
 function SimpleDropdown({ label, items }: {
   label: string;
   items: { label: string; href: string; badge?: string }[];
 }) {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen, onEnter, onLeave } = useHoverDelay();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -222,10 +234,10 @@ function SimpleDropdown({ label, items }: {
     }
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, []);
+  }, [setOpen]);
 
   return (
-    <div ref={ref} className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <div ref={ref} className="relative" onMouseEnter={onEnter} onMouseLeave={onLeave}>
       <button
         aria-expanded={open}
         className={`flex items-center gap-1 text-[15px] font-medium transition-colors duration-150 ${
@@ -233,30 +245,27 @@ function SimpleDropdown({ label, items }: {
         }`}
       >
         {label}
-        <svg
-          className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-          fill="none" stroke="currentColor" viewBox="0 0 24 24"
-        >
+        <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
       {open && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-52 bg-white border border-[#E2E8F0] rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.10)] overflow-hidden z-50 py-2">
-          {items.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-between px-4 py-2.5 text-[14px] text-[#334155] hover:text-[#4F46E5] hover:bg-[#F8FAFC] transition-colors"
-            >
-              {item.label}
-              {item.badge && (
-                <span className="text-[11px] font-semibold text-[#4F46E5] bg-[#EEF2FF] px-2 py-0.5 rounded-full">
-                  {item.badge}
-                </span>
-              )}
-            </a>
-          ))}
+        <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-52 z-50">
+          <div className="bg-white border border-[#E2E8F0] rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.12)] overflow-hidden py-2">
+            {items.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-between px-4 py-2.5 text-[14px] text-[#334155] hover:text-[#4F46E5] hover:bg-[#F8FAFC] transition-colors"
+              >
+                {item.label}
+                {item.badge && (
+                  <span className="text-[11px] font-semibold text-[#4F46E5] bg-[#EEF2FF] px-2 py-0.5 rounded-full">{item.badge}</span>
+                )}
+              </a>
+            ))}
+          </div>
         </div>
       )}
     </div>

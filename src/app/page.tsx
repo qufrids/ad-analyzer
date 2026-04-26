@@ -5,6 +5,7 @@ import PricingButton from "@/components/PricingButton";
 import ProductShowcase from "@/components/landing/ProductShowcase";
 import BeforeAfter from "@/components/landing/BeforeAfter";
 import LandingFAQ from "@/components/landing/LandingFAQ";
+import FeatureSections from "@/components/landing/FeatureSections";
 
 /* ─── JSON-LD ─── */
 const jsonLd = {
@@ -293,6 +294,12 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ══════════ FEATURE DETAIL SECTIONS ══════════
+            Each section is anchored to its nav link ID so clicking
+            "Ad Analysis", "AI Improver", etc. in the Features dropdown
+            scrolls directly to the relevant deep-dive section.        */}
+        <FeatureSections />
+
         {/* ══════════ BEFORE / AFTER ══════════ */}
         <section className="bg-[#F8FAFC] py-16 md:py-24 px-6 md:px-4" id="before-after">
           <div className="max-w-5xl mx-auto">
@@ -553,13 +560,13 @@ export default function LandingPage() {
                 >
                   Start for Free <Arrow />
                 </Link>
-                <a
-                  href="#"
+                <Link
+                  href="/contact"
                   style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation", minHeight: "48px" }}
                   className="inline-flex items-center justify-center gap-2 bg-transparent text-white font-semibold text-[16px] px-7 rounded-[10px] border border-white/30 active:bg-white/10 md:hover:bg-white/10 transition-colors duration-150"
                 >
                   Book a demo <Arrow />
-                </a>
+                </Link>
               </div>
             </ScrollReveal>
           </div>
@@ -609,14 +616,14 @@ export default function LandingPage() {
                 <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F172A] mb-3 md:mb-4">Product</p>
                 <ul>
                   {[
-                    { label: "Features",   href: "#features" },
-                    { label: "Pricing",    href: "#pricing"  },
-                    { label: "Changelog",  href: "#"         },
+                    { label: "Features",   href: "#features"   },
+                    { label: "Pricing",    href: "#pricing"    },
+                    { label: "Changelog",  href: "/changelog"  },
                   ].map((l) => (
                     <li key={l.label}>
-                      <a href={l.href} style={{ WebkitTapHighlightColor: "transparent" }} className="flex items-center h-10 text-[15px] text-[#64748B] md:hover:text-[#4F46E5] transition-colors duration-150">
+                      <Link href={l.href} style={{ WebkitTapHighlightColor: "transparent" }} className="flex items-center h-10 text-[15px] text-[#64748B] md:hover:text-[#4F46E5] transition-colors duration-150">
                         {l.label}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                   <li>
@@ -631,13 +638,23 @@ export default function LandingPage() {
               <div>
                 <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F172A] mb-3 md:mb-4">Resources</p>
                 <ul>
-                  {["Blog", "Help Center", "Documentation"].map((r) => (
-                    <li key={r}>
-                      <span className="flex items-center h-10 text-[15px] text-[#94A3B8] gap-2">
-                        {r} <span className="text-[11px] font-semibold text-[#4F46E5] bg-[#EEF2FF] px-2 py-0.5 rounded-full">Soon</span>
-                      </span>
-                    </li>
-                  ))}
+                  <li>
+                    <Link href="/blog" style={{ WebkitTapHighlightColor: "transparent" }} className="flex items-center gap-2 h-10 text-[15px] text-[#64748B] md:hover:text-[#4F46E5] transition-colors duration-150">
+                      Blog
+                      <span className="text-[11px] font-semibold text-[#4F46E5] bg-[#EEF2FF] px-2 py-0.5 rounded-full">Soon</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/help" style={{ WebkitTapHighlightColor: "transparent" }} className="flex items-center h-10 text-[15px] text-[#64748B] md:hover:text-[#4F46E5] transition-colors duration-150">
+                      Help Center
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/help" style={{ WebkitTapHighlightColor: "transparent" }} className="flex items-center gap-2 h-10 text-[15px] text-[#64748B] md:hover:text-[#4F46E5] transition-colors duration-150">
+                      Documentation
+                      <span className="text-[11px] font-semibold text-[#4F46E5] bg-[#EEF2FF] px-2 py-0.5 rounded-full">Soon</span>
+                    </Link>
+                  </li>
                 </ul>
               </div>
 
@@ -646,8 +663,8 @@ export default function LandingPage() {
                 <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F172A] mb-3 md:mb-4">Company</p>
                 <ul>
                   {[
-                    { label: "About",          href: "#"        },
-                    { label: "Contact",        href: "#"        },
+                    { label: "About",          href: "/about"   },
+                    { label: "Contact",        href: "/contact" },
                     { label: "Privacy Policy", href: "/privacy" },
                     { label: "Terms",          href: "/terms"   },
                   ].map((l) => (

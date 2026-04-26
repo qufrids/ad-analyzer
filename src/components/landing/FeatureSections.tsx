@@ -381,7 +381,7 @@ function URLVisual() {
 ══════════════════════════════════════════ */
 
 function FeatureSection({
-  id, bg, badge, headline, description, benefits, cta, visual, reverse = false,
+  id, bg, badge, headline, description, benefits, cta, ctaHref, visual, reverse = false,
 }: {
   id:          string;
   bg:          string;
@@ -390,6 +390,7 @@ function FeatureSection({
   description: string;
   benefits:    string[];
   cta:         string;
+  ctaHref:     string;
   visual:      React.ReactNode;
   reverse?:    boolean;
 }) {
@@ -424,8 +425,12 @@ function FeatureSection({
                   </li>
                 ))}
               </ul>
+              {/* ctaHref points to the real dashboard feature page.
+                  Logged-in users land there directly.
+                  Logged-out users are redirected by middleware to
+                  /login?redirect=<ctaHref>, then forwarded after auth. */}
               <Link
-                href="/signup"
+                href={ctaHref}
                 className="inline-flex items-center gap-2 bg-[#4F46E5] hover:bg-[#4338CA] active:bg-[#4338CA] text-white font-semibold text-[15px] px-6 py-3 rounded-[8px] transition-colors duration-150"
               >
                 {cta}
@@ -464,6 +469,7 @@ export default function FeatureSections() {
           "Export the full report as a PDF to share with your team",
         ]}
         cta="Analyze your first ad free"
+        ctaHref="/analyze"
         visual={<AnalysisVisual />}
         reverse={false}
       />
@@ -482,6 +488,7 @@ export default function FeatureSections() {
           "Paste directly into Meta Ads Manager, TikTok Ads, or Google",
         ]}
         cta="Try the AI Improver"
+        ctaHref="/improve"
         visual={<ImproverVisual />}
         reverse={true}
       />
@@ -500,6 +507,7 @@ export default function FeatureSections() {
           "Export data as CSV for client reports or internal dashboards",
         ]}
         cta="Track your creatives"
+        ctaHref="/history"
         visual={<TrackerVisual />}
         reverse={false}
       />
@@ -518,6 +526,7 @@ export default function FeatureSections() {
           "Works across platforms — compare a Meta ad against a TikTok version",
         ]}
         cta="Compare two creatives"
+        ctaHref="/compare"
         visual={<ABVisual />}
         reverse={true}
       />
@@ -536,6 +545,7 @@ export default function FeatureSections() {
           "Build a swipe file of competitor intelligence over time",
         ]}
         cta="Spy on a competitor"
+        ctaHref="/spy"
         visual={<CompetitorVisual />}
         reverse={false}
       />
@@ -554,6 +564,7 @@ export default function FeatureSections() {
           "Ready to paste into any ad manager — no editing required",
         ]}
         cta="Generate ads from URL"
+        ctaHref="/generate"
         visual={<URLVisual />}
         reverse={true}
       />

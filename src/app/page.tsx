@@ -218,20 +218,26 @@ export default function LandingPage() {
               </p>
 
               {/* Buttons */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mb-8">
+              <div className="flex flex-row items-center justify-center gap-2.5 sm:gap-3 mb-8 px-2">
                 <Link
                   href="/analyze"
-                  style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation", minHeight: "52px" }}
-                  className="inline-flex items-center justify-center gap-2 bg-[#5B4BFF] hover:bg-[#4A3AEE] active:bg-[#4A3AEE] text-white font-semibold text-[15px] px-7 rounded-xl shadow-[0_0_0_4px_rgba(91,75,255,0.18),0_2px_12px_rgba(91,75,255,0.35)] transition-all duration-150"
+                  style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
+                  className="inline-flex items-center justify-center gap-1.5 bg-[#5B4BFF] hover:bg-[#4A3AEE] active:scale-[0.97] text-white font-semibold text-[13px] sm:text-[15px] px-4 sm:px-7 py-2.5 sm:py-3.5 rounded-full shadow-[0_0_0_3px_rgba(91,75,255,0.18),0_2px_10px_rgba(91,75,255,0.32)] transition-all duration-150"
                 >
-                  Analyze your first ad — free →
+                  Analyze free
+                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
                 </Link>
                 <a
                   href="#before-after"
-                  style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation", minHeight: "52px" }}
-                  className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 active:bg-slate-50 text-slate-700 font-semibold text-[15px] px-7 rounded-xl border border-slate-200 transition-colors duration-150"
+                  style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
+                  className="inline-flex items-center justify-center gap-1.5 bg-[#EEF2FF] hover:bg-[#E0E7FF] active:scale-[0.97] text-[#4F46E5] font-semibold text-[13px] sm:text-[15px] px-4 sm:px-7 py-2.5 sm:py-3.5 rounded-full border border-[#C7D2FE] hover:border-[#A5B4FC] transition-all duration-150"
                 >
-                  See real before/afters
+                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909" />
+                  </svg>
+                  Before/after
                 </a>
               </div>
 

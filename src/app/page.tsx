@@ -91,7 +91,7 @@ const PRICING = [
       { text: "Unlimited Competitor Spy",   included: true },
       { text: "Unlimited URL to Ads",       included: true },
       { text: "Weekly email reports",       included: true },
-      { text: "API access (coming soon)",   included: true },
+      { text: "API access",                  included: true },
     ],
   },
 ];
@@ -117,7 +117,7 @@ function FeatureCard({ label, title, description, icon }: {
   label: string; title: string; description: string; icon: React.ReactNode;
 }) {
   return (
-    <div className="bg-white border border-[#E2E8F0] rounded-[12px] md:rounded-[16px] p-6 md:p-8 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+    <div className="bg-white border border-[#E2E8F0] rounded-[16px] p-6 md:p-8 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
       <div className="w-11 h-11 md:w-12 md:h-12 bg-[#EEF2FF] rounded-[10px] md:rounded-[12px] flex items-center justify-center text-[#4F46E5] mb-3 md:mb-5">
         {icon}
       </div>
@@ -396,7 +396,7 @@ export default function LandingPage() {
             <ScrollReveal>
               <div className="text-center mb-10 md:mb-16">
                 <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[#4F46E5] mb-3">FEATURES</p>
-                <h2 className="text-[26px] md:text-[36px] lg:text-[42px] font-bold text-[#0F172A] leading-tight tracking-tight">
+                <h2 className="text-[26px] md:text-[36px] lg:text-[40px] font-bold text-[#0F172A] leading-tight tracking-tight">
                   Everything you need to run winning ads.
                 </h2>
               </div>
@@ -454,9 +454,9 @@ export default function LandingPage() {
         <section className="bg-[#F8FAFC] py-16 md:py-24 px-6 md:px-4" id="before-after">
           <div className="max-w-5xl mx-auto">
             <ScrollReveal>
-              <div className="text-center mb-8 md:mb-14">
+              <div className="text-center mb-10 md:mb-14">
                 <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[#4F46E5] mb-3">SEE THE DIFFERENCE</p>
-                <h2 className="text-[26px] md:text-[36px] md:text-[40px] font-bold text-[#0F172A] tracking-tight leading-tight">
+                <h2 className="text-[26px] md:text-[36px] lg:text-[40px] font-bold text-[#0F172A] tracking-tight leading-tight">
                   What AI optimization looks like.
                 </h2>
               </div>
@@ -471,7 +471,7 @@ export default function LandingPage() {
             Mobile: stacked vertically, 40px numbers, narrow dividers
             Desktop: 3 columns with vertical dividers
         ══════════ */}
-        <section className="bg-white py-12 md:py-24 px-6 md:px-4">
+        <section className="bg-white py-16 md:py-24 px-6 md:px-4">
           <div className="max-w-4xl mx-auto">
             <ScrollReveal>
               <div className="flex flex-col items-center md:grid md:grid-cols-3">
@@ -556,7 +556,7 @@ export default function LandingPage() {
                     "Analyze unlimited creatives across all client accounts",
                     "Generate weekly automated creative performance reports",
                     "Prioritized improvement recommendations per brand",
-                    "API access for custom workflows (coming soon)",
+                    "API access for custom workflows",
                   ],
                 },
               ].map((p, i) => (
@@ -611,7 +611,7 @@ export default function LandingPage() {
             <ScrollReveal>
               <div className="text-center mb-10 md:mb-14">
                 <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[#4F46E5] mb-3">PRICING</p>
-                <h2 className="text-[26px] md:text-[36px] md:text-[40px] font-bold text-[#0F172A] tracking-tight mb-3 leading-tight">
+                <h2 className="text-[26px] md:text-[36px] lg:text-[40px] font-bold text-[#0F172A] tracking-tight mb-3 leading-tight">
                   Simple, transparent pricing.
                 </h2>
                 <p className="text-[16px] md:text-[18px] text-[#64748B]">Start free. Upgrade when you&apos;re ready.</p>
@@ -623,10 +623,10 @@ export default function LandingPage() {
               {PRICING.map((plan, i) => (
                 <ScrollReveal key={plan.name} delay={i * 0.04}>
                   <div
-                    className={`relative bg-white rounded-[12px] md:rounded-[16px] p-6 md:p-8 flex flex-col h-full transition-all duration-200 ${plan.mobileOrder} ${
+                    className={`relative rounded-[16px] p-6 md:p-8 flex flex-col h-full transition-all duration-200 ${plan.mobileOrder} ${
                       plan.highlight
-                        ? "border-2 border-[#4F46E5] shadow-[0_4px_24px_rgba(79,70,229,0.15)]"
-                        : "border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+                        ? "bg-[#FAFAFE] border-2 border-[#4F46E5] shadow-[0_8px_32px_rgba(79,70,229,0.18)]"
+                        : "bg-white border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
                     }`}
                   >
                     {plan.highlight && (
@@ -639,7 +639,7 @@ export default function LandingPage() {
                       <p className="text-[18px] font-bold text-[#0F172A] mb-1">{plan.name}</p>
                       <p className="text-[14px] text-[#64748B] mb-4">{plan.desc}</p>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-[40px] md:text-[42px] font-bold text-[#0F172A] leading-none">{plan.price}</span>
+                        <span className={`font-bold text-[#0F172A] leading-none ${plan.highlight ? "text-[44px] md:text-[50px]" : "text-[40px] md:text-[42px]"}`}>{plan.price}</span>
                         <span className="text-[15px] text-[#64748B]">{plan.cadence}</span>
                       </div>
                     </div>
@@ -673,7 +673,7 @@ export default function LandingPage() {
             <ScrollReveal>
               <div className="text-center mb-8 md:mb-12">
                 <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[#4F46E5] mb-3">FAQ</p>
-                <h2 className="text-[26px] md:text-[36px] md:text-[40px] font-bold text-[#0F172A] tracking-tight leading-tight">
+                <h2 className="text-[26px] md:text-[36px] lg:text-[40px] font-bold text-[#0F172A] tracking-tight leading-tight">
                   Frequently asked questions.
                 </h2>
               </div>
@@ -685,7 +685,7 @@ export default function LandingPage() {
         </section>
 
         {/* ══════════ CTA BANNER ══════════ */}
-        <section className="bg-[#4F46E5] py-14 md:py-20 px-6 md:px-4 relative overflow-hidden">
+        <section className="bg-[#4F46E5] py-16 md:py-24 px-6 md:px-4 relative overflow-hidden">
           <div
             aria-hidden="true"
             className="absolute inset-0 opacity-[0.15]"
@@ -699,25 +699,26 @@ export default function LandingPage() {
               <h2 className="text-[26px] md:text-[36px] lg:text-[40px] font-bold text-white leading-[1.2] tracking-tight mb-4">
                 Ready to stop guessing?
               </h2>
-              <p className="text-[15px] md:text-[18px] text-white/80 mb-7 md:mb-10 leading-relaxed">
+              <p className="text-[16px] md:text-[18px] text-white/80 mb-8 md:mb-10 leading-relaxed">
                 Join thousands of advertisers making data-driven creative decisions.
               </p>
-              <div className="flex flex-col md:flex-row items-stretch md:items-center justify-center gap-3 md:gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-5">
                 <Link
                   href="/signup"
-                  style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation", minHeight: "48px" }}
-                  className="inline-flex items-center justify-center gap-2 bg-white text-[#4F46E5] font-semibold text-[16px] px-7 rounded-[10px] active:bg-[#F8FAFC] md:hover:bg-[#F8FAFC] transition-colors duration-150 shadow-sm"
+                  style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
+                  className="inline-flex items-center justify-center gap-2 bg-white text-[#4F46E5] font-semibold text-[16px] px-7 py-3.5 rounded-[10px] hover:bg-[#F8FAFC] active:bg-[#F8FAFC] active:scale-[0.98] transition-all duration-200 shadow-sm w-full sm:w-auto"
                 >
                   Start for Free <Arrow />
                 </Link>
                 <Link
-                  href="/contact"
-                  style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation", minHeight: "48px" }}
-                  className="inline-flex items-center justify-center gap-2 bg-transparent text-white font-semibold text-[16px] px-7 rounded-[10px] border border-white/30 active:bg-white/10 md:hover:bg-white/10 transition-colors duration-150"
+                  href="/signup"
+                  style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
+                  className="inline-flex items-center justify-center gap-2 bg-white/10 text-white font-semibold text-[16px] px-7 py-3.5 rounded-[10px] border border-white/30 hover:bg-white/20 active:bg-white/20 active:scale-[0.98] transition-all duration-200 w-full sm:w-auto"
                 >
                   Book a demo <Arrow />
                 </Link>
               </div>
+              <p className="text-[13px] text-white/50">No credit card required · Cancel anytime</p>
             </ScrollReveal>
           </div>
         </section>
@@ -763,7 +764,7 @@ export default function LandingPage() {
 
               {/* Product */}
               <div>
-                <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F172A] mb-3 md:mb-4">Product</p>
+                <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F172A] mb-4">Product</p>
                 <ul>
                   {[
                     { label: "Features",   href: "#features"   },
@@ -786,7 +787,7 @@ export default function LandingPage() {
 
               {/* Resources */}
               <div>
-                <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F172A] mb-3 md:mb-4">Resources</p>
+                <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F172A] mb-4">Resources</p>
                 <ul>
                   <li>
                     <Link href="/blog" style={{ WebkitTapHighlightColor: "transparent" }} className="flex items-center gap-2 h-10 text-[15px] text-[#64748B] md:hover:text-[#4F46E5] transition-colors duration-150">
@@ -810,7 +811,7 @@ export default function LandingPage() {
 
               {/* Company */}
               <div>
-                <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F172A] mb-3 md:mb-4">Company</p>
+                <p className="text-[13px] font-bold uppercase tracking-wider text-[#0F172A] mb-4">Company</p>
                 <ul>
                   {[
                     { label: "About",          href: "/about"   },
